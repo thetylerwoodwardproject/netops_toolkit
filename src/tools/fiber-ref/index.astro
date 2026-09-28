@@ -1,0 +1,80 @@
+---
+import Icon from '@/components/Icon.astro';
+
+// Jacket colors per TIA-598.
+const jacket = {
+  Orange: 'bg-[#f97316]',
+  Aqua: 'bg-[#22d3ee]',
+  Lime: 'bg-[#a3e635]',
+  Yellow: 'bg-[#facc15]',
+};
+
+const rows: [string, string, string, keyof typeof jacket, string, string, string, string][] = [
+  ['OM1', 'Multimode', '62.5µm', 'Orange', '850/1300nm', '275m', '33m', '—'],
+  ['OM2', 'Multimode', '50µm', 'Orange', '850/1300nm', '550m', '82m', '—'],
+  ['OM3', 'Multimode', '50µm', 'Aqua', '850/1300nm', '800m', '300m', '100m'],
+  ['OM4', 'Multimode', '50µm', 'Aqua', '850/1300nm', '1100m', '400m', '150m'],
+  ['OM5', 'Multimode', '50µm', 'Lime', '850–953nm', '1100m', '400m', '150m'],
+  ['OS1', 'Singlemode', '9µm', 'Yellow', '1310/1550nm', '10km', '10km', '10km'],
+  ['OS2', 'Singlemode', '9µm', 'Yellow', '1310/1550nm', '100km', '40km', '40km'],
+];
+
+const connectors = [
+  ['SC', 'Square push-pull, common in datacom'],
+  ['LC', 'Small form-factor, most popular in DCs'],
+  ['ST', 'Bayonet twist-lock, legacy multimode'],
+  ['MPO/MTP', 'Multi-fiber (12/24), 40G/100G+ trunks'],
+];
+---
+
+<div class="table-wrap">
+  <table class="ref-table">
+    <thead>
+      <tr>
+        <th>Type</th><th>Mode</th><th>Core</th><th>Jacket</th><th>Wavelength</th><th>1G</th><th
+          >10G</th
+        ><th>40G/100G</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map(([type, mode, core, color, wave, g1, g10, g100]) => (
+          <tr>
+            <td>
+              <strong>{type}</strong>
+            </td>
+            <td>{mode}</td>
+            <td>{core}</td>
+            <td class="whitespace-nowrap">
+              <span class:list={['wire-dot', jacket[color]]} />
+              {color}
+            </td>
+            <td>{wave}</td>
+            <td>{g1}</td>
+            <td>{g10}</td>
+            <td>{g100}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="panel mt-3.5">
+  <h3><Icon name="plug" /> Common Connector Types</h3>
+  <div class="result-grid mt-2">
+    {
+      connectors.map(([name, desc]) => (
+        <div class="result-item">
+          <div class="ri-label">{name}</div>
+          <div class="ri-value ri-text">{desc}</div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+<div class="tip">
+  <Icon name="lightbulb" />
+  Use <strong>OM3/OM4</strong> for in-building/data center. Use <strong>OS2</strong> for building-to-building,
+  campus, or long-haul. All cladding is 125µm.
+</div>

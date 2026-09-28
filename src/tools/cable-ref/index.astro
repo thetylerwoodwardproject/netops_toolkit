@@ -1,0 +1,711 @@
+---
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+import { bandDot, studiohubDot, t568Dot } from '@/data/wiring';
+
+const status = {
+  common: { label: 'Common', icon: 'circle-check', class: 'text-green' },
+  current: { label: 'Current', icon: 'circle-check', class: 'text-green' },
+  recommended: { label: 'Recommended', icon: 'star', class: 'text-accent' },
+  legacy: { label: 'Legacy', icon: 'triangle-exclamation', class: 'text-orange' },
+  obsolete: { label: 'Obsolete', icon: 'ban', class: 'text-red' },
+  nonstd: { label: 'Non-Std', icon: 'triangle-exclamation', class: 'text-orange' },
+  rare: { label: 'Rare', icon: 'triangle-exclamation', class: 'text-orange' },
+  dc: { label: 'Data Center', icon: 'flask', class: 'text-purple' },
+};
+
+const catRows: [string, string, string, string, string, keyof typeof status, string][] = [
+  [
+    'Cat3',
+    '10 Mbps',
+    '16 MHz',
+    '100 m (328 ft)',
+    'UTP only',
+    'legacy',
+    '10BASE-T, POTS voice/phone wiring. Still found in older buildings.',
+  ],
+  [
+    'Cat5',
+    '100 Mbps',
+    '100 MHz',
+    '100 m (328 ft)',
+    'UTP / STP',
+    'obsolete',
+    'Fast Ethernet only. Do not use for new installs — superseded by Cat5e.',
+  ],
+  [
+    'Cat5e',
+    '1 Gbps',
+    '100 MHz',
+    '100 m (328 ft)',
+    'UTP / STP',
+    'common',
+    'Most common in existing installs. StudioHub/AngryAudio requires STP variant.',
+  ],
+  [
+    'Cat6',
+    '1 Gbps / 10 Gbps',
+    '250 MHz',
+    '100 m @ 1G, 55 m @ 10G',
+    'UTP / STP',
+    'current',
+    'Good all-purpose choice. 10G limited to 55 m. Spline reduces crosstalk.',
+  ],
+  [
+    'Cat6A',
+    '10 Gbps',
+    '500 MHz',
+    '100 m (328 ft)',
+    'UTP / STP',
+    'recommended',
+    'Best for new installs. Full 10G at 100 m. Preferred for data centers & broadcast.',
+  ],
+  [
+    'Cat7',
+    '10 Gbps',
+    '600 MHz',
+    '100 m (328 ft)',
+    'S/FTP only',
+    'nonstd',
+    'Not an IEEE/TIA standard. Uses proprietary GG45 or TERA connectors. Avoid.',
+  ],
+  [
+    'Cat7A',
+    '10 Gbps',
+    '1000 MHz',
+    '100 m (328 ft)',
+    'S/FTP only',
+    'rare',
+    'Rarely deployed. Same connector caveats as Cat7. Not widely supported.',
+  ],
+  [
+    'Cat8.1',
+    '25–40 Gbps',
+    '2000 MHz',
+    '30 m (100 ft)',
+    'S/FTP only',
+    'dc',
+    'Switch-to-server in data centers only. Standard RJ-45 connectors (Cat8.1).',
+  ],
+];
+
+const recs = [
+  ['Home / Small Office', 'Cat5e UTP or Cat6 UTP — cost-effective, sufficient for 1G switching'],
+  ['Enterprise / Campus', 'Cat6A UTP — full 10G at 100 m, future-proof for at least 10 years'],
+  ['Data Center (ToR)', 'Cat6A or Cat8.1 S/FTP — short structured runs, high density'],
+  ['AV over IP / Dante', 'Cat6A UTP or STP — low-latency, QoS-enabled switches required'],
+  ['Outdoor / Industrial', 'Shielded Cat6A rated for outdoor UV/direct-burial as needed'],
+];
+
+const shieldRows = [
+  [
+    'U/UTP',
+    'Unshielded Twisted Pair',
+    'None',
+    'None',
+    'Cat3–Cat6A',
+    'Lowest cost, easiest to install. Sufficient for most office/home networks. Most common.',
+  ],
+  [
+    'F/UTP',
+    'Foiled Twisted Pair (FTP)',
+    'Foil',
+    'None',
+    'Cat5e–Cat6A',
+    'Light overall shield blocks external EMI. Good for moderate interference environments.',
+  ],
+  [
+    'S/UTP',
+    'Screened UTP',
+    'Braid',
+    'None',
+    'Cat6–Cat6A',
+    'Braid provides better drain of EMI than foil. Slightly bulkier cable.',
+  ],
+  [
+    'SF/UTP',
+    'Screened Foil UTP',
+    'Braid + Foil',
+    'None',
+    'Cat6A',
+    'Highest overall shielding without per-pair shields. Data center & industrial use.',
+  ],
+  [
+    'U/FTP',
+    'Unshielded, Foiled Pairs',
+    'None',
+    'Foil per pair',
+    'Cat6A',
+    'No outer shield but each pair wrapped. Reduces ANEXT/alien crosstalk in Cat6A.',
+  ],
+  [
+    'F/FTP',
+    'Foiled overall, Foiled Pairs',
+    'Foil',
+    'Foil per pair',
+    'Cat6A–Cat7A',
+    'High-performance. Eliminates inter-pair and external interference. StudioHub compatible.',
+  ],
+  [
+    'S/FTP',
+    'Screened, Foiled Pairs',
+    'Braid',
+    'Foil per pair',
+    'Cat6A–Cat8',
+    'Premium shielding. Required for Cat7/7A/8. Ideal for broadcast & AV over IP.',
+  ],
+];
+
+const constructs = [
+  [
+    'Solid Core',
+    'Permanent horizontal runs. Stiffer — do not flex repeatedly. Punches down to keystone jacks & 110-blocks.',
+  ],
+  [
+    'Stranded Core',
+    'Patch cables & equipment jumpers. Flexible. Do not use for permanent wall runs — higher attenuation.',
+  ],
+  ['Plenum (CMP)', 'Required in HVAC air-return spaces. Fire-rated, lower smoke. More expensive.'],
+  ['Riser (CMR)', 'Vertical runs between floors in conduit. Less expensive than plenum.'],
+  [
+    'Outdoor/UV Rated',
+    'Direct burial or conduit exposed to sun. Check for sunlight-resistant jacket.',
+  ],
+  ['Armored', 'Physical protection in industrial/outdoor conduit. Rodent-resistant.'],
+];
+
+const colors568B = [
+  'White/Orange',
+  'Orange',
+  'White/Green',
+  'Blue',
+  'White/Blue',
+  'Green',
+  'White/Brown',
+  'Brown',
+];
+const colors568A = [
+  'White/Green',
+  'Green',
+  'White/Orange',
+  'Blue',
+  'White/Blue',
+  'Orange',
+  'White/Brown',
+  'Brown',
+];
+const funcs = ['TX+', 'TX−', 'RX+', '—', '—', 'RX−', '—', '—'];
+
+const apps = [
+  ['Standard office (1 Gbps)', 'Cat5e UTP', 'Cat6 UTP', 'Cost-effective; handles 1G everywhere'],
+  ['Modern office (multi-gig)', 'Cat6 UTP', 'Cat6A UTP', 'Multi-gig switches becoming standard'],
+  ['New construction', 'Cat6A UTP', 'Cat6A S/FTP', 'Future-proof; no need to re-cable for 10G'],
+  [
+    'Data center (server access)',
+    'Cat6A',
+    'Cat6A or Cat8.1',
+    'Full 10G at 100 m; Cat8 for 25/40G short runs',
+  ],
+  [
+    'Broadcast facility',
+    'Cat5e STP',
+    'Cat6A S/FTP',
+    'EMI immunity from transmitters, high-power audio gear',
+  ],
+  [
+    'AV over IP / Dante',
+    'Cat6 UTP',
+    'Cat6A UTP',
+    'Low latency; QoS switch required (IEEE 802.1Q/p)',
+  ],
+  ['IP intercoms / VoIP', 'Cat5e UTP', 'Cat6 UTP', 'Low bandwidth but reliability matters'],
+  ['PoE devices (cameras, APs)', 'Cat5e', 'Cat6A', 'Higher gauge wire handles PoE heat better'],
+];
+
+const shPins = [
+  ['1', 'Wht/Org', 'L AES+', 'Left Ch. Positive / AES+EBU Positive'],
+  ['2', 'Org/Wht', 'L AES−', 'Left Ch. Negative / AES+EBU Negative'],
+  ['3', 'Wht/Grn', 'R+', 'Right Channel Positive'],
+  ['4', 'Blu/Wht', 'GND', 'Signal Ground (bonded to cable shield)'],
+  ['5', 'Wht/Blu', 'NC', 'Not Connected — spare'],
+  ['6', 'Grn/Wht', 'R−', 'Right Channel Negative'],
+  ['7', 'Wht/Brn', '−15V DC', 'Negative DC Power (StudioHub powered devices only)'],
+  ['8', 'Brn/Wht', '+15V DC', 'Positive DC Power (StudioHub powered devices only)'],
+];
+
+// [property, IT networking, StudioHub bold part, StudioHub rest]
+const compare = [
+  ['Cable Type', 'Cat5e–Cat6A UTP or STP', 'Shielded STP only', ' (required)'],
+  ['Pinout Standard', 'T568A or T568B', 'T568B only', ''],
+  ['Connector', 'RJ-45 (data)', '', 'RJ-45 (audio — not interchangeable)'],
+  ['Max Run', '100 m (328 ft)', '', '90 m (300 ft) analog; shorter for digital'],
+  ['Pins 7 & 8', 'Brown pair — data', '', '±15V DC power for StudioHub hubs'],
+  ['Pin 4', 'Blue pair — data', '', 'Signal ground (bonded to shield)'],
+  ['Patch Panels', 'Standard 110-block, T568B', '', 'Same — standard panels work fine'],
+  ['Connect to Switch?', 'Yes — this is the purpose', 'NEVER', ' — audio only'],
+  ['Compatible Gear', 'Any Ethernet device', '', 'Axia/Telos, Wheatstone, Angry Audio gear'],
+];
+---
+
+<Tabs
+  tabs={[
+    { id: 'cat-types', label: 'CAT Types', icon: 'chart-column' },
+    { id: 'shielding', label: 'Shielding Guide', icon: 'shield-halved' },
+    { id: 'pinouts', label: 'RJ-45 Pinouts', icon: 'plug' },
+    { id: 'broadcast', label: 'Broadcast Standards', icon: 'tower-broadcast' },
+  ]}
+>
+  <TabPanel id="cat-types" selected>
+    <div class="tip">
+      <Icon name="lightbulb" />
+      <strong>The 100 m Rule:</strong> All copper ethernet standards cap at <strong
+        >100 m (328 ft)</strong
+      > total channel length — 90 m permanent run + 10 m in patch cables. Cat6A and below. Cat8 is limited
+      to just 30 m (data center switch-to-server only).
+    </div>
+    <div class="table-wrap mt-3">
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>Category</th><th>Max Speed</th><th>Bandwidth</th><th>Max Distance</th><th
+              >Shielding</th
+            ><th>Status</th><th>Notes / Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            catRows.map(([cat, speed, bw, dist, shield, st, notes]) => (
+              <tr>
+                <td>
+                  <strong>{cat}</strong>
+                </td>
+                <td class="mono">{speed}</td>
+                <td class="mono">{bw}</td>
+                <td class="mono">{dist}</td>
+                <td>{shield}</td>
+                <td class:list={['font-bold whitespace-nowrap', status[st].class]}>
+                  <Icon name={status[st].icon} size={12} class="mr-1 inline align-[-1px]" />
+                  {status[st].label}
+                </td>
+                <td class="text-[11.5px]">{notes}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="panel mt-3.5">
+      <h3><Icon name="trophy" /> Recommended by Use Case</h3>
+      <div class="result-grid mt-2">
+        {
+          recs.slice(0, 3).map(([label, text]) => (
+            <div class="result-item">
+              <div class="ri-label">{label}</div>
+              <div class="ri-value ri-text">{text}</div>
+            </div>
+          ))
+        }
+        <div class="result-item">
+          <div class="ri-label">Broadcast Facility</div>
+          <div class="ri-value ri-text">
+            <strong>Cat5e or Cat6 STP (S/FTP)</strong> — required for StudioHub/AngryAudio audio wiring
+          </div>
+        </div>
+        {
+          recs.slice(3).map(([label, text]) => (
+            <div class="result-item">
+              <div class="ri-label">{label}</div>
+              <div class="ri-value ri-text">{text}</div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <div class="tip mt-2.5">
+      <Icon name="triangle-exclamation" />
+      <strong>Cat7 warning:</strong> Despite marketing, Cat7 and Cat7A are <strong
+        >not recognized IEEE or TIA standards</strong
+      >. They require proprietary GG45 or TERA connectors that are not universally compatible with
+      standard RJ-45 patch panels or equipment. Stick with Cat6A for new installs.
+    </div>
+  </TabPanel>
+
+  <TabPanel id="shielding">
+    <div class="panel">
+      <h3><Icon name="font" /> ISO 11801 Shielding Notation</h3>
+      <p>
+        The naming convention reads as <strong>Overall Shield / Per-Pair Shield</strong>. Letters: <strong
+          >U</strong
+        > = Unshielded, <strong>F</strong> = Foil, <strong>S</strong> = Braided Screen, <strong
+          >TP</strong
+        > = Twisted Pair.
+      </p>
+      <p class="mt-1 text-[12px] text-text3">
+        Example: <span class="font-mono text-accent">S/FTP</span> = Braided braid overall shield + Foil
+        on each individual pair — highest protection class.
+      </p>
+    </div>
+    <div class="table-wrap">
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>Code</th><th>Common Name</th><th>Overall Shield</th><th>Per-Pair Shield</th><th
+              >Typical Cat</th
+            ><th>Use Case</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            shieldRows.map(([code, name, overall, pair, cat, use]) => (
+              <tr>
+                <td class="mono font-bold">{code}</td>
+                <td>
+                  <strong>{name}</strong>
+                </td>
+                <td>{overall}</td>
+                <td>{pair}</td>
+                <td class="mono">{cat}</td>
+                <td class="text-[11.5px]">{use}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="form-row mt-3.5">
+      <div class="panel">
+        <h3><Icon name="circle-check" /> Use Unshielded (UTP) When…</h3>
+        <ul class="panel-list mt-1.5">
+          <li>Standard office or home environment</li>
+          <li>No nearby high-EMI sources (motors, UPS, fluorescents)</li>
+          <li>Budget and installation ease are priorities</li>
+          <li>Running normal IT data networking (not audio)</li>
+          <li>Existing infrastructure is UTP — matching is simpler</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3><Icon name="shield-halved" /> Use Shielded (STP/FTP) When…</h3>
+        <ul class="panel-list mt-1.5">
+          <li><strong>Always</strong> for StudioHub/AngryAudio broadcast audio wiring</li>
+          <li>Running cable near power cables, UPS, AC units, or transmitters</li>
+          <li>Industrial environments with heavy EMI</li>
+          <li>Data center high-density runs (Cat6A S/FTP, Cat8)</li>
+          <li>Outdoor or plenum environments with external interference</li>
+          <li>AES50 digital audio (Midas, Behringer, DiGiCo)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="warn">
+      <Icon name="triangle-exclamation" />
+      <strong>Grounding Shielded Cable:</strong> Shields must be properly grounded — typically at <strong
+        >one end only</strong
+      > (usually the equipment/rack end) to prevent ground loops. In broadcast audio, Pin 4 of the RJ-45
+      and the cable shield are bonded as audio ground inside all StudioHub adapters.
+    </div>
+    <div class="panel mt-3">
+      <h3><Icon name="ruler" /> Cable Construction Comparison</h3>
+      <div class="result-grid mt-2">
+        {
+          constructs.map(([label, text]) => (
+            <div class="result-item">
+              <div class="ri-label">{label}</div>
+              <div class="ri-value ri-text text-[11.5px]">{text}</div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </TabPanel>
+
+  <TabPanel id="pinouts">
+    <div class="form-row">
+      {
+        [
+          ['T568B — Most Common', colors568B],
+          ['T568A', colors568A],
+        ].map(([title, colors]) => (
+          <div class="panel">
+            <h3>{title}</h3>
+            <table class="ref-table">
+              <thead>
+                <tr>
+                  <th>Pin</th>
+                  <th>Color</th>
+                  <th>Function</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(colors as string[]).map((c, i) => (
+                  <tr>
+                    <td class="mono">{i + 1}</td>
+                    <td>
+                      <span class:list={['wire-dot', t568Dot[c]]} />
+                      {c}
+                    </td>
+                    <td>{funcs[i]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))
+      }
+    </div>
+    <div class="panel">
+      <h3>Cable Types</h3>
+      <table class="ref-table">
+        <thead><tr><th>Type</th><th>Wiring</th><th>Use Case</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Straight-through</strong></td><td>T568B ↔ T568B (both ends same)</td><td
+              >PC to Switch, Router to Switch</td
+            >
+          </tr>
+          <tr>
+            <td><strong>Crossover</strong></td><td>T568A ↔ T568B (different ends)</td><td
+              >Switch to Switch, PC to PC, Router to Router</td
+            >
+          </tr>
+          <tr>
+            <td><strong>Rollover / Console</strong></td><td>Pin 1↔8, 2↔7, 3↔6, 4↔5</td><td
+              >PC serial to Cisco console port (RJ45)</td
+            >
+          </tr>
+        </tbody>
+      </table>
+      <div class="tip">
+        <Icon name="lightbulb" />
+        Modern devices with Auto-MDIX auto-detect cable type, making crossover cables largely unnecessary.
+      </div>
+    </div>
+    <div class="panel">
+      <h3><Icon name="ruler" /> T568A vs T568B — When to Use Each</h3>
+      <div class="result-grid mt-2">
+        <div class="result-item">
+          <div class="ri-label">T568B (Preferred)</div>
+          <div class="ri-value ri-text">
+            Most common in North America. Use for all new installs. Required by
+            StudioHub/AngryAudio.
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">T568A</div>
+          <div class="ri-value ri-text">
+            Used in US government buildings and some international installs. Creates crossover when
+            mixed with T568B.
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Key Rule</div>
+          <div class="ri-value ri-text">
+            Pick one standard and be <strong>consistent throughout the entire facility</strong>.
+            Never mix within the same run.
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Max Channel</div>
+          <div class="ri-value ri-text">
+            100 m total (90 m permanent horizontal run + 10 m combined patch cables at both ends).
+          </div>
+        </div>
+      </div>
+    </div>
+  </TabPanel>
+
+  <TabPanel id="broadcast">
+    <Tabs
+      tabs={[
+        { id: 'it-practices', label: 'IT Networking Best Practices', icon: 'desktop' },
+        { id: 'studiohub', label: 'StudioHub / AngryAudio', icon: 'tower-broadcast' },
+      ]}
+    >
+      <TabPanel id="it-practices" selected>
+        <div class="panel">
+          <h3><Icon name="desktop" /> TIA/EIA-568 Structured Cabling Best Practices</h3>
+          <p>
+            TIA-568 is the North American standard governing commercial building telecommunications
+            cabling — the spec your IT infrastructure should follow.
+          </p>
+        </div>
+        <div class="form-row">
+          <div class="panel">
+            <h3><Icon name="clipboard-list" /> Installation Standards</h3>
+            <ul class="panel-list">
+              <li>Use <strong>T568B</strong> for all terminations (consistent)</li>
+              <li>Horizontal runs: <strong>solid-core</strong> cable only</li>
+              <li>Patch cables: <strong>stranded</strong> for flexibility</li>
+              <li>Max channel: <strong>100 m</strong> (90 m run + 10 m patch)</li>
+              <li>Untwist no more than <strong>13 mm (½ in)</strong> at termination</li>
+              <li>No kinks, sharp bends (&lt; 4× cable diameter bend radius)</li>
+              <li>Use <strong>Cat6A</strong> for all new installs targeting 10G</li>
+              <li>Label both ends of every run</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3><Icon name="bolt" /> EMI &amp; Separation Rules</h3>
+            <ul class="panel-list">
+              <li>Min <strong>6 in (150 mm)</strong> separation from power cables</li>
+              <li>Min <strong>12 in (300 mm)</strong> near high-voltage or fluorescents</li>
+              <li>Cross power cables at <strong>90°</strong> when unavoidable</li>
+              <li>Use <strong>shielded cable</strong> near motors, UPS, transmitters</li>
+              <li>Do <strong>not</strong> run data in same conduit as power</li>
+              <li>Bond cable shields to ground at one end (rack/panel side)</li>
+              <li>Use shielded patch panels in shielded installations</li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel">
+          <h3><Icon name="chart-column" /> Category Recommendation Guide</h3>
+          <div class="table-wrap">
+            <table class="ref-table">
+              <thead>
+                <tr><th>Application</th><th>Minimum</th><th>Recommended</th><th>Reasoning</th></tr>
+              </thead>
+              <tbody>
+                {
+                  apps.map(([app, min, rec, why]) => (
+                    <tr>
+                      <td>{app}</td>
+                      <td class="mono text-text2">{min}</td>
+                      <td class="mono text-green">{rec}</td>
+                      <td class="text-[11.5px]">{why}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </TabPanel>
+
+      <TabPanel id="studiohub">
+        <div class="panel">
+          <h3><Icon name="tower-broadcast" /> StudioHub / AngryAudio Wiring Standard</h3>
+          <p>
+            StudioHub (now <strong>Angry Audio</strong>) is the de facto broadcast audio wiring
+            standard for radio and television facilities. It uses <strong
+              >shielded Cat5e/Cat6 STP cable</strong
+            > and standard <strong>RJ-45 connectors</strong> to carry balanced stereo audio and AES/EBU
+            digital audio throughout a facility using a T568B pinout. Compatible with Axia/Telos Alliance,
+            Wheatstone, and all StudioHub-equipped gear.
+          </p>
+        </div>
+        <div class="warn">
+          <Icon name="ban" />
+          <strong>CRITICAL:</strong> StudioHub cable carries <strong
+            >audio signals — NOT Ethernet data.</strong
+          > Never plug StudioHub-wired cables into Ethernet switches, routers, or standard IT network
+          equipment. Damage to gear or signal corruption will result.
+        </div>
+        <div class="form-row mt-3">
+          <div class="panel">
+            <h3><Icon name="circle-check" /> StudioHub Cable Requirements</h3>
+            <ul class="panel-list">
+              <li><strong>Must use shielded STP cable</strong> — UTP is not acceptable</li>
+              <li>Cat5e STP or Cat6 STP (S/FTP preferred)</li>
+              <li>T568B color code on both ends</li>
+              <li>Max analog audio run: <strong>300 ft (90 m)</strong></li>
+              <li>AES/EBU digital: shorter runs recommended (100–150 ft ideal)</li>
+              <li>Standard 110-block or keystone patch panels — punch to T568B</li>
+              <li>Use shielded patch panels and shielded patch cables</li>
+              <li>Shield must be continuous throughout the run and bonded inside adapters</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3><Icon name="map-pin" /> StudioHub+ Pinout (T568B)</h3>
+            <table class="ref-table">
+              <thead><tr><th>Pin</th><th>Pair Color</th><th>Signal</th><th>Function</th></tr></thead
+              >
+              <tbody>
+                {
+                  shPins.map(([pin, pair, signal, fn]) => (
+                    <tr>
+                      <td class="mono">{pin}</td>
+                      <td class="whitespace-nowrap">
+                        <span class:list={['wire-dot', studiohubDot[pair]]} />
+                        {pair}
+                      </td>
+                      <td class="font-bold text-accent">{signal}</td>
+                      <td class="text-[11.5px]">{fn}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel mt-1">
+          <h3><Icon name="plug" /> Adapter Color Band Convention</h3>
+          <div class="result-grid mt-2">
+            <div class="result-item">
+              <div class="ri-label">
+                <span class:list={['wire-dot', bandDot.green]}></span>Green Band
+              </div>
+              <div class="ri-value ri-text">Left Channel or AES/EBU</div>
+            </div>
+            <div class="result-item">
+              <div class="ri-label">
+                <span class:list={['wire-dot', bandDot.red]}></span>Red Band
+              </div>
+              <div class="ri-value ri-text">Right Channel</div>
+            </div>
+            <div class="result-item">
+              <div class="ri-label">
+                <span class:list={['wire-dot', bandDot.white]}></span>No Band / Stereo
+              </div>
+              <div class="ri-value ri-text">Mini or Pigtail — carries both channels</div>
+            </div>
+            <div class="result-item">
+              <div class="ri-label">Orientation</div>
+              <div class="ri-value ri-text">
+                RJ-45 female onto patch cable; audio connector faces the gear
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel mt-1">
+          <h3><Icon name="scale-balanced" /> StudioHub vs IT Networking Standards</h3>
+          <div class="table-wrap">
+            <table class="ref-table">
+              <thead>
+                <tr
+                  ><th>Property</th><th>IT Networking (TIA-568)</th><th>StudioHub / AngryAudio</th
+                  ></tr
+                >
+              </thead>
+              <tbody>
+                {
+                  compare.map(([prop, it, bold, rest]) => (
+                    <tr>
+                      <td>
+                        <strong>{prop}</strong>
+                      </td>
+                      <td class="text-[12px]">{it}</td>
+                      <td class="text-[12px]">
+                        {bold && <strong>{bold}</strong>}
+                        {rest}
+                      </td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="tip mt-2.5">
+          <Icon name="book" />
+          Reference: <a
+            href="https://angryaudio.com/wp-content/uploads/2020/01/SHPrimer2001201.pdf"
+            target="_blank"
+            rel="noopener">StudioHub+ Primer (Angry Audio PDF)</a
+          > &nbsp;&nbsp; <a
+            href="https://docs.telosalliance.com/docs/rj-45-to-balanced-or-unbalanced-audio-cable-wiring"
+            target="_blank"
+            rel="noopener">Telos Alliance RJ-45 Audio Wiring Guide</a
+          >
+        </div>
+      </TabPanel>
+    </Tabs>
+  </TabPanel>
+</Tabs>

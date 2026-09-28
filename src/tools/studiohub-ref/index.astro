@@ -1,0 +1,297 @@
+---
+import Icon from '@/components/Icon.astro';
+import { bandDot, studiohubDot, studiohubPlusPins } from '@/data/wiring';
+
+const classicPins: [number, string, string, string][] = [
+  [1, 'Wht/Org', 'GND', 'Signal Ground'],
+  [2, 'Org/Wht', '+', 'Positive Signal'],
+  [3, 'Wht/Grn', '−', 'Negative Signal'],
+  [4, 'Blu/Wht', 'NC', 'Not Connected'],
+  [5, 'Wht/Blu', 'L+', 'Left Channel Positive'],
+  [6, 'Grn/Wht', 'NC', 'Not Connected'],
+  [7, 'Wht/Brn', 'R+', 'Right Channel Positive'],
+  [8, 'Brn/Wht', 'NC', 'Not Connected'],
+];
+
+type Band = keyof typeof bandDot;
+const bandLabel: Record<string, [Band, string]> = {
+  left: ['green', 'Green Band (Left)'],
+  leftAes: ['green', 'Green Band (Left/AES)'],
+  right: ['red', 'Red Band (Right)'],
+  stereo: ['white', 'Stereo (both channels)'],
+};
+
+const adapters: { name: string; desc: string; band: string; rows: string[][] }[] = [
+  {
+    name: 'ADAPT-XLRM / ADAPT-XLRF',
+    desc: 'XLR Male or Female — Left / Mono Balanced',
+    band: 'leftAes',
+    rows: [
+      ['Pin 1 (L+/AES+)', 'XLR Pin 2', 'Signal +'],
+      ['Pin 2 (L−/AES−)', 'XLR Pin 3', 'Signal −'],
+      ['Pin 4 + Shield', 'XLR Pin 1', 'Ground'],
+    ],
+  },
+  {
+    name: 'ADAPT-XLRM / ADAPT-XLRF',
+    desc: 'XLR Male or Female — Right Channel Balanced',
+    band: 'right',
+    rows: [
+      ['Pin 3 (R+)', 'XLR Pin 2', 'Signal +'],
+      ['Pin 6 (R−)', 'XLR Pin 3', 'Signal −'],
+      ['Pin 4 + Shield', 'XLR Pin 1', 'Ground'],
+    ],
+  },
+  {
+    name: 'ADAPT-TRS',
+    desc: '1/4″ or 1/8″ TRS — Left / Mono Balanced',
+    band: 'left',
+    rows: [
+      ['Pin 1 (L+)', 'Tip', 'Signal +'],
+      ['Pin 2 (L−)', 'Ring', 'Signal −'],
+      ['Pin 4 + Shield', 'Sleeve', 'Ground'],
+    ],
+  },
+  {
+    name: 'ADAPT-TRS',
+    desc: '1/4″ or 1/8″ TRS — Right Channel Balanced',
+    band: 'right',
+    rows: [
+      ['Pin 3 (R+)', 'Tip', 'Signal +'],
+      ['Pin 6 (R−)', 'Ring', 'Signal −'],
+      ['Pin 4 + Shield', 'Sleeve', 'Ground'],
+    ],
+  },
+  {
+    name: 'ADAPT-RCA',
+    desc: 'RCA / Phono — Left / Mono Unbalanced',
+    band: 'left',
+    rows: [
+      ['Pin 1 (L+)', 'Center Pin', 'Signal +'],
+      ['Pin 4 + Shield', 'Outer Shell', 'Ground/Shield'],
+    ],
+  },
+  {
+    name: 'ADAPT-RCA',
+    desc: 'RCA / Phono — Right Channel Unbalanced',
+    band: 'right',
+    rows: [
+      ['Pin 3 (R+)', 'Center Pin', 'Signal +'],
+      ['Pin 4 + Shield', 'Outer Shell', 'Ground/Shield'],
+    ],
+  },
+  {
+    name: 'ADAPT-MINI / ADAPT-MINIUNBAL',
+    desc: '1/8″ Stereo TRS — Left + Right Unbalanced',
+    band: 'stereo',
+    rows: [
+      ['Pin 1 (L+)', 'Tip', 'Left Channel'],
+      ['Pin 3 (R+)', 'Ring', 'Right Channel'],
+      ['Pin 4 + Shield', 'Sleeve', 'Ground'],
+    ],
+  },
+  {
+    name: 'ADAPT-PIGTAIL',
+    desc: 'Bare Wire Pigtail — Left / Mono Balanced',
+    band: 'left',
+    rows: [
+      ['Pin 1 (L+)', 'Red Wire', 'Signal +'],
+      ['Pin 2 (L−)', 'Black Wire', 'Signal −'],
+      ['Pin 4 + Shield', 'Bare/Shield Wire', 'Ground'],
+    ],
+  },
+];
+
+const notes = [
+  ['Cable Type', 'Shielded Cat5e or Cat6 STP required — unshielded UTP not recommended for audio'],
+  ['Max Length', 'Up to ~300 ft (90m) for analog; shorter recommended for AES/EBU digital'],
+  [
+    'AES/EBU Digital',
+    'Uses Pins 1 & 2 (same pair as Left analog). 110Ω impedance. Green Band adapters.',
+  ],
+  ['Ground (Pin 4)', 'Pin 4 and cable shield are bonded as audio GND inside all standard adapters'],
+  ['DC Power', 'Pins 7 (+15V) and 8 (−15V) only active on StudioHub+ powered Cubes/Hubs'],
+  [
+    'Compatibility',
+    'Works with Axia (Telos Alliance), Wheatstone, and all StudioHub+ equipped gear',
+  ],
+  ['Patch Panels', 'Standard 110-block or keystone patch panels work; punch down to T568B'],
+];
+---
+
+<div class="panel">
+  <h3><Icon name="map-pin" /> About StudioHub+</h3>
+  <p>
+    StudioHub+ (now <strong>Angry Audio</strong>) is a broadcast audio wiring standard using <strong
+      >shielded Cat5e/Cat6 STP cable and RJ-45 connectors</strong
+    > to carry balanced stereo audio throughout a facility. Wiring follows the <strong
+      >T568B color standard</strong
+    >, compatible with standard Ethernet patch panels and keystone jacks. Pin 4 and the cable shield
+    serve as the common audio ground.
+  </p>
+  <p class="mt-1.5 text-[12px] text-text3">
+    <Icon name="bolt" size={12} class="inline align-[-1px] text-yellow" /> Pins 7 &amp; 8 carry optional
+    &plusmn;15V DC when used with StudioHub+ powered Cubes or Hubs. <strong
+      >Do NOT connect to Ethernet switches.</strong
+    >
+  </p>
+</div>
+
+<div class="form-row">
+  <div class="panel">
+    <h3>
+      StudioHub+ &ldquo;Plus&rdquo; Pinout <span class="text-[11px] font-normal text-text3"
+        >(T568B &mdash; Current Standard)</span
+      >
+    </h3>
+    <div class="table-wrap">
+      <table class="ref-table">
+        <thead><tr><th>Pin</th><th>Color Pair</th><th>Signal</th><th>Description</th></tr></thead>
+        <tbody>
+          {
+            studiohubPlusPins.map(([pin, pair, signal, desc]) => (
+              <tr>
+                <td class="mono">{pin}</td>
+                <td class="whitespace-nowrap">
+                  <span class:list={['wire-dot', studiohubDot[pair]]} />
+                  {pair}
+                </td>
+                <td>
+                  <strong>{signal}</strong>
+                </td>
+                <td class="text-[11px] text-text3">{desc}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>
+      StudioHub &ldquo;Classic&rdquo; Pinout <span class="text-[11px] font-normal text-text3"
+        >(Legacy)</span
+      >
+    </h3>
+    <div class="table-wrap">
+      <table class="ref-table">
+        <thead><tr><th>Pin</th><th>Color Pair</th><th>Signal</th><th>Description</th></tr></thead>
+        <tbody>
+          {
+            classicPins.map(([pin, pair, signal, desc]) => (
+              <tr>
+                <td class="mono">{pin}</td>
+                <td class="whitespace-nowrap">
+                  <span class:list={['wire-dot', studiohubDot[pair]]} />
+                  {pair}
+                </td>
+                <td>
+                  <strong>{signal}</strong>
+                </td>
+                <td class="text-[11px] text-text3">{desc}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="warn mt-2.5">
+      <Icon name="triangle-exclamation" />
+      <strong>Classic</strong> is legacy. Use <strong>Plus</strong> for new installs. Adapters are NOT
+      cross-compatible between Classic and Plus.
+    </div>
+  </div>
+</div>
+
+<div class="panel mb-3.5">
+  <h3><Icon name="building" /> Adapter Band Color Convention</h3>
+  <div class="result-grid mt-2">
+    <div class="result-item">
+      <div class="ri-label"><span class:list={['wire-dot', bandDot.green]}></span>Green Band</div>
+      <div class="ri-value ri-text">Left Channel / AES/EBU</div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label"><span class:list={['wire-dot', bandDot.red]}></span>Red Band</div>
+      <div class="ri-value ri-text">Right Channel (Stereo R)</div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">
+        <span class:list={['wire-dot', bandDot.white]}></span>Stereo / No Band
+      </div>
+      <div class="ri-value ri-text">Mini / Pigtail carry both channels</div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">Orientation</div>
+      <div class="ri-value ri-text">
+        RJ-45 Female onto patch cable; audio connector faces the gear
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 class="section-label">Adapter Pinout Reference</h3>
+{
+  adapters.map((a) => {
+    const [color, label] = bandLabel[a.band];
+    return (
+      <div class="panel mb-3">
+        <h3 class="flex-wrap">
+          <span>{a.name}</span>
+          <span class="rounded-full bg-surface2 px-2 py-0.5 text-[11px] font-semibold text-text3">
+            <span class:list={['wire-dot', bandDot[color]]} />
+            {label}
+          </span>
+        </h3>
+        <p class="mb-2 text-[12px] text-text3">{a.desc}</p>
+        <table class="ref-table">
+          <thead>
+            <tr>
+              <th>RJ-45 Pin</th>
+              <th>Adapter Connector</th>
+              <th>Function</th>
+            </tr>
+          </thead>
+          <tbody>
+            {a.rows.map(([pin, connector, fn]) => (
+              <tr>
+                <td class="mono">{pin}</td>
+                <td class="mono text-green">{connector}</td>
+                <td>{fn}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  })
+}
+
+<div class="panel mt-1">
+  <h3><Icon name="ruler" /> Wiring Notes</h3>
+  <table class="ref-table">
+    <thead><tr><th>Topic</th><th>Detail</th></tr></thead>
+    <tbody>
+      {
+        notes.map(([topic, detail]) => (
+          <tr>
+            <td>
+              <strong>{topic}</strong>
+            </td>
+            <td>{detail}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+<div class="tip">
+  Reference: <a
+    href="https://studiohub.com/wp-content/uploads/2019/10/AAPinoutandAdapterGuide.pdf"
+    target="_blank"
+    rel="noopener">StudioHub+ AA Pinout &amp; Adapter Guide (PDF)</a
+  > &nbsp;|&nbsp; <a
+    href="https://docs.telosalliance.com/docs/rj-45-to-balanced-or-unbalanced-audio-cable-wiring"
+    target="_blank"
+    rel="noopener">Telos Alliance RJ-45 Audio Wiring</a
+  >
+</div>

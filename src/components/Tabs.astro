@@ -24,7 +24,7 @@ const { tabs } = Astro.props;
           tabindex={i === 0 ? 0 : -1}
           class="tab"
         >
-          {tab.icon && <Icon name={tab.icon} size={13} />}
+          {tab.icon && <Icon name={tab.icon} size={14.5} />}
           {tab.label}
         </button>
       ))
@@ -34,8 +34,12 @@ const { tabs } = Astro.props;
 </div>
 
 <script>
-  function select(root: Element, tab: HTMLElement, focus = false) {
-    for (const t of root.querySelectorAll<HTMLElement>(':scope > [role=tablist] > [role=tab]')) {
+  const tabsOf = (root: Element) => [
+    ...root.querySelectorAll<HTMLElement>(':scope > [role=tablist] > [role=tab]'),
+  ];
+
+  function select(tab: HTMLElement, focus = false) {
+    for (const t of tabsOf(tab.closest('[data-tabs]')!)) {
       const on = t === tab;
       t.setAttribute('aria-selected', String(on));
       t.tabIndex = on ? 0 : -1;
@@ -46,20 +50,27 @@ const { tabs } = Astro.props;
   }
 
   for (const root of document.querySelectorAll('[data-tabs]')) {
-    const tabs = [...root.querySelectorAll<HTMLElement>(':scope > [role=tablist] > [role=tab]')];
+    const tabs = tabsOf(root);
     for (const tab of tabs) {
       tab.addEventListener('click', () => {
-        select(root, tab);
+        select(tab);
         history.replaceState(null, '', `#${tab.getAttribute('aria-controls')}`);
       });
       tab.addEventListener('keydown', (e) => {
         const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
         if (!step) return;
-        const next = tabs[(tabs.indexOf(tab) + step + tabs.length) % tabs.length];
-        select(root, next, true);
+        select(tabs[(tabs.indexOf(tab) + step + tabs.length) % tabs.length], true);
       });
     }
-    const fromHash = tabs.find((t) => `#${t.getAttribute('aria-controls')}` === location.hash);
-    if (fromHash) select(root, fromHash);
+  }
+
+  // Open the panel a #hash names, and every tab panel it is nested inside.
+  const target = location.hash
+    ? document.getElementById(decodeURIComponent(location.hash.slice(1)))
+    : null;
+  for (let panel = target?.closest('[role=tabpanel]'); panel;) {
+    const tab = document.getElementById(`tab-${panel.id}`);
+    if (tab) select(tab);
+    panel = panel.parentElement?.closest('[role=tabpanel]') ?? null;
   }
 </script>

@@ -1,0 +1,101 @@
+---
+import Icon from '@/components/Icon.astro';
+
+const layers = [
+  {
+    n: 7,
+    name: 'Application',
+    color: 'bg-[#e74c3c]',
+    pdu: 'Data',
+    protos: 'HTTP, HTTPS, FTP, SSH, DNS, DHCP, SMTP, SNMP, Telnet, LDAP, RDP, SIP',
+    desc: 'End-user services and application protocols. Where users interact with network services.',
+  },
+  {
+    n: 6,
+    name: 'Presentation',
+    color: 'bg-[#e67e22]',
+    pdu: 'Data',
+    protos: 'SSL/TLS, JPEG, PNG, MPEG, ASCII, GIF, encryption/compression',
+    desc: 'Data formatting, encryption, compression, and translation between application and network formats.',
+  },
+  {
+    n: 5,
+    name: 'Session',
+    color: 'bg-[#f1c40f]',
+    pdu: 'Data',
+    protos: 'NetBIOS, RPC, PPTP, SCP, NFS, SQL sessions',
+    desc: 'Session management — establishes, maintains, and terminates connections between applications.',
+  },
+  {
+    n: 4,
+    name: 'Transport',
+    color: 'bg-[#2ecc71]',
+    pdu: 'Segment',
+    protos: 'TCP (reliable, connection-oriented), UDP (fast, connectionless)',
+    desc: 'End-to-end delivery, segmentation, reassembly, flow control, error recovery. Ports live here.',
+  },
+  {
+    n: 3,
+    name: 'Network',
+    color: 'bg-[#3498db]',
+    pdu: 'Packet',
+    protos: 'IPv4, IPv6, ICMP, OSPF, BGP, EIGRP, ARP, IPSec',
+    desc: 'Logical addressing (IP) and routing. Devices: Router, Layer 3 Switch.',
+  },
+  {
+    n: 2,
+    name: 'Data Link',
+    color: 'bg-[#2980b9]',
+    pdu: 'Frame',
+    protos: 'Ethernet, 802.11 WiFi, STP, VLANs, PPP, LLDP, CDP, ARP',
+    desc: 'MAC addressing, switching, error detection (CRC), frame delivery. Devices: Switch, Bridge, WAP.',
+  },
+  {
+    n: 1,
+    name: 'Physical',
+    color: 'bg-[#8e44ad]',
+    pdu: 'Bits',
+    protos: 'Copper (Cat5e/6/6a), Fiber (OM3/OM4/OS2), Coax, WiFi radio, Hubs, Repeaters',
+    desc: 'Physical transmission — cables, connectors, signals, voltages, light pulses, radio waves.',
+  },
+];
+---
+
+<div class="tip mb-3.5">
+  <Icon name="graduation-cap" />
+  <strong>Not sure what layers mean?</strong> Think of it like sending a letter — you write it (Layer
+  7), seal it in an envelope (Layer 6–5), address it (Layer 3–4), hand it to the postal worker (Layer
+  2), and they carry it physically (Layer 1). Each layer adds a wrapper to the data.
+</div>
+<div class="tip">
+  <Icon name="lightbulb" />
+  <strong>Top-down:</strong> All People Seem To Need Data Processing &nbsp;|&nbsp;
+  <strong>Bottom-up:</strong> Please Do Not Throw Sausage Pizza Away
+</div>
+
+<ol class="mt-3 flex list-none flex-col gap-[3px] p-0">
+  {
+    layers.map((l) => (
+      <li class="flex overflow-hidden rounded-field">
+        <div
+          class:list={[
+            'flex w-10 shrink-0 items-center justify-center text-[16px] font-extrabold text-white',
+            l.color,
+          ]}
+        >
+          {l.n}
+        </div>
+        <div class="flex-1 border border-line bg-surface px-3.5 py-2.5">
+          <h4 class="m-0 text-[13px] font-bold">
+            {l.name}
+            <span class="ml-2 rounded bg-white/8 px-1.5 py-px text-[10px] font-bold tracking-wide uppercase">
+              {l.pdu}
+            </span>
+          </h4>
+          <p class="m-0 mt-[3px] text-[11.5px] text-text2">{l.desc}</p>
+          <p class="m-0 mt-1 text-[11px] text-accent">{l.protos}</p>
+        </div>
+      </li>
+    ))
+  }
+</ol>

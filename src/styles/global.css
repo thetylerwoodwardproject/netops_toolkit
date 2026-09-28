@@ -90,6 +90,29 @@
   .warn {
     @apply border-orange bg-orange/10;
   }
+  /* An icon leading a tip or warning, in place of the original's emoji. */
+  .tip > svg:first-child,
+  .warn > svg:first-child {
+    @apply mr-1 inline align-[-2px];
+  }
+  .tip > svg:first-child {
+    @apply text-accent;
+  }
+  .warn > svg:first-child {
+    @apply text-orange;
+  }
+  /* Bulleted list inside a panel. */
+  .panel-list {
+    @apply ml-[18px] list-disc text-[12.5px] leading-loose text-text2;
+  }
+  /* Small uppercase heading between panels. */
+  .section-label {
+    @apply mb-2.5 text-[13px] font-bold tracking-wider text-text3 uppercase;
+  }
+  /* A wire color swatch: <span class="wire-dot bg-[#f97316]">. */
+  .wire-dot {
+    @apply mr-1.5 inline-block size-2.5 rounded-full border border-white/20 align-[-1px];
+  }
 
   .table-wrap {
     @apply max-h-[480px] overflow-auto rounded-card border border-line;
@@ -173,6 +196,10 @@
   .ri-value.orange {
     @apply text-orange;
   }
+  /* A tile holding a sentence rather than a value. */
+  .ri-value.ri-text {
+    @apply font-sans text-[12px] text-text2;
+  }
 
   .code {
     @apply relative my-2.5 overflow-x-auto rounded-field border border-line bg-bg p-3.5 font-mono text-[12px] leading-relaxed break-words whitespace-pre-wrap text-text;
@@ -182,6 +209,6 @@
     @apply mb-4 flex flex-wrap gap-0.5 rounded-field border border-line bg-bg p-[3px];
   }
   .tab {
-    @apply inline-flex min-w-[70px] flex-auto cursor-pointer items-center justify-center gap-1.5 rounded-field px-2.5 py-1.5 text-[11px] leading-[1.21] font-semibold text-text3 transition-colors hover:text-text aria-selected:bg-surface2 aria-selected:text-accent xs:px-4 xs:py-[7px] xs:text-[12px] md:flex-none;
+    @apply inline-flex min-w-[70px] flex-auto cursor-pointer items-center justify-center gap-1.5 rounded-field px-2.5 py-[7px] text-[11px] leading-[1.21] font-semibold text-text3 transition-colors hover:text-text aria-selected:bg-surface2 aria-selected:text-accent xs:px-4 xs:text-[12px] md:flex-none;
   }
 }
