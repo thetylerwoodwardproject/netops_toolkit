@@ -19,4 +19,5 @@ toolkit.config.local.ts
 
 # Notes for this box only; the repo is public
 CLAUDE.md
+PORTING.md
 .parity/
