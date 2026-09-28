@@ -8,14 +8,14 @@ const { activeTool } = Astro.props as { activeTool?: string };
 ---
 
 <header
-  class="sticky top-0 z-30 flex h-[57px] items-center gap-3 border-b border-line bg-bg/85 px-4 backdrop-blur-lg sm:gap-4 sm:px-6"
+  class="sticky top-0 z-30 flex h-15 items-center gap-2.5 border-b border-line bg-bg/85 px-3.5 backdrop-blur-lg md:gap-4 md:px-6"
 >
   <a href="/" class="flex shrink-0 items-center gap-2.5 text-text no-underline hover:no-underline">
     <Icon name={toolkit.icon} size={22} class="text-accent" />
     <span class="text-[17px] font-bold tracking-tight">{toolkit.name}</span>
   </a>
 
-  <div class="min-w-0 flex-1 sm:max-w-[480px]" data-island="search" data-ssr>
+  <div class="min-w-0 flex-1 md:max-w-[480px]" data-island="search" data-ssr>
     <Search />
   </div>
 
@@ -33,7 +33,7 @@ const { activeTool } = Astro.props as { activeTool?: string };
       <Icon name="bars" size={18} />
     </summary>
     <div
-      class="fixed inset-x-0 top-[57px] bottom-0 overflow-y-auto border-t border-line bg-bg2 shadow-2xl"
+      class="fixed inset-x-0 top-15 bottom-0 overflow-y-auto border-t border-line bg-bg2 shadow-2xl"
     >
       <Sidebar activeTool={activeTool} />
     </div>

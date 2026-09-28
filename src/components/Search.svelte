@@ -65,13 +65,13 @@
     bind:this={input}
     bind:value={query}
     type="search"
-    placeholder="Search tools…"
+    placeholder="Search…"
     aria-label="Search tools"
     autocomplete="off"
     role="combobox"
     aria-expanded={open && results.length > 0}
     aria-controls="search-results"
-    class="w-full rounded-lg border border-line bg-surface py-[9px] pr-3 pl-9 text-[13px] text-text outline-none placeholder:text-text3 focus:border-accent focus:ring-3 focus:ring-accent/15 sm:pr-12"
+    class="w-full rounded-lg border border-line bg-surface py-[9px] pr-3 pl-9 text-[16px] leading-[1.21] text-text outline-none placeholder:text-text3 focus:border-accent focus:ring-3 focus:ring-accent/15 xs:text-[13px] md:pr-12"
     onfocus={() => {
       open = true;
       load();
@@ -81,7 +81,7 @@
     onkeydown={onKeydown}
   />
   <kbd
-    class="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 rounded border border-line bg-bg px-1.5 text-[11px] text-text3 sm:block"
+    class="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 rounded border border-line bg-bg px-1.5 text-[11px] text-text3 md:block"
     >⌘K</kbd
   >
 

@@ -18,7 +18,7 @@ import { categoryClasses } from '@/data/categories';
             <span class:list={['size-1.5 rounded-full', colors.dot]} />
             {cat.label}
           </h2>
-          <ul class="m-0 grid list-none grid-cols-1 gap-2.5 p-0 sm:grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
+          <ul class="m-0 grid list-none grid-cols-1 gap-2.5 p-0 md:grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
             {tools
               .filter((t) => t.category === cat.id)
               .map((t) => (

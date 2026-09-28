@@ -5,7 +5,7 @@ import Icon from './Icon.astro';
 const { note, links } = toolkit.footer;
 ---
 
-<footer class="mt-12 border-t border-line bg-bg2 px-6 py-6 text-center text-[11px] text-text3">
+<footer class="mt-12 border-t border-line bg-bg2 p-4 text-center text-[11px] text-text3 md:p-6">
   {note && <p class="m-0 mb-2 text-[12px] text-text2">{note}</p>}
   {
     links.length > 0 && (

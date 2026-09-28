@@ -8,6 +8,14 @@
  * fork changes one setting instead of editing this file.
  */
 @theme {
+  /*
+   * The original toolkit's layout switched at max-width 768px (sidebar off,
+   * one column) and 480px (small phones). md and xs reproduce those exactly:
+   * md: starts at 769px, xs: at 481px.
+   */
+  --breakpoint-xs: 30.0625rem;
+  --breakpoint-md: 48.0625rem;
+
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', monospace;
 
@@ -39,12 +47,13 @@
 }
 
 @layer base {
+  /* 14px text like the original, set on body rather than html so Tailwind's
+     rem-based sizes (w-60 = 240px) stay at their usual values. */
   html {
-    font-size: 14px;
     color-scheme: dark;
   }
   body {
-    @apply bg-bg font-sans leading-normal text-text antialiased;
+    @apply bg-bg font-sans text-[14px] leading-normal text-text antialiased;
   }
   a {
     @apply text-accent no-underline hover:underline;
@@ -63,7 +72,7 @@
  */
 @layer components {
   .panel {
-    @apply mb-3.5 overflow-x-auto rounded-card border border-line bg-surface p-[18px];
+    @apply mb-3.5 overflow-x-auto rounded-card border border-line bg-surface p-3 xs:p-[18px];
   }
   .panel h3 {
     @apply mb-2.5 flex items-center gap-2 text-[14px] font-bold text-text;
@@ -107,9 +116,12 @@
   .form-label {
     @apply mb-1.5 block text-[12px] font-semibold text-text2;
   }
+  /* Inputs, buttons and tabs use Inter's own line-height (1.21), which is what
+     the original's browser-default 'normal' came to, so controls keep its heights. */
+  /* 16px below xs: iOS zooms the page on focusing any smaller input. */
   .form-input,
   .form-select {
-    @apply w-full rounded-field border border-line bg-bg px-3 py-[9px] text-[13px] text-text transition-colors outline-none placeholder:text-text3 focus:border-accent;
+    @apply w-full rounded-field border border-line bg-bg px-3 py-[9px] text-[16px] leading-[1.21] text-text transition-colors outline-none placeholder:text-text3 focus:border-accent xs:text-[13px];
   }
   .form-input.mono {
     @apply font-mono;
@@ -118,14 +130,14 @@
     @apply min-h-20 resize-y font-mono text-[12px];
   }
   .form-row {
-    @apply grid gap-3 sm:grid-cols-2;
+    @apply grid gap-3 md:grid-cols-2;
   }
   .form-row-3 {
-    @apply grid gap-3 sm:grid-cols-3;
+    @apply grid gap-3 md:grid-cols-3;
   }
 
   .btn {
-    @apply cursor-pointer rounded-field px-[18px] py-[9px] text-[13px] font-semibold transition-colors;
+    @apply cursor-pointer rounded-field px-[18px] py-[9px] text-[13px] leading-[1.21] font-semibold transition-colors;
   }
   .btn-primary {
     @apply bg-accent text-accent-ink hover:bg-accent-hover;
@@ -144,10 +156,10 @@
     @apply mt-4 rounded-card border border-line bg-bg p-4;
   }
   .result-grid {
-    @apply grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-2.5;
+    @apply grid grid-cols-1 gap-2.5 md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))];
   }
   .result-item {
-    @apply rounded-field border border-line bg-surface px-3 py-2.5;
+    @apply rounded-field border border-line bg-surface px-2.5 py-2 xs:px-3 xs:py-2.5;
   }
   .ri-label {
     @apply mb-0.5 text-[10px] font-semibold tracking-wide text-text3 uppercase;
@@ -170,6 +182,6 @@
     @apply mb-4 flex flex-wrap gap-0.5 rounded-field border border-line bg-bg p-[3px];
   }
   .tab {
-    @apply inline-flex cursor-pointer items-center gap-1.5 rounded-field px-4 py-[7px] text-[12px] font-semibold text-text3 transition-colors hover:text-text aria-selected:bg-surface2 aria-selected:text-accent;
+    @apply inline-flex min-w-[70px] flex-auto cursor-pointer items-center justify-center gap-1.5 rounded-field px-2.5 py-1.5 text-[11px] leading-[1.21] font-semibold text-text3 transition-colors hover:text-text aria-selected:bg-surface2 aria-selected:text-accent xs:px-4 xs:py-[7px] xs:text-[12px] md:flex-none;
   }
 }
