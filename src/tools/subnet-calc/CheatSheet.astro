@@ -1,0 +1,73 @@
+---
+import Icon from '@/components/Icon.astro';
+
+const subnets: [number, string, string, number | string, string][] = [
+  [32, '255.255.255.255', '0.0.0.0', 1, 'Host route'],
+  [31, '255.255.255.254', '0.0.0.1', 2, 'P2P link'],
+  [30, '255.255.255.252', '0.0.0.3', 2, 'P2P link'],
+  [29, '255.255.255.248', '0.0.0.7', 6, 'Small'],
+  [28, '255.255.255.240', '0.0.0.15', 14, 'Small'],
+  [27, '255.255.255.224', '0.0.0.31', 30, 'Workgroup'],
+  [26, '255.255.255.192', '0.0.0.63', 62, 'Dept.'],
+  [25, '255.255.255.128', '0.0.0.127', 126, 'Half C'],
+  [24, '255.255.255.0', '0.0.0.255', 254, 'Standard LAN'],
+  [23, '255.255.254.0', '0.0.1.255', 510, ''],
+  [22, '255.255.252.0', '0.0.3.255', 1022, ''],
+  [21, '255.255.248.0', '0.0.7.255', 2046, ''],
+  [20, '255.255.240.0', '0.0.15.255', 4094, 'Large'],
+  [19, '255.255.224.0', '0.0.31.255', 8190, ''],
+  [18, '255.255.192.0', '0.0.63.255', 16382, ''],
+  [17, '255.255.128.0', '0.0.127.255', 32766, ''],
+  [16, '255.255.0.0', '0.0.255.255', 65534, 'Class B'],
+  [8, '255.0.0.0', '0.255.255.255', '16.7M', 'Class A'],
+];
+---
+
+<div class="table-wrap">
+  <table class="ref-table">
+    <thead>
+      <tr><th>CIDR</th><th>Subnet Mask</th><th>Wildcard</th><th>Usable Hosts</th><th>Note</th></tr>
+    </thead>
+    <tbody>
+      {
+        subnets.map(([cidr, mask, wildcard, hosts, note]) => (
+          <tr>
+            <td class="mono">/{cidr}</td>
+            <td class="mono">{mask}</td>
+            <td class="mono">{wildcard}</td>
+            <td>{typeof hosts === 'number' ? hosts.toLocaleString('en-US') : hosts}</td>
+            <td>{note}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="panel mt-3.5">
+  <h3><Icon name="lock" /> Private IP Ranges (RFC 1918)</h3>
+  <table class="ref-table">
+    <thead><tr><th>Class</th><th>Range</th><th>CIDR</th><th>Hosts</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>A</td><td class="mono">10.0.0.0 – 10.255.255.255</td><td class="mono">/8</td><td
+          >16,777,214</td
+        >
+      </tr>
+      <tr>
+        <td>B</td><td class="mono">172.16.0.0 – 172.31.255.255</td><td class="mono">/12</td><td
+          >1,048,574</td
+        >
+      </tr>
+      <tr>
+        <td>C</td><td class="mono">192.168.0.0 – 192.168.255.255</td><td class="mono">/16</td><td
+          >65,534</td
+        >
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="tip">
+  <Icon name="lightbulb" class="mr-1 inline align-[-2px] text-accent" /> Usable hosts = 2<sup>n</sup
+  > − 2 (where n = host bits). Subtract 2 for network and broadcast addresses.
+</div>

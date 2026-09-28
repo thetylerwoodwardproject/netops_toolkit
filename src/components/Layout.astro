@@ -1,0 +1,56 @@
+---
+import '@/styles/global.css';
+import { createHash } from 'node:crypto';
+import { toolkit } from '@/config';
+import Header from './Header.astro';
+import Sidebar from './Sidebar.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  activeTool?: string;
+}
+
+const { title, description = toolkit.tagline ?? toolkit.name, activeTool } = Astro.props;
+const fullTitle = title ? `${title} | ${toolkit.name}` : toolkit.name;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+// theme.css and the favicon are unfingerprinted; tie their URLs to what they contain.
+const v = createHash('sha256').update(`${toolkit.accent}${toolkit.icon}`).digest('hex').slice(0, 8);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#111214" />
+    <link rel="icon" href={`/favicon.svg?v=${v}`} type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="stylesheet" href={`/theme.css?v=${v}`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={toolkit.name} />
+    <meta property="og:title" content={title ?? toolkit.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+  </head>
+  <body>
+    <Header activeTool={activeTool} />
+    <div class="mx-auto flex max-w-[1440px]">
+      <aside
+        class="sticky top-[57px] hidden h-[calc(100dvh-57px)] w-60 shrink-0 overflow-y-auto border-r border-line bg-bg2 md:block"
+      >
+        <Sidebar activeTool={activeTool} />
+      </aside>
+      <div class="flex min-w-0 flex-1 flex-col">
+        <main class="w-full max-w-[1200px] flex-1 p-4 sm:p-6">
+          <slot />
+        </main>
+        <Footer />
+      </div>
+    </div>
+  </body>
+</html>

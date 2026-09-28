@@ -1,0 +1,16 @@
+#!/bin/sh
+# Build with the stock toolkit.config.ts only, as a fresh clone would, and make
+# sure nothing from this instance's toolkit.config.local.ts leaks into it.
+# Pass the strings that must not appear, e.g.:  tools/check-default example.com "Acme"
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+OUT="$ROOT/.build-default"
+
+cd "$ROOT"
+trap 'rm -rf "$OUT"' EXIT INT TERM
+TOOLKIT_IGNORE_LOCAL=1 npx astro build --outDir "$OUT" >/dev/null
+n=$#
+for s in "$@"; do set -- "$@" --forbid "$s"; done
+shift "$n"
+node tools/verify.mjs "$OUT" "$@"

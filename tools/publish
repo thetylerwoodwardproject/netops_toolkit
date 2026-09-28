@@ -1,0 +1,57 @@
+#!/bin/sh
+# Build a timestamped release and swap it in atomically.
+#
+# The web server serves $LINK, a symlink into .releases/. The swap is the last
+# thing that happens and only on success, so a failed build or verification
+# leaves the currently published release untouched and still serving.
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+RELEASES="$ROOT/.releases"
+STAMP=$(date -u +%Y%m%dT%H%M%SZ)
+RELEASE="$RELEASES/$STAMP"
+LOCK="$ROOT/.publish.lock"
+LINK=${PUBLISH_LINK:-"$ROOT/dist"}
+KEEP=${KEEP_RELEASES:-5}
+
+mkdir -p "$RELEASES"
+exec 9>"$LOCK"
+flock -n 9 || {
+  printf '%s\n' "A publish is already running." >&2
+  exit 1
+}
+
+cd "$ROOT"
+
+# Covers every way out, Ctrl-C included, so a failed build leaves no orphan.
+trap 'rm -rf "$RELEASE"' EXIT INT TERM
+
+npx astro check
+npx astro build --outDir "$RELEASE"
+node tools/verify.mjs "$RELEASE"
+
+# The web server usually runs as another user; make the release readable.
+chmod -R a+rX "$RELEASE"
+
+trap - EXIT INT TERM
+
+# Relative when the link sits in the checkout root, so the checkout can be
+# moved or renamed without the live link dangling.
+if [ "$(dirname -- "$LINK")" = "$ROOT" ]; then
+  TARGET=".releases/$STAMP"
+else
+  TARGET="$RELEASE"
+fi
+
+rm -f "$LINK.next"
+ln -s "$TARGET" "$LINK.next"
+mv -Tf "$LINK.next" "$LINK" # same directory, so the replace is atomic
+
+# Keep the newest $KEEP releases, and never whatever the link resolves to.
+CURRENT=$(readlink -f "$LINK")
+for old in $(ls -1d "$RELEASES"/*/ 2>/dev/null | sort | head -n "-$KEEP"); do
+  [ "$(readlink -f "$old")" = "$CURRENT" ] && continue
+  rm -rf "$old"
+done
+
+printf 'Published %s -> %s\n' "$RELEASE" "$LINK"

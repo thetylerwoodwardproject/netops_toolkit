@@ -1,0 +1,28 @@
+---
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+import Calculator from './Calculator.svelte';
+import CheatSheet from './CheatSheet.astro';
+import Multicast from './Multicast.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'calculator', label: 'Calculator', icon: 'calculator' },
+    { id: 'cheat-sheet', label: 'Cheat Sheet', icon: 'clipboard-list' },
+    { id: 'multicast', label: 'Multicast', icon: 'tower-broadcast' },
+  ]}
+>
+  <TabPanel id="calculator" selected>
+    <div data-island="subnet-calc" data-ssr><Calculator /></div>
+  </TabPanel>
+  <TabPanel id="cheat-sheet"><CheatSheet /></TabPanel>
+  <TabPanel id="multicast"><Multicast /></TabPanel>
+</Tabs>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Calculator from './Calculator.svelte';
+
+  start('[data-island="subnet-calc"]', Calculator);
+</script>

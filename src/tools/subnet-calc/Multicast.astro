@@ -1,0 +1,350 @@
+---
+import Icon from '@/components/Icon.astro';
+---
+
+<div class="panel">
+  <h3><Icon name="earth-americas" /> IPv4 Multicast Address Space (224.0.0.0/4)</h3>
+  <p>
+    Multicast uses Class D addresses — <code>224.0.0.0</code> through <code>239.255.255.255</code>.
+    Unlike unicast (one-to-one) or broadcast (one-to-all), multicast delivers to a subscribed group.
+    Routers use IGMP locally and PIM between routers to manage group membership and distribution
+    trees.
+  </p>
+</div>
+
+<div class="table-wrap">
+  <table class="ref-table">
+    <thead><tr><th>Range</th><th>Block Name</th><th>RFC / Scope</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr
+        ><td class="mono">224.0.0.0 – 224.0.0.255</td><td><strong>Link-Local Control</strong></td
+        ><td>RFC 5771</td><td
+          >Never forwarded by routers. Protocol-use only (OSPF, EIGRP, PIM, VRRP…)</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.1.0 – 224.0.1.255</td><td>Internetwork Control</td><td>IANA</td><td
+          >Globally routable control traffic (NTP, RP-announce, etc.)</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.2.0 – 224.0.255.255</td><td>AD-HOC Block I</td><td>RFC 5771</td><td
+          >Globally routable, miscellaneous assigned addresses</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.1.0.0 – 231.255.255.255</td><td>Global Scope (General)</td><td
+          >RFC 5771</td
+        ><td>Public multicast streams, applications, conferencing</td></tr
+      >
+      <tr
+        ><td class="mono">232.0.0.0/8</td><td>Source-Specific Multicast (SSM)</td><td>RFC 4607</td
+        ><td
+          >Receiver specifies both group and source — no RP needed. Preferred for broadcast/AV
+          delivery.</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">233.0.0.0/8</td><td>GLOP Addressing</td><td>RFC 3180</td><td
+          >ASN embedded in 2nd/3rd octets. AS 65000 = 233.253.232.0/24. Deprecated for new
+          deployments.</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">234.0.0.0/8</td><td>Unicast-Prefix-Based</td><td>RFC 6034</td><td
+          >Derived from unicast prefix — avoids manual coordination.</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">239.0.0.0/8</td><td><strong>Administratively Scoped</strong></td><td
+          >RFC 2365</td
+        ><td
+          >Private multicast — like RFC 1918 for unicast. Use freely inside your org; won't leak to
+          Internet.</td
+        ></tr
+      >
+    </tbody>
+  </table>
+</div>
+
+<div class="panel mt-3.5">
+  <h3><Icon name="map-pin" /> Well-Known Link-Local Addresses (224.0.0.x)</h3>
+  <div class="tip mb-2.5">
+    These are <strong>never forwarded by routers</strong>. TTL = 1 by default. Essential for
+    protocol operation on directly connected segments.
+  </div>
+</div>
+<div class="table-wrap">
+  <table class="ref-table">
+    <thead><tr><th>Address</th><th>Protocol / Use</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr
+        ><td class="mono">224.0.0.1</td><td>All Hosts (All Systems)</td><td
+          >Every multicast-capable host on the segment</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.0.2</td><td>All Routers</td><td
+          >All multicast routers on the segment</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.0.4</td><td>DVMRP Routers</td><td
+          >Distance Vector Multicast Routing Protocol (legacy)</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.0.5</td><td>OSPF — All Routers</td><td
+          >All OSPF routers (Hello, LSAs)</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.0.6</td><td>OSPF — DR/BDR</td><td
+          >Designated Router / Backup DR only</td
+        ></tr
+      >
+      <tr><td class="mono">224.0.0.9</td><td>RIPv2</td><td>All RIPv2 routers</td></tr>
+      <tr
+        ><td class="mono">224.0.0.10</td><td>EIGRP</td><td>All EIGRP routers — Hello packets</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.0.12</td><td>DHCP Relay (Bootstrap)</td><td
+          >BOOTP/DHCP server discovery</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.0.13</td><td>PIM — All PIM Routers</td><td
+          >Protocol Independent Multicast Hellos</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.0.18</td><td>VRRP</td><td>Virtual Router Redundancy Protocol</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.0.19–21</td><td>IS-IS over IP</td><td
+          >Intermediate System to Intermediate System</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.0.22</td><td>IGMPv3 Reports</td><td
+          >Membership reports sent to this address</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.0.107</td><td>PTPv2 / IEEE 1588</td><td
+          >PTP peer-delay messages (P2P transport)</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.1.1</td><td>NTP — Network Time Protocol</td><td
+          >Globally routable NTP multicast</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.0.1.129</td><td>PTPv2 / IEEE 1588</td><td
+          >PTP primary / Sync messages (E2E transport)</td
+        ></tr
+      >
+    </tbody>
+  </table>
+</div>
+
+<div class="panel mt-3.5">
+  <h3><Icon name="tower-broadcast" /> Broadcast &amp; AV Multicast Addressing</h3>
+  <p>
+    Broadcast and AV-over-IP standards rely heavily on multicast within the <code>239.0.0.0/8</code> administratively
+    scoped block and, increasingly, SSM <code>232.0.0.0/8</code>. Below are common allocations used
+    in broadcast facilities.
+  </p>
+</div>
+<div class="table-wrap">
+  <table class="ref-table">
+    <thead><tr><th>Address / Range</th><th>Standard / Protocol</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr
+        ><td class="mono">239.0.0.0/8</td><td>Administratively Scoped (General)</td><td
+          >Use this block for all internal facility multicast. Sub-allocate by site or service.</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">239.255.255.250</td><td>SSDP / UPnP</td><td
+          >Simple Service Discovery Protocol — device discovery</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">239.255.255.251</td><td>mDNS / Bonjour / Avahi</td><td
+          >Multicast DNS — zero-config device discovery (port 5353)</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">239.69.0.0/16</td><td>AES67 / RAVENNA (common)</td><td
+          >Common facility allocation for AES67 audio streams — not a standard, coordinate
+          internally</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">239.x.x.x (custom)</td><td>SMPTE ST 2110</td><td
+          >Video (2110-20), audio (2110-30/31), metadata (2110-40) — assign per stream within your
+          239/8 block</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.2.0.0/11</td><td>SAP / SDP (SDP Announcements)</td><td
+          >Session Announcement Protocol — used for MPEG multicast service discovery; 224.2.127.254
+          = SAP</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">224.2.127.254</td><td>SAP Announcements</td><td
+          >Listening address for SAP/SDP stream discovery (VLC auto-detect)</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">232.0.0.0/8</td><td>SSM — Source-Specific Multicast</td><td
+          >Preferred for IPTV / AV-over-IP. Receiver joins (S, G) pair — eliminates RP, reduces
+          spoofing risk.</td
+        ></tr
+      >
+    </tbody>
+  </table>
+</div>
+
+<div class="panel mt-3.5">
+  <h3><Icon name="arrows-rotate" /> IGMP Versions</h3>
+</div>
+<div class="table-wrap">
+  <table class="ref-table">
+    <thead
+      ><tr
+        ><th>Version</th><th>RFC</th><th>Key Feature</th><th>Leave Behavior</th><th
+          >Recommendation</th
+        ></tr
+      ></thead
+    >
+    <tbody>
+      <tr
+        ><td><strong>IGMPv1</strong></td><td>RFC 1112</td><td>Basic join. No explicit leave.</td><td
+          >Timeout-based (~3 min)</td
+        ><td class="text-red">Legacy only</td></tr
+      >
+      <tr
+        ><td><strong>IGMPv2</strong></td><td>RFC 2236</td><td
+          >Explicit leave group message. Faster leave.</td
+        ><td>Leave + Last-Member Query (~1–2s)</td><td class="text-orange">Acceptable, common</td
+        ></tr
+      >
+      <tr
+        ><td><strong>IGMPv3</strong></td><td>RFC 3376</td><td
+          >Source filtering — supports SSM (S,G) joins. Reports sent to 224.0.0.22.</td
+        ><td>Explicit include/exclude source lists</td><td class="text-green"
+          ><strong>Recommended</strong></td
+        ></tr
+      >
+    </tbody>
+  </table>
+</div>
+
+<div class="panel mt-3.5">
+  <h3><Icon name="map" /> Multicast MAC Address Mapping</h3>
+  <p>
+    IPv4 multicast addresses map to a corresponding Ethernet MAC address. The OUI <code
+      >01:00:5E</code
+    > is reserved for IPv4 multicast. Only the low-order <strong>23 bits</strong> of the multicast IP
+    are mapped — meaning 32 group addresses share each MAC (bit 25 is not mapped), which can cause unwanted
+    traffic on unmanaged switches.
+  </p>
+  <div class="mt-2.5 rounded-field bg-bg p-3.5 font-mono text-[11.5px] leading-loose">
+    <div class="mb-1 border-l-3 border-accent bg-surface px-2 py-1.5">
+      IP: <strong>239</strong> . <strong>1</strong> . <strong>2</strong> . <strong>100</strong> → Binary
+      low 23 bits: <strong>0000001 . 00000010 . 01100100</strong>
+    </div>
+    <div class="border-l-3 border-green bg-surface px-2 py-1.5">
+      MAC: <strong>01:00:5E</strong> : <strong>01:02:64</strong> (OUI fixed, last 3 octets from IP low-23)
+    </div>
+  </div>
+  <div class="tip mt-2.5">
+    <strong>Formula:</strong> Take the last 3 octets of the multicast IP → zero out the MSB of the first
+    → append to <code>01:00:5E</code>. Example: <code>239.1.2.100</code> → <code
+      >01:00:5E:01:02:64</code
+    >
+  </div>
+</div>
+
+<div class="panel mt-3.5">
+  <h3>IPv6 Multicast (FF00::/8)</h3>
+  <p>
+    IPv6 has no broadcast — multicast replaces it. All IPv6 multicast addresses begin with <code
+      >FF</code
+    >. The second byte encodes flags and scope. There is no separate IGMP; IPv6 uses <strong
+      >MLD (Multicast Listener Discovery)</strong
+    > — MLDv1 ≈ IGMPv2, MLDv2 ≈ IGMPv3 with SSM support.
+  </p>
+</div>
+<div class="table-wrap">
+  <table class="ref-table">
+    <thead><tr><th>Address</th><th>Scope</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr
+        ><td class="mono">FF01::1</td><td>Interface-local</td><td
+          >All nodes (same interface only)</td
+        ></tr
+      >
+      <tr
+        ><td class="mono">FF01::2</td><td>Interface-local</td><td
+          >All routers (same interface only)</td
+        ></tr
+      >
+      <tr><td class="mono">FF02::1</td><td>Link-local</td><td>All nodes on the link</td></tr>
+      <tr><td class="mono">FF02::2</td><td>Link-local</td><td>All routers on the link</td></tr>
+      <tr><td class="mono">FF02::5</td><td>Link-local</td><td>OSPFv3 all routers</td></tr>
+      <tr><td class="mono">FF02::6</td><td>Link-local</td><td>OSPFv3 DR/BDR</td></tr>
+      <tr><td class="mono">FF02::A</td><td>Link-local</td><td>EIGRP routers</td></tr>
+      <tr><td class="mono">FF02::D</td><td>Link-local</td><td>PIM routers</td></tr>
+      <tr><td class="mono">FF02::16</td><td>Link-local</td><td>MLDv2 reports (like IGMPv3)</td></tr>
+      <tr
+        ><td class="mono">FF02::1:FF00::/104</td><td>Link-local</td><td
+          >Solicited-node multicast (NDP / neighbor discovery)</td
+        ></tr
+      >
+      <tr><td class="mono">FF05::2</td><td>Site-local</td><td>All routers in site</td></tr>
+      <tr><td class="mono">FF0E::/16</td><td>Global</td><td>Globally scoped IPv6 multicast</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="panel mt-3.5">
+  <h3><Icon name="gear" /> PIM Modes — Quick Reference</h3>
+</div>
+<div class="table-wrap">
+  <table class="ref-table">
+    <thead><tr><th>Mode</th><th>Tree Type</th><th>RP Required?</th><th>Best For</th></tr></thead>
+    <tbody>
+      <tr
+        ><td><strong>PIM-SM</strong></td><td>Shared (RPT) + Shortest Path Tree</td><td
+          >Yes — Rendezvous Point</td
+        ><td>Sparse receivers spread across a large network</td></tr
+      >
+      <tr
+        ><td><strong>PIM-DM</strong></td><td>Source-based (SPT) — flood &amp; prune</td><td>No</td
+        ><td>Dense receivers, small networks — not recommended at scale</td></tr
+      >
+      <tr
+        ><td><strong>PIM-SSM</strong></td><td>Source-specific (S, G) SPT only</td><td
+          >No RP needed</td
+        ><td>IPTV, AV-over-IP, AES67 — preferred in modern broadcast networks</td></tr
+      >
+      <tr
+        ><td><strong>Bidir-PIM</strong></td><td>Bidirectional shared tree</td><td
+          >Yes — RP is a forwarding point</td
+        ><td>Many-to-many (video conferencing, trading floors)</td></tr
+      >
+    </tbody>
+  </table>
+</div>
+<div class="tip mt-1">
+  <strong>Broadcast AV Tip:</strong> Use <strong>PIM-SSM</strong> with IGMPv3 for SMPTE ST 2110 and AES67
+  — it eliminates the RP as a single point of failure and maps directly to the (S,G) model used by those
+  standards.
+</div>

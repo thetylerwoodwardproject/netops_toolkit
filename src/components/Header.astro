@@ -1,0 +1,54 @@
+---
+import { toolkit, tools } from '@/config';
+import Icon from './Icon.astro';
+import Sidebar from './Sidebar.astro';
+import Search from './Search.svelte';
+
+const { activeTool } = Astro.props as { activeTool?: string };
+---
+
+<header
+  class="sticky top-0 z-30 flex h-[57px] items-center gap-3 border-b border-line bg-bg/85 px-4 backdrop-blur-lg sm:gap-4 sm:px-6"
+>
+  <a href="/" class="flex shrink-0 items-center gap-2.5 text-text no-underline hover:no-underline">
+    <Icon name={toolkit.icon} size={22} class="text-accent" />
+    <span class="text-[17px] font-bold tracking-tight">{toolkit.name}</span>
+  </a>
+
+  <div class="min-w-0 flex-1 sm:max-w-[480px]" data-island="search" data-ssr>
+    <Search />
+  </div>
+
+  <span
+    class="ml-auto hidden rounded-full bg-green/10 px-2.5 py-1 text-[11px] font-semibold text-green lg:inline"
+  >
+    {tools.length} tools
+  </span>
+
+  <details class="nav-menu md:hidden">
+    <summary
+      aria-label="All tools"
+      class="grid size-9 cursor-pointer list-none place-items-center rounded-field border border-line text-text2 hover:text-accent [&::-webkit-details-marker]:hidden"
+    >
+      <Icon name="bars" size={18} />
+    </summary>
+    <div
+      class="fixed inset-x-0 top-[57px] bottom-0 overflow-y-auto border-t border-line bg-bg2 shadow-2xl"
+    >
+      <Sidebar activeTool={activeTool} />
+    </div>
+  </details>
+</header>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Search from './Search.svelte';
+
+  start('[data-island="search"]', Search);
+
+  // Close the mobile menu on Escape.
+  const menu = document.querySelector<HTMLDetailsElement>('details.nav-menu');
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu) menu.open = false;
+  });
+</script>

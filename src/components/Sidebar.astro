@@ -1,0 +1,65 @@
+---
+import { enabledCategories, tools } from '@/config';
+import Icon from './Icon.astro';
+
+const { activeTool } = Astro.props as { activeTool?: string };
+---
+
+<nav aria-label="Tools" class="px-2.5 py-3">
+  {
+    enabledCategories.map((cat) => {
+      const items = tools.filter((t) => t.category === cat.id);
+      return (
+        <details open class="sb-section group mb-1" data-category={cat.id}>
+          <summary class="flex cursor-pointer list-none items-center justify-between px-2 py-1.5 text-[10px] font-bold tracking-[0.08em] text-text3 uppercase select-none hover:text-text [&::-webkit-details-marker]:hidden">
+            {cat.label}
+            <Icon
+              name="chevron-down"
+              size={10}
+              class="transition-transform group-not-open:-rotate-90"
+            />
+          </summary>
+          <ul class="m-0 list-none p-0">
+            {items.map((t) => (
+              <li>
+                <a
+                  href={`/${t.id}/`}
+                  aria-current={t.id === activeTool ? 'page' : undefined}
+                  class="flex items-center gap-2 rounded-field px-2.5 py-[7px] text-[12.5px] text-text2 no-underline hover:bg-surface hover:text-text hover:no-underline aria-[current=page]:bg-accent/10 aria-[current=page]:text-accent"
+                >
+                  <span class="flex w-5 justify-center">
+                    <Icon name={t.icon} size={14} />
+                  </span>
+                  {t.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
+      );
+    })
+  }
+</nav>
+
+<script>
+  // Remember which sections are collapsed. Both copies of the sidebar (desktop
+  // and the mobile menu) share the one stored state.
+  const KEY = 'sb-collapsed';
+  let collapsed: string[] = [];
+  try {
+    collapsed = JSON.parse(localStorage.getItem(KEY) ?? '[]');
+  } catch {}
+  const sections = document.querySelectorAll<HTMLDetailsElement>('details.sb-section');
+  for (const s of sections) {
+    if (collapsed.includes(s.dataset.category!)) s.open = false;
+    s.addEventListener('toggle', () => {
+      const set = new Set(collapsed);
+      if (s.open) set.delete(s.dataset.category!);
+      else set.add(s.dataset.category!);
+      collapsed = [...set];
+      try {
+        localStorage.setItem(KEY, JSON.stringify(collapsed));
+      } catch {}
+    });
+  }
+</script>

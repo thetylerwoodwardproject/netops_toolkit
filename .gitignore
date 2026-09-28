@@ -1,0 +1,21 @@
+# Astro
+.astro/
+.build/
+.build-default/
+node_modules/
+
+# Publish artifacts -- dist is the symlink nginx serves
+dist
+dist.next
+.releases/
+.publish.lock
+
+# This instance's settings (see toolkit.config.ts)
+toolkit.config.local.ts
+
+# OS / editor
+.DS_Store
+.idea/
+
+# Notes for this box only; the repo is public
+CLAUDE.md

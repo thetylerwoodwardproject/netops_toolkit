@@ -1,0 +1,11 @@
+#!/bin/sh
+# Build into .build/ (or a given directory) and verify the result.
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+DESTINATION=${1:-"$ROOT/.build"}
+
+cd "$ROOT"
+npx astro check
+npx astro build --outDir "$DESTINATION"
+node tools/verify.mjs "$DESTINATION"

@@ -1,0 +1,48 @@
+---
+import Layout from '@/components/Layout.astro';
+import Icon from '@/components/Icon.astro';
+import { enabledCategories, toolkit, tools } from '@/config';
+import { categoryClasses } from '@/data/categories';
+---
+
+<Layout>
+  <h1 class="m-0 text-[22px] font-bold tracking-tight">{toolkit.name}</h1>
+  {toolkit.tagline && <p class="mt-1 mb-8 text-[13px] text-text3">{toolkit.tagline}</p>}
+
+  {
+    enabledCategories.map((cat) => {
+      const colors = categoryClasses[cat.color];
+      return (
+        <section class="mb-8">
+          <h2 class="mb-3 flex items-center gap-2 text-[13px] font-bold tracking-wider text-text3 uppercase">
+            <span class:list={['size-1.5 rounded-full', colors.dot]} />
+            {cat.label}
+          </h2>
+          <ul class="m-0 grid list-none grid-cols-1 gap-2.5 p-0 sm:grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
+            {tools
+              .filter((t) => t.category === cat.id)
+              .map((t) => (
+                <li>
+                  <a
+                    href={`/${t.id}/`}
+                    class="flex h-full flex-col gap-1.5 rounded-card border border-line bg-surface p-4 text-text no-underline transition hover:-translate-y-0.5 hover:border-accent hover:no-underline hover:shadow-xl"
+                  >
+                    <Icon name={t.icon} size={22} class="text-text2" />
+                    <span class="text-[13px] font-semibold">{t.name}</span>
+                    <span class="text-[11.5px] leading-snug text-text3">{t.desc}</span>
+                    <span class="mt-auto flex flex-wrap gap-1 pt-1.5">
+                      {t.tags.slice(0, 3).map((tag) => (
+                        <span class:list={['rounded-full px-[7px] py-0.5 text-[10px]', colors.tag]}>
+                          {tag}
+                        </span>
+                      ))}
+                    </span>
+                  </a>
+                </li>
+              ))}
+          </ul>
+        </section>
+      );
+    })
+  }
+</Layout>

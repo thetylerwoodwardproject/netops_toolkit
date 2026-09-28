@@ -1,0 +1,65 @@
+---
+// A tab strip for the TabPanels in the slot. The first tab is selected in the
+// served HTML, so there is no flash; the script only wires up clicks, arrow
+// keys and #hash deep links (e.g. /subnet-calc/#cheat-sheet).
+import Icon from './Icon.astro';
+
+interface Props {
+  tabs: { id: string; label: string; icon?: string }[];
+}
+
+const { tabs } = Astro.props;
+---
+
+<div data-tabs>
+  <div role="tablist" class="tabs">
+    {
+      tabs.map((tab, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`tab-${tab.id}`}
+          aria-controls={tab.id}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          class="tab"
+        >
+          {tab.icon && <Icon name={tab.icon} size={13} />}
+          {tab.label}
+        </button>
+      ))
+    }
+  </div>
+  <slot />
+</div>
+
+<script>
+  function select(root: Element, tab: HTMLElement, focus = false) {
+    for (const t of root.querySelectorAll<HTMLElement>(':scope > [role=tablist] > [role=tab]')) {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      const panel = document.getElementById(t.getAttribute('aria-controls')!);
+      if (panel) panel.hidden = !on;
+    }
+    if (focus) tab.focus();
+  }
+
+  for (const root of document.querySelectorAll('[data-tabs]')) {
+    const tabs = [...root.querySelectorAll<HTMLElement>(':scope > [role=tablist] > [role=tab]')];
+    for (const tab of tabs) {
+      tab.addEventListener('click', () => {
+        select(root, tab);
+        history.replaceState(null, '', `#${tab.getAttribute('aria-controls')}`);
+      });
+      tab.addEventListener('keydown', (e) => {
+        const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        const next = tabs[(tabs.indexOf(tab) + step + tabs.length) % tabs.length];
+        select(root, next, true);
+      });
+    }
+    const fromHash = tabs.find((t) => `#${t.getAttribute('aria-controls')}` === location.hash);
+    if (fromHash) select(root, fromHash);
+  }
+</script>

@@ -1,0 +1,13 @@
+---
+interface Props {
+  id: string;
+  /** Only the first panel of a Tabs group should set this. */
+  selected?: boolean;
+}
+
+const { id, selected = false } = Astro.props;
+---
+
+<div role="tabpanel" id={id} aria-labelledby={`tab-${id}`} hidden={!selected}>
+  <slot />
+</div>

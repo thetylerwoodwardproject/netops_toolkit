@@ -1,0 +1,33 @@
+---
+// Font Awesome Free (CC BY 4.0, https://fontawesome.com/license/free), inlined as SVG.
+import { faIcon } from '@/lib/fa';
+
+interface Props {
+  /** Font Awesome name: 'network-wired', or 'brands:github'. */
+  name: string;
+  size?: number;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { name, size = 16, class: className, ...rest } = Astro.props;
+const [width, height, , , data] = faIcon(name).icon;
+const d = Array.isArray(data) ? data.join(' ') : data;
+// Font Awesome glyphs fill their whole box; scale down to sit with text.
+const h = Math.round(size * 0.9 * 100) / 100;
+const w = Math.round(((h * width) / height) * 100) / 100;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox={`0 0 ${width} ${height}`}
+  width={w}
+  height={h}
+  fill="currentColor"
+  aria-hidden="true"
+  focusable="false"
+  class:list={['shrink-0', className]}
+  {...rest}
+>
+  <path d={d}></path>
+</svg>

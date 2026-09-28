@@ -1,0 +1,38 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '@/components/Layout.astro';
+import Icon from '@/components/Icon.astro';
+import { tools, enabledCategories } from '@/config';
+import { implementations } from '@/tools';
+import type { Tool } from '@/data/tools';
+
+export const getStaticPaths = (() =>
+  tools.map((tool) => ({ params: { tool: tool.id }, props: { tool } }))) satisfies GetStaticPaths;
+
+const { tool } = Astro.props as { tool: Tool };
+const Implementation = implementations[tool.id];
+const category = enabledCategories.find((c) => c.id === tool.category)!;
+---
+
+<Layout title={tool.name} description={tool.desc} activeTool={tool.id}>
+  <header class="mb-5">
+    <p class="m-0 mb-1 text-[11px] font-bold tracking-wider text-text3 uppercase">
+      {category.label}
+    </p>
+    <h1 class="m-0 flex items-center gap-2.5 text-[20px] font-bold">
+      <Icon name={tool.icon} size={20} class="text-accent" />
+      {tool.name}
+    </h1>
+    <p class="m-0 mt-1 text-[12.5px] text-text3">{tool.desc}</p>
+  </header>
+
+  {
+    Implementation ? (
+      <Implementation />
+    ) : (
+      <div class="warn" data-placeholder>
+        This tool hasn't been ported to the new toolkit yet.
+      </div>
+    )
+  }
+</Layout>

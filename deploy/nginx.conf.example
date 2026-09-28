@@ -1,0 +1,52 @@
+# Example nginx vhost for a NetOps Toolkit instance.
+#
+# The site is static: tools/publish builds into .releases/<stamp>/ and points
+# the `dist` symlink at it, so `root` is the checkout's dist. Replace
+# tools.example.com and the paths, and add your TLS certificate lines.
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name tools.example.com;
+
+    # ssl_certificate     /etc/letsencrypt/live/tools.example.com/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/tools.example.com/privkey.pem;
+
+    root /var/www/netops-toolkit/dist;
+    index index.html;
+    charset utf-8;
+
+    # Nothing in the build needs inline script or style, so the CSP allows
+    # neither. connect-src lists the services the IP Checker calls; with
+    # externalLookups: false in your config, drop them and keep 'self'.
+    #
+    # add_header is not inherited by a location that declares its own, so
+    # every location below that sets a header repeats these.
+    set $csp "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://api.ipify.org https://api4.ipify.org https://api6.ipify.org https://ipapi.co https://dns.google";
+    add_header Content-Security-Policy $csp always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    location ~ /\. {
+        deny all;
+    }
+
+    # Fingerprinted by the build: cache for a year.
+    location ^~ /_astro/ {
+        try_files $uri =404;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        add_header Content-Security-Policy $csp always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    }
+
+    # Pages, theme.css, favicon.svg, search.json: small, and unversioned.
+    location / {
+        try_files $uri $uri/ =404;
+        add_header Cache-Control "no-cache" always;
+        add_header Content-Security-Policy $csp always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    }
+}
