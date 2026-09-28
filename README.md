@@ -67,7 +67,7 @@ Rename it, recolor it, hide categories and add your own links from one small con
 ## Run your own
 
 ```sh
-git clone <this repo> netops-toolkit && cd netops-toolkit
+git clone https://github.com/thetylerwoodwardproject/netops_toolkit && cd netops_toolkit
 npm ci
 npm run dev          # http://localhost:4321
 ```
