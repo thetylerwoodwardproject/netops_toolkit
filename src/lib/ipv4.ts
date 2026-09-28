@@ -59,3 +59,27 @@ export function isPrivateIPv4(address: number) {
   const b = (address >>> 16) & 255;
   return a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168);
 }
+
+/**
+ * Read an IPv4 address written any of the ways the IP converter accepts:
+ * dotted decimal, binary (only 0s, 1s and dots, up to 32 bits), hex (0x
+ * prefix or any a–f digit) or a plain decimal integer. Null if it is none of
+ * these or doesn't fit in 32 bits.
+ */
+export function parseIPv4Any(text: string): number | null {
+  const v = text.trim();
+  if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(v)) return parseIPv4(v);
+  if (/^[01.]+$/.test(v)) {
+    const bits = v.replace(/\./g, '');
+    return bits.length >= 1 && bits.length <= 32 ? Number.parseInt(bits, 2) >>> 0 : null;
+  }
+  // The original tested hex before decimal, and plain digits pass a hex test,
+  // so decimal input such as 3232235777 was read as hex. Hex now needs a 0x
+  // prefix or a letter digit.
+  let n: number;
+  if (/^0x[0-9a-f]+$/i.test(v)) n = Number.parseInt(v.slice(2), 16);
+  else if (/^[0-9a-f]+$/i.test(v) && /[a-f]/i.test(v)) n = Number.parseInt(v, 16);
+  else if (/^\d+$/.test(v)) n = Number(v);
+  else return null;
+  return n <= 0xffffffff ? n : null;
+}

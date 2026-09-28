@@ -1,0 +1,53 @@
+---
+import Icon from '@/components/Icon.astro';
+import Calculator from './Calculator.svelte';
+---
+
+<div class="panel">
+  <h3><Icon name="tower-broadcast" /> Livewire Multicast Address Calculator</h3>
+  <p class="mb-3.5">
+    Livewire encodes channel numbers directly into multicast IP addresses. Each stream type uses a
+    different base address range.
+  </p>
+  <div data-island="lw-multicast" data-ssr><Calculator /></div>
+</div>
+<div class="panel">
+  <h3><Icon name="circle-info" /> Address Range Reference</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead><tr><th>Stream Type</th><th>Base Address</th><th>Range</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Standard</td><td class="mono">239.192.0.0</td><td class="mono">ch 1–32767</td><td
+            >Primary program audio</td
+          >
+        </tr>
+        <tr>
+          <td>Backfeed</td><td class="mono">239.193.0.0</td><td class="mono">ch 1–32767</td><td
+            >Return feeds to studios</td
+          >
+        </tr>
+        <tr>
+          <td>Backfeed Livestream</td><td class="mono">239.195.0.0</td><td class="mono"
+            >ch 1–32767</td
+          ><td>Low-latency return streams</td>
+        </tr>
+        <tr>
+          <td>Surround / 5.1</td><td class="mono">239.196.0.0</td><td class="mono">ch 1–32767</td
+          ><td>8-channel surround audio</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tip mt-3">
+    The last two octets encode the channel number. Ch 27 = <strong>239.192.0.27</strong> &nbsp;|&nbsp;
+    Ch 256 = <strong>239.192.1.0</strong> &nbsp;|&nbsp; Ch 1212 = <strong>239.192.4.188</strong>.
+  </div>
+</div>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Calculator from './Calculator.svelte';
+
+  start('[data-island="lw-multicast"]', Calculator);
+</script>

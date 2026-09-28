@@ -208,6 +208,18 @@
     @apply relative my-2.5 overflow-x-auto rounded-field border border-line bg-bg p-3.5 font-mono text-[12px] leading-relaxed break-words whitespace-pre-wrap text-text;
   }
 
+  /* The inline-code look (base layer) is for code in running text, not in blocks. */
+  .code code {
+    @apply rounded-none bg-transparent p-0 text-[length:inherit] text-inherit;
+  }
+  .copy-btn {
+    @apply absolute top-2 right-2 cursor-pointer rounded-field border border-line bg-surface2 px-2.5 py-[3px] font-sans text-[11px] text-text3 transition-colors hover:bg-surface3 hover:text-text;
+  }
+  /* A small uppercase label above a code block or result. */
+  .field-label {
+    @apply mb-1 text-[11px] font-bold tracking-[.05em] text-text3 uppercase;
+  }
+
   .tabs {
     @apply mb-4 flex flex-wrap gap-0.5 rounded-field border border-line bg-bg p-[3px];
   }

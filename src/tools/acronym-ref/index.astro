@@ -1,0 +1,354 @@
+---
+import Icon from '@/components/Icon.astro';
+import FilterScript from '@/components/FilterScript.astro';
+---
+
+<div class="table-filter">
+  <input
+    class="form-input"
+    id="acro-filter"
+    placeholder="Search acronym or meaning, e.g. VLAN, routing, protocol..."
+    data-filter="#acro-table tbody tr"
+    type="search"
+    autocomplete="off"
+  />
+</div>
+<div class="table-wrap" id="acro-table-wrap">
+  <table class="ref-table" id="acro-table">
+    <thead><tr><th class="w-[120px]">Acronym</th><th>Meaning &amp; Context</th></tr></thead>
+    <tbody
+      ><tr
+        ><td><strong class="mono text-accent">AAA</strong></td><td
+          >Authentication, Authorization, Accounting — security framework for controlling access</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">ACL</strong></td><td
+          >Access Control List — permit/deny rules for traffic filtering</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">ARP</strong></td><td
+          >Address Resolution Protocol — maps IP addresses to MAC addresses</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">AS</strong></td><td
+          >Autonomous System — a network under one organisation's control, identified by an ASN</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">ASN</strong></td><td
+          >Autonomous System Number — unique ID for BGP routing between organisations</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">BGP</strong></td><td
+          >Border Gateway Protocol — the routing protocol of the internet</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">BPDU</strong></td><td
+          >Bridge Protocol Data Unit — messages exchanged by STP to prevent loops</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">CAM</strong></td><td
+          >Content Addressable Memory — the MAC address table inside a switch</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">CDP</strong></td><td
+          >Cisco Discovery Protocol — Cisco's neighbor discovery protocol</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">CIDR</strong></td><td
+          >Classless Inter-Domain Routing — slash notation for subnets (e.g. /24)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">CLI</strong></td><td
+          >Command Line Interface — text-based configuration interface</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">CRC</strong></td><td
+          >Cyclic Redundancy Check — error detection for Ethernet frames</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">CSMA/CD</strong></td><td
+          >Carrier Sense Multiple Access / Collision Detection — old shared Ethernet access method</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">DAI</strong></td><td
+          >Dynamic ARP Inspection — security feature that validates ARP packets on a switch</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">DHCP</strong></td><td
+          >Dynamic Host Configuration Protocol — auto-assigns IP addresses to devices</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">DMZ</strong></td><td
+          >Demilitarized Zone — isolated network segment for public-facing servers</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">DNS</strong></td><td
+          >Domain Name System — translates names to IP addresses</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">DSCP</strong></td><td
+          >Differentiated Services Code Point — QoS field in IP header for traffic prioritisation</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">EIGRP</strong></td><td
+          >Enhanced Interior Gateway Routing Protocol — Cisco's fast interior routing protocol</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">EVPN</strong></td><td
+          >Ethernet VPN — control plane for VXLAN overlays</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">FTP</strong></td><td
+          >File Transfer Protocol — transfers files between systems (port 20/21, unencrypted)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">GRE</strong></td><td
+          >Generic Routing Encapsulation — tunneling protocol</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">HSRP</strong></td><td
+          >Hot Standby Router Protocol — Cisco's gateway redundancy protocol</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">HTTP</strong></td><td
+          >Hypertext Transfer Protocol — web traffic (port 80, unencrypted)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">HTTPS</strong></td><td
+          >HTTP Secure — encrypted web traffic using TLS (port 443)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">ICMP</strong></td><td
+          >Internet Control Message Protocol — used by ping and traceroute</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">IDF</strong></td><td
+          >Intermediate Distribution Frame — floor/wing wiring closet</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">IDS</strong></td><td
+          >Intrusion Detection System — monitors for suspicious activity, alerts only</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">IGP</strong></td><td
+          >Interior Gateway Protocol — routing protocol within an autonomous system (OSPF, EIGRP)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">IOS</strong></td><td
+          >Internetwork Operating System — Cisco's router/switch OS</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">IPS</strong></td><td
+          >Intrusion Prevention System — like IDS but can block threats</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">IPsec</strong></td><td
+          >IP Security — framework for encrypted VPN tunnels</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">IPv4</strong></td><td
+          >Internet Protocol version 4 — 32-bit addresses (most common)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">IPv6</strong></td><td
+          >Internet Protocol version 6 — 128-bit addresses</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">ISP</strong></td><td>Internet Service Provider</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">LACP</strong></td><td
+          >Link Aggregation Control Protocol — IEEE standard for bundling ports (EtherChannel)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">LAN</strong></td><td
+          >Local Area Network — private network within a building</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">LLDP</strong></td><td
+          >Link Layer Discovery Protocol — open standard neighbor discovery</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">LSDB</strong></td><td
+          >Link State Database — the OSPF topology map stored in each router</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">LSA</strong></td><td
+          >Link State Advertisement — the routing update packets in OSPF</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">MAC</strong></td><td
+          >Media Access Control — hardware address of a NIC</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">MDF</strong></td><td
+          >Main Distribution Frame — central wiring hub</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">MPLS</strong></td><td
+          >Multiprotocol Label Switching — WAN technology for routing via labels, not IPs</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">MTU</strong></td><td
+          >Maximum Transmission Unit — largest packet a link can carry (standard: 1500 bytes)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">NAT</strong></td><td
+          >Network Address Translation — rewrites IP addresses at the router</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">NIC</strong></td><td
+          >Network Interface Card — hardware that connects a device to the network</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">NHRP</strong></td><td
+          >Next Hop Resolution Protocol — used in DMVPN for dynamic tunnel building</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">NTP</strong></td><td
+          >Network Time Protocol — synchronises clocks across devices (port 123)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">OSFP</strong></td><td
+          >(typo for OSPF) Open Shortest Path First</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">OSPF</strong></td><td
+          >Open Shortest Path First — link-state interior routing protocol</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">PAT</strong></td><td
+          >Port Address Translation — NAT where many IPs share one public IP via ports</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">PDU</strong></td><td
+          >Protocol Data Unit — the name for data at each OSI layer (frame, packet, segment)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">PoE</strong></td><td
+          >Power over Ethernet — power delivery over network cable</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">QoS</strong></td><td
+          >Quality of Service — traffic prioritisation policies</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">RADIUS</strong></td><td
+          >Remote Authentication Dial-In User Service — AAA protocol for network access</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">RFC</strong></td><td
+          >Request for Comments — standards documents that define internet protocols</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">RIP</strong></td><td
+          >Routing Information Protocol — simple distance-vector routing protocol (max 15 hops)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">RIB</strong></td><td
+          >Routing Information Base — the routing table</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">RPF</strong></td><td
+          >Reverse Path Forwarding — multicast loop prevention mechanism</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">RSTP</strong></td><td
+          >Rapid Spanning Tree Protocol — faster version of STP (802.1w)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">SFP</strong></td><td
+          >Small Form-factor Pluggable — hot-swap transceiver module</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">SMTP</strong></td><td
+          >Simple Mail Transfer Protocol — sends email (port 25/587)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">SNMP</strong></td><td
+          >Simple Network Management Protocol — monitoring and management (port 161/162)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">SPF</strong></td><td
+          >Shortest Path First — the algorithm OSPF uses to calculate routes (Dijkstra)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">SSH</strong></td><td
+          >Secure Shell — encrypted remote CLI access (port 22)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">SSID</strong></td><td
+          >Service Set Identifier — the Wi-Fi network name</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">STP</strong></td><td
+          >Spanning Tree Protocol — prevents Layer 2 loops</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">TACACS+</strong></td><td
+          >Terminal Access Controller Access-Control System Plus — Cisco AAA protocol</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">TCP</strong></td><td
+          >Transmission Control Protocol — reliable, connection-oriented transport (Layer 4)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">TLS</strong></td><td
+          >Transport Layer Security — encryption protocol used by HTTPS, SSH, etc.</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">UDP</strong></td><td
+          >User Datagram Protocol — fast, connectionless transport (Layer 4)</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">VLAN</strong></td><td
+          >Virtual LAN — logical network segmentation on a switch</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">VoIP</strong></td><td
+          >Voice over IP — phone calls carried over the data network</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">VPN</strong></td><td
+          >Virtual Private Network — encrypted tunnel over untrusted network</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">VRF</strong></td><td
+          >Virtual Routing and Forwarding — separate routing tables on one device</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">VRRP</strong></td><td
+          >Virtual Router Redundancy Protocol — open standard gateway redundancy</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">VTEP</strong></td><td
+          >VXLAN Tunnel Endpoint — device that encapsulates/decapsulates VXLAN traffic</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">VXLAN</strong></td><td
+          >Virtual Extensible LAN — overlay protocol that extends VLANs over Layer 3</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">WAN</strong></td><td
+          >Wide Area Network — network spanning large geographic areas</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">WAP</strong></td><td
+          >Wireless Access Point — broadcasts Wi-Fi</td
+        ></tr
+      ><tr
+        ><td><strong class="mono text-accent">WCCP</strong></td><td
+          >Web Cache Communication Protocol — Cisco protocol for redirecting web traffic</td
+        ></tr
+      ></tbody
+    >
+  </table>
+</div>
+<div class="tip mt-[12px]">
+  <Icon name="lightbulb" />
+  <strong>Tip:</strong> Use Ctrl+F or the search box above. For full definitions, check the <strong
+    >Jargon Decoder</strong
+  > tool.
+</div>
+
+<FilterScript />

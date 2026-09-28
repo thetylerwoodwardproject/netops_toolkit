@@ -1,0 +1,12 @@
+---
+import Calculator from './Calculator.svelte';
+---
+
+<div data-island="bw-calc" data-ssr><Calculator /></div>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Calculator from './Calculator.svelte';
+
+  start('[data-island="bw-calc"]', Calculator);
+</script>

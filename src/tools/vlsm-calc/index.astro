@@ -1,0 +1,12 @@
+---
+import Planner from './Planner.svelte';
+---
+
+<div data-island="vlsm-calc" data-ssr><Planner /></div>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Planner from './Planner.svelte';
+
+  start('[data-island="vlsm-calc"]', Planner);
+</script>

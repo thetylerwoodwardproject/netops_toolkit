@@ -1,0 +1,12 @@
+---
+import Converter from './Converter.svelte';
+---
+
+<div data-island="ip-converter" data-ssr><Converter /></div>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Converter from './Converter.svelte';
+
+  start('[data-island="ip-converter"]', Converter);
+</script>
