@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="120" viewBox="0 0 560 120" role="img" aria-label="NetOps Toolkit">
+  <style>
+    .word { fill: #1f2328; font: 700 46px -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; letter-spacing: -1px; }
+    .word b { fill: #3cae32; }
+    @media (prefers-color-scheme: dark) { .word { fill: #f0f6fc; } }
+  </style>
+  <rect x="4" y="4" width="112" height="112" rx="26" fill="#3cae32"/>
+  <g transform="translate(20 34) scale(0.15625)" fill="#fff">
+    <path d="M248 88l80 0 0 48-80 0 0-48zm-8-56c-26.5 0-48 21.5-48 48l0 64c0 26.5 21.5 48 48 48l16 0 0 32-224 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0 0 32-16 0c-26.5 0-48 21.5-48 48l0 64c0 26.5 21.5 48 48 48l96 0c26.5 0 48-21.5 48-48l0-64c0-26.5-21.5-48-48-48l-16 0 0-32 192 0 0 32-16 0c-26.5 0-48 21.5-48 48l0 64c0 26.5 21.5 48 48 48l96 0c26.5 0 48-21.5 48-48l0-64c0-26.5-21.5-48-48-48l-16 0 0-32 96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-224 0 0-32 16 0c26.5 0 48-21.5 48-48l0-64c0-26.5-21.5-48-48-48l-96 0zM448 376l8 0 0 48-80 0 0-48 72 0zm-256 0l8 0 0 48-80 0 0-48 72 0z"/>
+  </g>
+  <text class="word" x="140" y="76">NetOps <tspan class="g" fill="#3cae32">Toolkit</tspan></text>
+</svg>
