@@ -1,0 +1,18 @@
+---
+// Live search for reference tables. Put data-filter="<selector>" on an input;
+// typing hides every element matching the selector whose text doesn't
+// contain the query. The rows are server-rendered, so without JavaScript
+// the full table is still there. Include this once per page that filters.
+---
+
+<script>
+  for (const input of document.querySelectorAll<HTMLInputElement>('input[data-filter]')) {
+    const rows = [...document.querySelectorAll<HTMLElement>(input.dataset.filter!)];
+    const text = rows.map((r) => r.textContent!.toLowerCase());
+    input.addEventListener('input', () => {
+      // Not trimmed: a trailing space narrows the search, as in "ss " for the ss command.
+      const q = input.value.toLowerCase();
+      rows.forEach((r, i) => (r.hidden = !text[i].includes(q)));
+    });
+  }
+</script>

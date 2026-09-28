@@ -1,0 +1,335 @@
+---
+import Icon from '@/components/Icon.astro';
+import FilterScript from '@/components/FilterScript.astro';
+---
+
+<input
+  class="form-input mb-[14px]"
+  id="cisco-filter"
+  placeholder="Search commands..."
+  data-filter=".cisco-cmd"
+  type="search"
+  autocomplete="off"
+/><div class="panel cisco-section">
+  <h3><Icon name="terminal" /> Command Modes</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">Router></td><td>User EXEC — basic monitoring</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">Router#</td><td
+            >Privileged EXEC — all show/debug commands</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">Router(config)#</td><td
+            >Global Config — configure terminal</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">Router(config-if)#</td><td
+            >Interface Config — interface gi0/0</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">Router(config-router)#</td><td
+            >Router Config — router ospf 10</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">Router(config-line)#</td><td
+            >Line Config — line vty 0 15</td
+          ></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="panel cisco-section">
+  <h3><Icon name="terminal" /> Navigation</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">enable</td><td>Enter privileged EXEC</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">configure terminal</td><td>Enter global config</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">exit</td><td>Go back one level</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">end / Ctrl+Z</td><td>Return to privileged EXEC</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">Tab</td><td>Auto-complete command</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">?</td><td>Show available commands</td></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="panel cisco-section">
+  <h3><Icon name="terminal" /> Show Commands</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show running-config</td><td>Active config in RAM</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show startup-config</td><td>Saved config in NVRAM</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show version</td><td>IOS version, uptime, hardware</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip interface brief</td><td
+            >Quick interface/IP summary</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip route</td><td>Routing table</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show vlan brief</td><td>VLAN assignments</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show interfaces trunk</td><td>Trunk port status</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show mac address-table</td><td>MAC table</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show cdp neighbors</td><td>Connected Cisco devices</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show access-lists</td><td>ACL rules & hit counts</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip nat translations</td><td>NAT table</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip ospf neighbor</td><td>OSPF adjacencies</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show etherchannel summary</td><td
+            >EtherChannel status</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show spanning-tree</td><td>STP topology</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show logging</td><td>Syslog buffer</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip dhcp binding</td><td>DHCP leases</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show tech-support</td><td>Full diagnostic report</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show policy-map interface &lt;intf&gt;</td><td
+            >Active QoS policy-map stats per interface</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show policy-map</td><td
+            >List all defined policy-maps</td
+          ></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="panel cisco-section">
+  <h3><Icon name="terminal" /> Multicast Commands</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip mroute</td><td
+            >Multicast routing table — all VRFs</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip mroute vrf &lt;VRF-NAME&gt;</td><td
+            >Multicast routing table for specific VRF</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip mroute count</td><td
+            >Multicast traffic statistics and packet counts</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip mroute active</td><td
+            >Active multicast sources</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip pim neighbor</td><td
+            >PIM neighbor adjacencies</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip pim interface</td><td
+            >PIM-enabled interfaces</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip pim rp mapping</td><td
+            >Rendezvous Point (RP) mappings</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip igmp groups</td><td
+            >IGMP multicast group memberships</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip igmp interface</td><td
+            >IGMP interface status</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip rpf &lt;source&gt;</td><td
+            >Reverse Path Forwarding check for source</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show ip msdp peer</td><td
+            >MSDP peer status (Multicast Source Discovery)</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">debug ip mpacket</td><td
+            >Debug multicast packets (use with caution)</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">debug ip pim</td><td>Debug PIM protocol messages</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">debug ip igmp</td><td>Debug IGMP protocol messages</td
+          ></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="panel cisco-section">
+  <h3><Icon name="terminal" /> Save & Manage</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">copy running-config startup-config</td><td
+            >Save config to NVRAM</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">copy running-config tftp</td><td>Backup to TFTP</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">erase startup-config</td><td>Delete saved config</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">reload</td><td>Reboot device</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">write erase</td><td>Factory reset config</td></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="panel cisco-section">
+  <h3><Icon name="terminal" /> Interface Management</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">default interface &lt;intf&gt;</td><td
+            >Reset interface to factory defaults — removes ALL config</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap"
+            >default interface range &lt;intf&gt; - &lt;intf&gt;</td
+          ><td>Default a range of consecutive interfaces</td></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">shutdown</td><td
+            >Administratively disable an interface</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">no shutdown</td><td>Enable (bring up) an interface</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">interface range &lt;intf&gt; - &lt;intf&gt;</td><td
+            >Configure a range of consecutive interfaces</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">interface range &lt;intf&gt; , &lt;intf&gt;</td><td
+            >Configure non-consecutive interfaces (comma-separated)</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">description &lt;text&gt;</td><td
+            >Add a human-readable label to an interface</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">no description</td><td
+            >Remove description from an interface</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show run interface &lt;intf&gt;</td><td
+            >Show running config for a single interface</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show interfaces &lt;intf&gt;</td><td
+            >Detailed counters, status, and error stats for interface</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show interfaces &lt;intf&gt; status</td><td
+            >Speed, duplex, VLAN, and link state summary</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show interfaces &lt;intf&gt; switchport</td><td
+            >Switchport mode, VLAN, and DTP details</td
+          ></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="panel cisco-section">
+  <h3><Icon name="terminal" /> QoS / Service Policy</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show policy-map</td><td
+            >List all defined policy-maps</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show policy-map &lt;name&gt;</td><td
+            >Show a specific policy-map & class hierarchy</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show policy-map interface &lt;intf&gt;</td><td
+            >All QoS stats (both directions) for an interface</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show policy-map interface &lt;intf&gt; input</td><td
+            >Input direction policy counters & drops</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show policy-map interface &lt;intf&gt; output</td><td
+            >Output direction counters & queue stats</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show class-map</td><td
+            >List all class-maps and match criteria</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show class-map &lt;name&gt;</td><td
+            >Show match conditions for a specific class-map</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show run | section policy-map</td><td
+            >Find all policy-map blocks in running config</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show run | section class-map</td><td
+            >Find all class-map blocks in running config</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show run | section service-policy</td><td
+            >Find all service-policy attachment points</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show run interface &lt;intf&gt;</td><td
+            >Full interface config incl. service-policy line</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show mls qos interface &lt;intf&gt;</td><td
+            >Hardware QoS stats on Catalyst switches</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show mls qos maps</td><td
+            >CoS/DSCP mapping tables on Catalyst switches</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap">show mls qos interface &lt;intf&gt; statistics</td><td
+            >Per-interface drop & queue stats (Catalyst)</td
+          ></tr
+        ><tr class="cisco-cmd"
+          ><td class="mono whitespace-nowrap"
+            >show interfaces &lt;intf&gt; | include service-policy</td
+          ><td>Confirm policy is attached to interface</td></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div>
+<FilterScript />

@@ -1,0 +1,187 @@
+---
+import Icon from '@/components/Icon.astro';
+import FilterScript from '@/components/FilterScript.astro';
+---
+
+<input
+  class="form-input mb-[14px]"
+  id="linux-filter"
+  placeholder="Search commands..."
+  data-filter=".linux-cmd"
+  type="search"
+  autocomplete="off"
+/><div class="panel linux-section">
+  <h3><Icon name="link" /> Connectivity</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ping &lt;host&gt;</td><td>Test basic connectivity</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ping6 &lt;host&gt;</td><td>Ping over IPv6</td></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">traceroute &lt;host&gt;</td><td
+            >Trace path to destination</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">mtr &lt;host&gt;</td><td
+            >Live combined ping + traceroute</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">nslookup &lt;domain&gt;</td><td>Query DNS</td></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">dig &lt;domain&gt; ANY</td><td
+            >Detailed DNS query (all records)</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">host &lt;domain&gt;</td><td>Quick DNS lookup</td></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">curl -I &lt;url&gt;</td><td
+            >Get HTTP response headers</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">wget -qO- ifconfig.me</td><td
+            >Get public IP address</td
+          ></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="panel linux-section">
+  <h3><Icon name="network-wired" /> Interfaces & Routing</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ip addr show</td><td>Show all interface IPs</td></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ip link show</td><td>Show link layer info</td></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ip route show</td><td>Show routing table</td></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ip neigh show</td><td>ARP/neighbor table</td></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ethtool &lt;intf&gt;</td><td
+            >NIC details (speed, duplex)</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">nmcli dev status</td><td
+            >NetworkManager device status</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ip link set &lt;intf&gt; up/down</td><td
+            >Enable/disable interface</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ip addr add &lt;ip/cidr&gt; dev &lt;intf&gt;</td><td
+            >Add IP to interface</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ip route add &lt;net&gt; via &lt;gw&gt;</td><td
+            >Add static route</td
+          ></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="panel linux-section">
+  <h3><Icon name="chart-column" /> Monitoring & Capture</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ss -tulnp</td><td>Show listening ports + processes</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">netstat -an</td><td>All connections (legacy)</td></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">tcpdump -i &lt;intf&gt;</td><td
+            >Capture packets on interface</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">tcpdump -i eth0 -c 100 -w capture.pcap</td><td
+            >Capture 100 packets to file</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">tcpdump port 53</td><td>Capture DNS traffic only</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">tshark -i &lt;intf&gt;</td><td>Wireshark CLI</td></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">iftop -i &lt;intf&gt;</td><td
+            >Live bandwidth monitor</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">nmap -sP 192.168.1.0/24</td><td
+            >Scan subnet for live hosts</td
+          ></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="panel linux-section">
+  <h3><Icon name="fire" /> Firewall</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">firewall-cmd --list-all</td><td
+            >Show firewalld rules</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">firewall-cmd --get-active-zones</td><td
+            >Active zones</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">iptables -L -n -v</td><td>List iptables rules</td></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">nft list ruleset</td><td>List nftables rules</td></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ufw status verbose</td><td>UFW firewall status</td
+          ></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="panel linux-section">
+  <h3><Icon name="box" /> File Transfer</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">scp file user@host:/path</td><td
+            >Secure copy over SSH</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">rsync -avz src/ user@host:/dest/</td><td
+            >Efficient file sync</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">sftp user@host</td><td>Interactive SFTP session</td
+          ></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="panel linux-section">
+  <h3><Icon name="plug" /> Cisco Console Access</h3><div class="table-wrap">
+    <table class="ref-table">
+      <tbody
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">screen /dev/ttyUSB0 9600</td><td
+            >Connect via screen (most common)</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">minicom -D /dev/ttyUSB0 -b 9600</td><td
+            >Connect via minicom</td
+          ></tr
+        ><tr class="linux-cmd"
+          ><td class="mono whitespace-nowrap">ls /dev | grep -i usb</td><td
+            >Find USB serial adapter</td
+          ></tr
+        ></tbody
+      >
+    </table>
+  </div>
+</div><div class="tip">
+  <Icon name="lightbulb" /> Cisco default serial: <strong
+    >9600 baud, 8 data bits, no parity, 1 stop bit, no flow control (9600 8N1)</strong
+  >
+</div>
+<FilterScript />

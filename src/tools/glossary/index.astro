@@ -1,0 +1,474 @@
+---
+import Icon from '@/components/Icon.astro';
+import FilterScript from '@/components/FilterScript.astro';
+---
+
+<div class="table-filter">
+  <input
+    class="form-input"
+    id="glossary-filter"
+    placeholder="Search terms, e.g. VLAN, subnet, gateway..."
+    data-filter="#glossary-table tbody tr"
+    type="search"
+    autocomplete="off"
+  />
+</div>
+<div class="table-wrap" id="glossary-table-wrap">
+  <table class="ref-table" id="glossary-table">
+    <thead><tr><th class="w-[160px]">Term</th><th>Plain-English Definition</th></tr></thead>
+    <tbody
+      ><tr
+        ><td class="w-[160px]"><strong>Access Port</strong></td><td
+          >A switch port that belongs to a single VLAN. Devices connected here don't know anything
+          about VLANs — the switch handles it all. Most end-device ports (PC, phone) are access
+          ports.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>ACL (Access Control List)</strong></td><td
+          >A list of rules on a router or switch that permit or deny traffic. Think of it as a
+          bouncer's list at the door — if your name is on it, you get in; if not, you're denied.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Address</strong></td><td
+          >A unique identifier for a device. MAC addresses are hardware addresses; IP addresses are
+          logical addresses assigned by software/DHCP.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>AP / WAP</strong></td><td
+          >Access Point or Wireless Access Point — the box on the ceiling that broadcasts Wi-Fi.
+          Connects wireless devices to the wired network.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>ARP</strong></td><td
+          >Address Resolution Protocol — how a device figures out the MAC address of another device
+          when it only knows the IP address. "Who has 192.168.1.1? Tell me your MAC."</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>ASN</strong></td><td
+          >Autonomous System Number — a unique ID given to organisations that run their own public
+          routing (usually ISPs and big companies using BGP).</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Backbone</strong></td><td
+          >The high-speed core of a network that carries the bulk of the traffic. Usually
+          fiber-connected switches or routers in the data center.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Bandwidth</strong></td><td
+          >The maximum amount of data a link can carry per second (e.g. 1 Gbps). Not the same as
+          speed — it's more like the width of a pipe, not how fast the water flows.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>BGP</strong></td><td
+          >Border Gateway Protocol — the routing protocol that runs the internet. Used between ISPs
+          and large enterprises to exchange routing information between autonomous systems.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Broadcast</strong></td><td
+          >A message sent to all devices on a network at once. Like shouting in a room instead of
+          whispering to one person.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>CDP / LLDP</strong></td><td
+          >Cisco Discovery Protocol / Link Layer Discovery Protocol — protocols that let network
+          devices announce themselves to their neighbors. Useful for mapping what's connected to
+          what.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>CIDR</strong></td><td
+          >Classless Inter-Domain Routing — a way to write IP addresses with their prefix length:
+          e.g. 192.168.1.0/24. The /24 tells you how many bits are the network part.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>CLI</strong></td><td
+          >Command Line Interface — the text-based interface you use to configure routers and
+          switches. No mouse, just typing commands.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Collision Domain</strong></td><td
+          >The group of devices that share a single network segment. Old hubs had one big collision
+          domain; switches give each port its own, eliminating most collisions.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Convergence</strong></td><td
+          >When all routers in a network agree on the best routes after a change (like a link going
+          down). During convergence, traffic may be temporarily disrupted.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>CRC</strong></td><td
+          >Cyclic Redundancy Check — a math checksum attached to Ethernet frames so the receiver can
+          detect if bits got corrupted in transit. Bad CRCs usually mean a cable or NIC issue.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>CSMA/CD</strong></td><td
+          >How old Ethernet shared a cable — devices listen before transmitting and back off if a
+          collision happens. Mostly irrelevant now that switches give each device a full-duplex
+          link.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Default Gateway</strong></td><td
+          >The router's IP address on your subnet. When your PC wants to reach something outside its
+          own network, it sends traffic here first. Usually ends in .1 (e.g. 192.168.1.1).</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>DHCP</strong></td><td
+          >Dynamic Host Configuration Protocol — automatically gives IP addresses, subnet masks,
+          gateways, and DNS servers to devices when they join the network. No manual config needed.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>DMZ</strong></td><td
+          >Demilitarized Zone — a network segment that sits between the internet and your internal
+          network, used for public-facing servers (web, email). Isolated so a compromise doesn't
+          reach internal systems.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>DNS</strong></td><td
+          >Domain Name System — translates names like google.com into IP addresses. Like a phone
+          book for the internet. Without it you'd need to memorise IPs for every website.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Duplex</strong></td><td
+          >Whether a link can send and receive at the same time. Full-duplex = simultaneous
+          send/receive (modern). Half-duplex = only one direction at a time (old hubs). Mismatched
+          duplex causes errors.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>EIGRP</strong></td><td
+          >Enhanced Interior Gateway Routing Protocol — a Cisco proprietary routing protocol. Faster
+          convergence than RIP, simpler than OSPF. Used inside enterprise networks.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Encapsulation</strong></td><td
+          >Wrapping data in headers at each OSI layer as it travels down the stack. Like putting a
+          letter in an envelope, then that envelope in a box, then shipping the box.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Ethernet</strong></td><td
+          >The most common wired networking standard. Uses frames with MAC addresses. Runs over
+          copper (Cat5e/6/6a) or fiber cable. Speeds: 100 Mbps, 1 Gbps, 10 Gbps, 25 Gbps, 100 Gbps.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Failover</strong></td><td
+          >When a primary link or device fails and traffic automatically switches to a backup. Good
+          network design always has a failover plan.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Firewall</strong></td><td
+          >A device (or software) that enforces rules about what traffic is allowed in or out of a
+          network. Can block ports, protocols, or specific IP addresses.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Frame</strong></td><td
+          >A Layer 2 packet. Contains source/destination MAC addresses, data payload, and a CRC
+          checksum. Switches work with frames.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Full Mesh</strong></td><td
+          >A network topology where every device connects directly to every other device. Very
+          resilient but expensive — connections grow exponentially with device count.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Gateway</strong></td><td
+          >Usually refers to the default gateway — the router interface on your subnet that forwards
+          traffic to other networks. Sometimes used for application-layer gateways (API, email).</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>GRE</strong></td><td
+          >Generic Routing Encapsulation — a tunneling protocol that wraps packets inside other
+          packets to carry them over a network that wouldn't normally support them (e.g. non-IP
+          traffic over IP).</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>HSRP / VRRP</strong></td><td
+          >Hot Standby Router Protocol / Virtual Router Redundancy Protocol — protocols that let two
+          routers share a virtual IP as the default gateway. If one fails, the other takes over
+          invisibly.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Hub</strong></td><td
+          >Old networking gear that broadcasts all traffic to every port. Replaced by switches,
+          which are smarter. You'll mostly see hubs in museums now.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>ICMP</strong></td><td
+          >Internet Control Message Protocol — used by ping and traceroute. It's a
+          diagnostic/control protocol, not for carrying user data. Firewalls often block it, which
+          is why ping sometimes fails.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>IDF</strong></td><td
+          >Intermediate Distribution Frame — the wiring closet on each floor or wing of a building.
+          Connects to the MDF (main distribution frame) in the data center.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Interface</strong></td><td
+          >A physical or logical connection point on a device. A router port, a switch port, or a
+          virtual interface (loopback, VLAN interface) are all interfaces.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>IP Address</strong></td><td
+          >A unique logical address for a device on a network. IPv4: four numbers 0–255 separated by
+          dots (e.g. 192.168.1.10). IPv6: eight groups of four hex digits (e.g. 2001:db8::1).</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>IPv4</strong></td><td
+          >The most common version of IP addressing — 32-bit addresses written as four decimal
+          numbers (e.g. 10.0.0.1). About 4.3 billion possible addresses.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>IPv6</strong></td><td
+          >The newer version — 128-bit addresses, allowing a virtually unlimited number. Written in
+          hex groups separated by colons. Slowly replacing IPv4 but both coexist today.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>ISP</strong></td><td
+          >Internet Service Provider — the company that connects your organisation to the internet.
+          Examples: AT&amp;T, Comcast, Spectrum, Lumen.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Jitter</strong></td><td
+          >Variation in the delay of arriving packets. High jitter causes choppy audio/video in VoIP
+          and video conferencing calls.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Jumbo Frames</strong></td><td
+          >Ethernet frames larger than the standard 1500-byte MTU, typically 9000 bytes. Used in
+          storage networks (iSCSI, NFS) to reduce overhead. All devices on a path must support them.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>LAN</strong></td><td
+          >Local Area Network — the private network inside your building or campus. Switches connect
+          devices on the LAN.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Latency</strong></td><td
+          >The time it takes a packet to travel from source to destination. Measured in milliseconds
+          (ms). Low latency is good — important for real-time traffic like voice and video.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Layer 2</strong></td><td
+          >The Data Link layer of the OSI model — where switches and MAC addresses live. Concerned
+          with getting frames between directly connected devices.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Layer 3</strong></td><td
+          >The Network layer of the OSI model — where routers and IP addresses live. Concerned with
+          routing packets between different networks.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Loopback</strong></td><td
+          >A virtual interface on a router or switch (e.g. Loopback0) used as a stable management
+          address that is always up as long as the device is running.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>MAC Address</strong></td><td
+          >Media Access Control address — a hardware address burned into every NIC at the factory.
+          Written as six pairs of hex digits: AA:BB:CC:DD:EE:FF. Switches use these to forward
+          frames locally.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>MDF</strong></td><td
+          >Main Distribution Frame — the central wiring hub, usually in the data center or main
+          comms room. All IDFs connect back here.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>MTU</strong></td><td
+          >Maximum Transmission Unit — the largest packet size a link can carry without fragmenting.
+          Standard Ethernet MTU is 1500 bytes.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Multicast</strong></td><td
+          >Sending data to a specific group of devices simultaneously (not all, not one). Used for
+          video streaming, IPTV, and routing protocol updates.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>NAT</strong></td><td
+          >Network Address Translation — rewrites IP addresses on packets as they pass through a
+          router. Most commonly used to let many private IPs share one public IP for internet
+          access.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>NIC</strong></td><td
+          >Network Interface Card — the hardware in your computer or server that connects to the
+          network. Has a MAC address burned in at the factory.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>NTP</strong></td><td
+          >Network Time Protocol — keeps all devices on the network synchronised to the same time.
+          Critical for logging, authentication (Kerberos), and certificates.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>OSPF</strong></td><td
+          >Open Shortest Path First — a popular routing protocol that automatically finds the best
+          paths between networks. Routers share a map of all links and calculate routes using
+          Dijkstra's algorithm.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Packet</strong></td><td
+          >A unit of data at Layer 3. Contains source and destination IP addresses plus the data
+          payload. Routers move packets between networks.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>PAT</strong></td><td
+          >Port Address Translation — a form of NAT where many internal IPs share one public IP by
+          using different source port numbers. Also called NAT overload. Most home routers use this.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Ping</strong></td><td
+          >A basic test that sends an ICMP echo request to a device and waits for a reply. If you
+          get replies, the path to that device is working. If not, there's a connectivity issue.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>PoE</strong></td><td
+          >Power over Ethernet — delivers electrical power alongside data over the same Ethernet
+          cable. Used to power APs, IP phones, cameras, and small switches without a separate power
+          supply.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Port (physical)</strong></td><td
+          >The socket on a switch or router where you plug in a cable.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Port (logical)</strong></td><td
+          >A number (0–65535) that identifies which application or service traffic belongs to. HTTP
+          = port 80, HTTPS = 443, SSH = 22. The Port Lookup tool lists them all.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Protocol</strong></td><td
+          >A set of rules that defines how devices communicate. Like a language — both sides must
+          speak the same protocol to understand each other. Examples: TCP, IP, HTTP, OSPF, SNMP.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>QoS</strong></td><td
+          >Quality of Service — policies that prioritise certain types of traffic (like voice and
+          video) over others so they don't get delayed by bulk downloads.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>RFC 1918</strong></td><td
+          >The standard that defines private IP address ranges: 10.x.x.x, 172.16–31.x.x, and
+          192.168.x.x. These addresses are not routed on the public internet.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>RJ-45</strong></td><td
+          >The standard 8-pin connector on the end of an Ethernet cable. The plastic tab that breaks
+          off if you're not careful.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Route</strong></td><td
+          >A path through the network to reach a destination. Routers store routes in a routing
+          table and choose the best one for each packet.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Router</strong></td><td
+          >A Layer 3 device that moves packets between different IP networks. Looks at IP addresses
+          to decide where to forward traffic.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>SFP</strong></td><td
+          >Small Form-factor Pluggable — a hot-swappable module that goes into a switch or router to
+          provide a specific type of connection (fiber, copper, 1G, 10G, etc.).</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>SNMP</strong></td><td
+          >Simple Network Management Protocol — used by monitoring systems to query and get alerts
+          from routers, switches, and servers. Versions: v1 (insecure), v2c (common), v3 (secure).</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Spanning Tree (STP)</strong></td><td
+          >A protocol that prevents network loops by blocking redundant paths. Without it, a loop
+          would flood the network with traffic until it crashed.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>SSH</strong></td><td
+          >Secure Shell — encrypted remote access to the CLI of a router, switch, or server.
+          Replaced Telnet, which sent passwords in plain text.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Subnet</strong></td><td
+          >A logical subdivision of an IP network. Devices in the same subnet can communicate
+          directly without going through a router. Splitting a big network into subnets improves
+          security and performance.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Switch</strong></td><td
+          >A Layer 2 device that connects devices on the same network. Learns which MAC addresses
+          are on which ports and forwards frames only to the correct port — unlike a hub.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>TCP</strong></td><td
+          >Transmission Control Protocol — ensures reliable delivery of data. Breaks data into
+          segments, sends them, and retransmits any that are lost. Used by HTTP, SSH, FTP, email.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Telnet</strong></td><td
+          >An old, unencrypted remote access protocol. Everything including passwords is sent in
+          plain text. Use SSH instead.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Throughput</strong></td><td
+          >The actual amount of useful data transferred per second, after accounting for overhead
+          and errors. Always less than the theoretical bandwidth of the link.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Traceroute</strong></td><td
+          >A tool that shows every router (hop) between you and a destination and how long each hop
+          takes. Great for pinpointing where a connection is slow or breaking.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Trunk Port</strong></td><td
+          >A switch port that carries traffic for multiple VLANs simultaneously, tagged with 802.1Q
+          headers. Used to connect switches together or connect a switch to a router.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>UDP</strong></td><td
+          >User Datagram Protocol — fast, connectionless delivery of data. No guarantee of delivery
+          or order. Used where speed matters more than perfection: DNS, VoIP, streaming, gaming.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Unicast</strong></td><td
+          >A one-to-one transmission — one source sends to exactly one destination. The most common
+          type of network traffic.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Uplink</strong></td><td
+          >A port that connects a device "up" toward the core of the network. E.g. the port on an
+          access switch that connects back to the distribution switch.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>VLAN</strong></td><td
+          >Virtual LAN — a logical grouping of ports on a switch that behaves as if they were on a
+          separate network. Separates traffic without needing separate physical hardware. E.g. VLAN
+          10 = Data, VLAN 20 = Voice.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>VPN</strong></td><td
+          >Virtual Private Network — creates an encrypted tunnel over the internet, making remote
+          devices appear to be on the local network. Examples: IPsec, SSL/TLS, OpenVPN, WireGuard.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>VRF</strong></td><td
+          >Virtual Routing and Forwarding — multiple independent routing tables on one physical
+          router. Like having separate routers inside one box. Used for network segmentation.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>WAN</strong></td><td
+          >Wide Area Network — the network beyond your building: internet, MPLS circuits, SD-WAN.
+          Connects your LANs across distances.</td
+        ></tr
+      ><tr
+        ><td class="w-[160px]"><strong>Wildcard Mask</strong></td><td
+          >The inverse of a subnet mask used in ACLs and OSPF statements. 0 means "must match," 1
+          means "don't care." e.g. 0.0.0.255 matches any host in a /24 network.</td
+        ></tr
+      ></tbody
+    >
+  </table>
+</div>
+<div class="tip mt-[12px]">
+  <Icon name="lightbulb" />
+  <strong>Tip:</strong> Search any word you hear and don't understand. Missing a term? Check the <strong
+    >Acronym Reference</strong
+  > tool for abbreviations.
+</div>
+
+<FilterScript />

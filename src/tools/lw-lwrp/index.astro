@@ -1,0 +1,187 @@
+---
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<div class="panel">
+  <h3><Icon name="terminal" /> LWRP — Livewire Routing Protocol</h3>
+  <p class="mb-[12px]">
+    Plain-text TCP protocol for controlling Axia/Livewire devices — routing sources/destinations and
+    reading/writing GPIO. Keep the session open; do not reconnect per command.
+  </p>
+  <div class="mt-[12px]">
+    <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+      Connection Details
+    </div>
+    <pre
+      class="code">Protocol:  TCP
+Port:      93
+Session:   Persistent — keep the connection open, do not reconnect per command
+Auth:      LOGIN &lt;password&gt;   (only if a password is set on the device)
+
+# Quick test with netcat
+nc &lt;device-ip&gt; 93
+
+# Or PuTTY: Connection Type = Raw, Port = 93</pre>
+  </div>
+</div>
+<Tabs
+  tabs={[
+    { id: 'lw-lwrp-cmd', label: 'Commands', icon: 'terminal' },
+    { id: 'lw-lwrp-gpio', label: 'GPIO', icon: 'microchip' },
+    { id: 'lw-lwrp-notes', label: 'Notes', icon: 'circle-info' },
+  ]}
+  ><TabPanel id="lw-lwrp-cmd" selected>
+    <div class="panel">
+      <h3><Icon name="list" /> Command Reference</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Command</th><th>Syntax</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr
+              ><td><strong>Version / Caps</strong></td><td class="mono">VER</td><td
+                >Returns firmware version, source count, destination count, GPIO count</td
+              ></tr
+            >
+            <tr
+              ><td><strong>List Sources</strong></td><td class="mono">SRC</td><td
+                >Returns all source slots with current channel assignments and labels</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Set Source</strong></td><td class="mono"
+                >SRC &lt;n&gt; LIWF:&lt;channel&gt;</td
+              ><td
+                >Assign source slot n to Livewire channel number — makes the device a stream
+                originator</td
+              ></tr
+            >
+            <tr
+              ><td><strong>List Destinations</strong></td><td class="mono">DST</td><td
+                >Returns all destination slots and their current channel assignments</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Set Destination</strong></td><td class="mono"
+                >DST &lt;n&gt; LIWF:&lt;channel&gt;</td
+              ><td>Route destination slot n to receive the given Livewire channel</td></tr
+            >
+            <tr
+              ><td><strong>Read GPIs</strong></td><td class="mono">GPI</td><td
+                >Returns state of all GPI (input) pins</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Read GPOs</strong></td><td class="mono">GPO</td><td
+                >Returns state of all GPO (output) pins</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Set GPO</strong></td><td class="mono">GPO &lt;n&gt; STAT:&lt;0|1&gt;</td
+              ><td>Set GPO pin n — 0 = low/active, 1 = high/inactive (inverted logic)</td></tr
+            >
+            <tr
+              ><td><strong>Hardware Status</strong></td><td class="mono">LPSTAT</td><td
+                >Extended device status — link state, PSU health (xNode devices)</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Subscribe Source</strong></td><td class="mono">ADD SRC &lt;n&gt;</td><td
+                >Subscribe to real-time change notifications for source slot n</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Subscribe Dest</strong></td><td class="mono">ADD DST &lt;n&gt;</td><td
+                >Subscribe to real-time change notifications for destination slot n</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-[14px]">
+        <div class="mb-[6px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+          Example Session
+        </div>
+        <pre
+          class="code"># Connect
+nc 192.168.1.100 93
+
+# Device responds with version banner
+VER &lt;LWRP:4.0.12 devn:"Studio A xNode" ntwk:"Studio Network" nsrc:8 ndst:8 ngpi:4 ngpo:4&gt;
+
+# List all destinations
+DST
+
+# Route destination 1 to channel 1001
+DST 1 LIWF:1001
+
+# Set GPO 1 active (low)
+GPO 1 STAT:0
+
+# Subscribe to destination changes
+ADD DST 0</pre>
+      </div>
+    </div>
+  </TabPanel><TabPanel id="lw-lwrp-gpio">
+    <div class="panel">
+      <h3><Icon name="microchip" /> GPIO Logic Reference</h3>
+      <p class="mb-[12px]">
+        Livewire GPIO uses <strong>inverted logic</strong> in LWRP — the opposite of what you might expect
+        from standard digital I/O. This is consistent with traditional broadcast tally and relay conventions.
+      </p>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead
+            ><tr><th>LWRP State</th><th>Voltage Level</th><th>Meaning</th><th>Typical Use</th></tr
+            ></thead
+          >
+          <tbody>
+            <tr
+              ><td class="mono">STAT:0</td><td>Low (0V)</td><td
+                ><strong class="text-green">Active / Closed</strong></td
+              ><td>Tally ON, relay closed, event triggered</td></tr
+            >
+            <tr
+              ><td class="mono">STAT:1</td><td>High (3.3V / 5V)</td><td
+                ><strong class="text-text3">Inactive / Open</strong></td
+              ><td>Tally OFF, relay open, idle state</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+      <div class="warn mt-[12px]">
+        GPIO states are polled or subscribed via LWRP. Use <code>ADD GPI 0</code> to subscribe to all
+        GPI change events in real time rather than polling with <code>GPI</code>.
+      </div>
+      <div class="tip mt-[8px]">
+        Livewire GPIO can be routed over the network — a GPI on one device can trigger a GPO on any
+        other device using the GPIO routing matrix in PathfinderPC or the Axia web UI.
+      </div>
+    </div>
+  </TabPanel><TabPanel id="lw-lwrp-notes">
+    <div class="panel">
+      <h3><Icon name="circle-info" /> Implementation Notes</h3>
+      <div class="tip">
+        <strong>Plain-text and testable.</strong> LWRP is a simple ASCII protocol. You can interact with
+        any Livewire device using <code>nc &lt;ip&gt; 93</code> or PuTTY in raw mode — no SDK required.
+        Great for scripting, automation, and diagnostics.
+      </div>
+      <div class="warn mt-[10px]">
+        <strong>Device generation matters.</strong> LWRP behavior varies between xNodes, Livewire Drivers,
+        QoR nodes, and legacy Element surfaces. Command support, response formatting, and GPIO counts
+        differ. Always test on non-critical equipment first.
+      </div>
+      <div class="warn mt-[10px]">
+        <strong>Limit concurrent connections.</strong> Making too many simultaneous LWRP connections to
+        a single device can cause instability or missed responses. Limit to one or two persistent connections
+        per device in production environments.
+      </div>
+      <div class="tip mt-[10px]">
+        <strong>Pathfinder and automation.</strong> For large-scale LWRP automation, consider Telos Alliance
+        PathfinderPC, which provides a higher-level API, event routing, and scripting — sitting on top
+        of LWRP so you don't have to manage raw connections at scale.
+      </div>
+    </div>
+  </TabPanel></Tabs
+>

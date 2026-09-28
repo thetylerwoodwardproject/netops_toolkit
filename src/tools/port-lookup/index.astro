@@ -1,0 +1,213 @@
+---
+import Icon from '@/components/Icon.astro';
+import FilterScript from '@/components/FilterScript.astro';
+---
+
+<div class="tip mb-[10px]">
+  <Icon name="graduation-cap" />
+  <strong>What's a port?</strong> If an IP address is a building's street address, a <em
+    >port number</em
+  > is the apartment number inside. Port 80 = web, port 443 = secure web, port 22 = SSH remote access.
+  Every service runs on a specific port.
+</div><div class="table-filter">
+  <input
+    class="form-input"
+    id="port-filter"
+    placeholder="Search by port number, name, or protocol..."
+    data-filter="#port-table tbody tr"
+    type="search"
+    autocomplete="off"
+  />
+</div><div class="table-wrap" id="port-table-wrap">
+  <table class="ref-table" id="port-table">
+    <thead><tr><th>Port</th><th>Service</th><th>Transport</th><th>Description</th></tr></thead
+    ><tbody
+      ><tr
+        ><td class="mono">20</td><td><strong>FTP Data</strong></td><td>TCP</td><td
+          >File transfer data channel</td
+        ></tr
+      ><tr
+        ><td class="mono">21</td><td><strong>FTP Control</strong></td><td>TCP</td><td
+          >File transfer commands</td
+        ></tr
+      ><tr
+        ><td class="mono">22</td><td><strong>SSH</strong></td><td>TCP</td><td
+          >Secure Shell encrypted remote access</td
+        ></tr
+      ><tr
+        ><td class="mono">23</td><td><strong>Telnet</strong></td><td>TCP</td><td
+          >Unencrypted remote access (legacy)</td
+        ></tr
+      ><tr
+        ><td class="mono">25</td><td><strong>SMTP</strong></td><td>TCP</td><td
+          >Simple Mail Transfer Protocol</td
+        ></tr
+      ><tr
+        ><td class="mono">49</td><td><strong>TACACS+</strong></td><td>TCP</td><td
+          >AAA authentication (Cisco)</td
+        ></tr
+      ><tr
+        ><td class="mono">53</td><td><strong>DNS</strong></td><td>TCP/UDP</td><td
+          >Domain Name System</td
+        ></tr
+      ><tr
+        ><td class="mono">93</td><td><strong>LWRP</strong></td><td>TCP</td><td
+          >Livewire Routing Protocol — source/destination routing, GPIO control (Axia/Telos)</td
+        ></tr
+      ><tr
+        ><td class="mono">67</td><td><strong>DHCP Server</strong></td><td>UDP</td><td
+          >Dynamic Host Config (server)</td
+        ></tr
+      ><tr
+        ><td class="mono">68</td><td><strong>DHCP Client</strong></td><td>UDP</td><td
+          >Dynamic Host Config (client)</td
+        ></tr
+      ><tr
+        ><td class="mono">69</td><td><strong>TFTP</strong></td><td>UDP</td><td
+          >Trivial File Transfer Protocol</td
+        ></tr
+      ><tr
+        ><td class="mono">80</td><td><strong>HTTP</strong></td><td>TCP</td><td
+          >Web traffic (unencrypted)</td
+        ></tr
+      ><tr
+        ><td class="mono">88</td><td><strong>Kerberos</strong></td><td>TCP/UDP</td><td
+          >Authentication (Active Directory)</td
+        ></tr
+      ><tr
+        ><td class="mono">110</td><td><strong>POP3</strong></td><td>TCP</td><td>Email retrieval</td
+        ></tr
+      ><tr
+        ><td class="mono">123</td><td><strong>NTP</strong></td><td>UDP</td><td
+          >Network Time Protocol</td
+        ></tr
+      ><tr
+        ><td class="mono">319</td><td><strong>PTP Event</strong></td><td>UDP</td><td
+          >IEEE 1588 PTP clock sync — time-critical event messages (AES67/AoIP)</td
+        ></tr
+      ><tr
+        ><td class="mono">320</td><td><strong>PTP General</strong></td><td>UDP</td><td
+          >IEEE 1588 PTP clock sync — announce and management messages (AES67/AoIP)</td
+        ></tr
+      ><tr
+        ><td class="mono">143</td><td><strong>IMAP</strong></td><td>TCP</td><td
+          >Email (server-stored)</td
+        ></tr
+      ><tr
+        ><td class="mono">161</td><td><strong>SNMP</strong></td><td>UDP</td><td>SNMP queries</td
+        ></tr
+      ><tr
+        ><td class="mono">162</td><td><strong>SNMP Trap</strong></td><td>UDP</td><td
+          >SNMP trap notifications</td
+        ></tr
+      ><tr
+        ><td class="mono">389</td><td><strong>LDAP</strong></td><td>TCP/UDP</td><td
+          >Directory services</td
+        ></tr
+      ><tr
+        ><td class="mono">443</td><td><strong>HTTPS</strong></td><td>TCP</td><td
+          >Encrypted web (TLS/SSL)</td
+        ></tr
+      ><tr
+        ><td class="mono">445</td><td><strong>SMB</strong></td><td>TCP</td><td
+          >File sharing (Windows)</td
+        ></tr
+      ><tr
+        ><td class="mono">514</td><td><strong>Syslog</strong></td><td>UDP</td><td>System logging</td
+        ></tr
+      ><tr
+        ><td class="mono">546</td><td><strong>DHCPv6 Client</strong></td><td>UDP</td><td
+          >DHCP for IPv6 (client)</td
+        ></tr
+      ><tr
+        ><td class="mono">547</td><td><strong>DHCPv6 Server</strong></td><td>UDP</td><td
+          >DHCP for IPv6 (server)</td
+        ></tr
+      ><tr
+        ><td class="mono">587</td><td><strong>SMTP Submission</strong></td><td>TCP</td><td
+          >Email submission with auth</td
+        ></tr
+      ><tr
+        ><td class="mono">636</td><td><strong>LDAPS</strong></td><td>TCP</td><td>LDAP over SSL</td
+        ></tr
+      ><tr
+        ><td class="mono">993</td><td><strong>IMAPS</strong></td><td>TCP</td><td>IMAP over SSL</td
+        ></tr
+      ><tr
+        ><td class="mono">995</td><td><strong>POP3S</strong></td><td>TCP</td><td>POP3 over SSL</td
+        ></tr
+      ><tr
+        ><td class="mono">1433</td><td><strong>MS-SQL</strong></td><td>TCP</td><td
+          >Microsoft SQL Server</td
+        ></tr
+      ><tr
+        ><td class="mono">1521</td><td><strong>Oracle DB</strong></td><td>TCP</td><td
+          >Oracle database</td
+        ></tr
+      ><tr
+        ><td class="mono">1812</td><td><strong>RADIUS Auth</strong></td><td>UDP</td><td
+          >RADIUS authentication</td
+        ></tr
+      ><tr
+        ><td class="mono">1813</td><td><strong>RADIUS Acct</strong></td><td>UDP</td><td
+          >RADIUS accounting</td
+        ></tr
+      ><tr
+        ><td class="mono">2049</td><td><strong>NFS</strong></td><td>TCP/UDP</td><td
+          >Network File System</td
+        ></tr
+      ><tr
+        ><td class="mono">3212</td><td><strong>NMOS IS-04</strong></td><td>TCP</td><td
+          >AES67 / ST 2110 device discovery and registration</td
+        ></tr
+      ><tr
+        ><td class="mono">3306</td><td><strong>MySQL</strong></td><td>TCP</td><td>MySQL database</td
+        ></tr
+      ><tr
+        ><td class="mono">3389</td><td><strong>RDP</strong></td><td>TCP</td><td
+          >Remote Desktop Protocol</td
+        ></tr
+      ><tr
+        ><td class="mono">4010</td><td><strong>LWCP</strong></td><td>TCP</td><td
+          >Livewire Console Protocol — VMix, fader/bus, AES67 mixing control (Axia/Telos)</td
+        ></tr
+      ><tr
+        ><td class="mono">4789</td><td><strong>VXLAN</strong></td><td>UDP</td><td
+          >VXLAN encapsulation (IANA assigned)</td
+        ></tr
+      ><tr
+        ><td class="mono">5004</td><td><strong>RTP / Livewire Audio</strong></td><td>UDP</td><td
+          >RTP audio stream delivery — Livewire and AES67 multicast audio</td
+        ></tr
+      ><tr
+        ><td class="mono">5060</td><td><strong>SIP</strong></td><td>TCP/UDP</td><td
+          >VoIP signaling</td
+        ></tr
+      ><tr
+        ><td class="mono">5061</td><td><strong>SIPS</strong></td><td>TCP</td><td>SIP over TLS</td
+        ></tr
+      ><tr
+        ><td class="mono">5432</td><td><strong>PostgreSQL</strong></td><td>TCP</td><td
+          >PostgreSQL database</td
+        ></tr
+      ><tr
+        ><td class="mono">8080</td><td><strong>HTTP Alt</strong></td><td>TCP</td><td
+          >Alternative HTTP / proxy</td
+        ></tr
+      ><tr
+        ><td class="mono">8443</td><td><strong>HTTPS Alt</strong></td><td>TCP</td><td
+          >Alternative HTTPS</td
+        ></tr
+      ><tr
+        ><td class="mono">9875</td><td><strong>SAP</strong></td><td>UDP</td><td
+          >Session Announcement Protocol — AES67 stream advertisement (multicast)</td
+        ></tr
+      ><tr
+        ><td class="mono">10000</td><td><strong>NDMP</strong></td><td>TCP</td><td
+          >Network Data Management Protocol</td
+        ></tr
+      ></tbody
+    >
+  </table>
+</div>
+<FilterScript />
