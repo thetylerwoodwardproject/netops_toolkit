@@ -18,6 +18,9 @@
 
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', monospace;
+  /* No ligatures: configs and diagrams must show exactly the characters that
+     get copied, so '<-' stays two characters and '!=' is not drawn as '≠'. */
+  --font-mono--font-feature-settings: 'liga' 0, 'calt' 0;
 
   --color-bg: #111214;
   --color-bg2: #171717;

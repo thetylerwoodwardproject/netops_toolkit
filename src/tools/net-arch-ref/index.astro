@@ -1,0 +1,507 @@
+---
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'arch-threetier', label: 'Three-Tier', icon: 'building' },
+    { id: 'arch-spineleaf', label: 'Spine-Leaf', icon: 'leaf' },
+    { id: 'arch-compare', label: 'Compare', icon: 'scale-balanced' },
+    { id: 'arch-fabric', label: 'Fabric' },
+    { id: 'arch-bestpractice', label: 'Best Practices', icon: 'lightbulb' },
+  ]}
+  ><TabPanel id="arch-threetier" selected
+    ><div class="panel">
+      <h3><Icon name="building" /> Three-Tier Hierarchical Model (Campus / Enterprise)</h3><p>
+        The Cisco three-tier hierarchical model divides a campus or enterprise network into three
+        distinct layers &#8212; <strong>Core</strong>, <strong>Distribution</strong>, and <strong
+          >Access</strong
+        > &#8212; each with a specific role. This separation makes the network easier to design, manage,
+        troubleshoot, and scale.
+      </p><div class="mt-[14px] flex flex-col gap-0">
+        <div class="flex overflow-hidden rounded-t-field">
+          <div class="w-[10px] shrink-0 bg-[#e74c3c]"></div><div
+            class="flex-1 border border-b-0 border-l-0 border-line bg-surface px-[16px] py-[14px]"
+          >
+            <div class="mb-[6px] flex items-center gap-[10px]">
+              <span class="text-[18px]"
+                ><Icon name="bolt" class="mr-1 inline align-[-2px] text-yellow" /></span
+              ><strong class="text-[13px] text-text">Layer 3 &#8212; Core</strong><span
+                class="rounded-[10px] bg-[#e74c3c]/15 px-[8px] py-[2px] text-[10px] font-bold tracking-[.05em] text-[#e74c3c] uppercase"
+                >Backbone</span
+              >
+            </div><p class="mb-[6px] text-[12px] text-text2">
+              The high-speed backbone. Provides fast, reliable transport between Distribution
+              blocks. <strong>No policy, no filtering here</strong> &#8212; just raw forwarding speed.
+            </p><div class="grid grid-cols-1 gap-[6px] text-[11.5px] text-text2 md:grid-cols-2">
+              <div>
+                <Icon name="box" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Devices:</strong> High-capacity L3 switches, routers
+              </div><div>
+                <Icon name="link" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Topology:</strong> Full-mesh or dual-node redundant
+              </div><div>
+                <Icon name="bolt" class="mr-1 inline align-[-2px] text-yellow" />
+                <strong>Speed:</strong> 10G / 40G / 100G links typical
+              </div><div>
+                <Icon name="ban" class="mr-1 inline align-[-2px] text-red" />
+                <strong>Avoid:</strong> Routing filters, ACLs, QoS marking
+              </div>
+            </div>
+          </div>
+        </div><div class="flex overflow-hidden">
+          <div class="w-[10px] shrink-0 bg-[#f39c12]"></div><div
+            class="flex-1 border border-t-0 border-b-0 border-l-0 border-line bg-surface px-[16px] py-[14px]"
+          >
+            <div class="mb-[6px] flex items-center gap-[10px]">
+              <span class="text-[18px]"
+                ><Icon name="shuffle" class="mr-1 inline align-[-2px] text-accent" /></span
+              ><strong class="text-[13px] text-text"
+                >Layer 2/3 &#8212; Distribution (Aggregation)</strong
+              ><span
+                class="rounded-[10px] bg-[#f39c12]/15 px-[8px] py-[2px] text-[10px] font-bold tracking-[.05em] text-[#f39c12] uppercase"
+                >Policy Point</span
+              >
+            </div><p class="mb-[6px] text-[12px] text-text2">
+              The brains of the network. Aggregates Access switches, enforces policy, provides
+              inter-VLAN routing, and is the boundary between L2 (Access) and L3 (Core).
+            </p><div class="grid grid-cols-1 gap-[6px] text-[11.5px] text-text2 md:grid-cols-2">
+              <div>
+                <Icon name="box" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Devices:</strong> Multilayer switches (L3)
+              </div><div>
+                <Icon name="link" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Topology:</strong> Redundant pair, uplinks to Core
+              </div><div>
+                <Icon name="clipboard-list" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Functions:</strong> ACLs, QoS, route summarization
+              </div><div>
+                <Icon name="globe" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Also:</strong> Inter-VLAN routing, HSRP/VRRP gateway
+              </div>
+            </div>
+          </div>
+        </div><div class="flex overflow-hidden rounded-b-field">
+          <div class="w-[10px] shrink-0 bg-[#27ae60]"></div><div
+            class="flex-1 border border-l-0 border-line bg-surface px-[16px] py-[14px]"
+          >
+            <div class="mb-[6px] flex items-center gap-[10px]">
+              <span class="text-[18px]"
+                ><Icon name="laptop" class="mr-1 inline align-[-2px] text-accent" /></span
+              ><strong class="text-[13px] text-text">Layer 1/2 &#8212; Access</strong><span
+                class="rounded-[10px] bg-[#27ae60]/15 px-[8px] py-[2px] text-[10px] font-bold tracking-[.05em] text-[#27ae60] uppercase"
+                >Edge / User</span
+              >
+            </div><p class="mb-[6px] text-[12px] text-text2">
+              Where end devices connect. Provides port-level security, VLAN assignment, PoE, and QoS
+              marking at the edge. Primarily L2 switching.
+            </p><div class="grid grid-cols-1 gap-[6px] text-[11.5px] text-text2 md:grid-cols-2">
+              <div>
+                <Icon name="box" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Devices:</strong> L2 switches, WAPs, PoE switches
+              </div><div>
+                <Icon name="link" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Connects:</strong> PCs, phones, printers, APs
+              </div><div>
+                <Icon name="lock" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Security:</strong> Port security, 802.1X, DHCP Snooping
+              </div><div>
+                <Icon name="tower-broadcast" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Features:</strong> PoE, BPDU Guard, storm control
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="ruler" /> Three-Tier Diagram</h3><div
+        class="overflow-x-auto rounded-field bg-bg p-[16px]"
+      >
+        <pre
+          class="m-0 font-mono text-[11.5px] leading-[1.9] text-text2">          +------------------------------------------+
+          |          CORE LAYER (L3)                 |
+          |  [Core-SW1] ============ [Core-SW2]      |  <-- Full-mesh, 10G/40G/100G
+          +--------+-----------------------+---------+
+                   |                       |
+     +-------------+-------+     +---------+---------------+
+     |  DISTRIBUTION (L3)  |     |  DISTRIBUTION (L3)      |
+     |  [Dist-SW1]         |     |       [Dist-SW3]         |  <-- ACLs, QoS, HSRP
+     |  [Dist-SW2]         |     |       [Dist-SW4]         |      Inter-VLAN routing
+     +--+-----+------+-----+     +------+-----+------+-----+
+        |     |      |                  |     |      |
+     [Acc1] [Acc2] [Acc3]          [Acc4] [Acc5] [Acc6]
+      ACCESS LAYER (L2)              ACCESS LAYER (L2)
+      PCs, Phones, APs               PCs, Phones, APs</pre>
+      </div><div class="tip mt-[10px]">
+        A <strong>Two-Tier (collapsed core)</strong> design merges Core + Distribution into one layer
+        &#8212; common in smaller campuses or single-building deployments where a separate Core adds unnecessary
+        complexity.
+      </div>
+    </div></TabPanel
+  ><TabPanel id="arch-spineleaf"
+    ><div class="panel">
+      <h3><Icon name="leaf" /> Spine-Leaf Architecture (Data Center / Modern Campus)</h3><p>
+        Spine-Leaf is a two-tier, flat topology designed for <strong>east-west traffic</strong> (server-to-server).
+        Every Leaf connects to every Spine in a full partial-mesh &#8212; resulting in a consistent, low-latency
+        <strong>2-hop path</strong> between any two endpoints.
+      </p><div class="mt-[14px] flex flex-col gap-0">
+        <div class="flex overflow-hidden rounded-t-field">
+          <div class="w-[10px] shrink-0 bg-[#3498db]"></div><div
+            class="flex-1 border border-b-0 border-l-0 border-line bg-surface px-[16px] py-[14px]"
+          >
+            <div class="mb-[6px] flex items-center gap-[10px]">
+              <span class="text-[18px]"
+                ><Icon name="circle" class="mr-1 inline align-[-2px] text-blue" /></span
+              ><strong class="text-[13px] text-text">Spine Layer</strong><span
+                class="rounded-[10px] bg-[#3498db]/15 px-[8px] py-[2px] text-[10px] font-bold tracking-[.05em] text-[#3498db] uppercase"
+                >Backbone</span
+              >
+            </div><p class="mb-[6px] text-[12px] text-text2">
+              Pure routing backbone. Spine switches <strong>only connect to Leaf switches</strong> &#8212;
+              never to servers or end devices. Provides equal-cost multipath (ECMP) forwarding across
+              all uplinks.
+            </p><div class="grid grid-cols-1 gap-[6px] text-[11.5px] text-text2 md:grid-cols-2">
+              <div>
+                <Icon name="box" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Devices:</strong> High-density L3 switches (no L2)
+              </div><div>
+                <Icon name="link" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Protocol:</strong> BGP (eBGP common) or OSPF underlay
+              </div><div>
+                <Icon name="bolt" class="mr-1 inline align-[-2px] text-yellow" />
+                <strong>Speed:</strong> 40G / 100G uplinks to each Leaf
+              </div><div>
+                <Icon name="chart-line" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Scale:</strong> Add spines for more bandwidth/redundancy
+              </div>
+            </div>
+          </div>
+        </div><div class="flex overflow-hidden rounded-b-field">
+          <div class="w-[10px] shrink-0 bg-[#2ecc71]"></div><div
+            class="flex-1 border border-l-0 border-line bg-surface px-[16px] py-[14px]"
+          >
+            <div class="mb-[6px] flex items-center gap-[10px]">
+              <span class="text-[18px]"
+                ><Icon name="circle" class="mr-1 inline align-[-2px] text-green" /></span
+              ><strong class="text-[13px] text-text">Leaf Layer (ToR &#8212; Top of Rack)</strong
+              ><span
+                class="rounded-[10px] bg-[#2ecc71]/15 px-[8px] py-[2px] text-[10px] font-bold tracking-[.05em] text-[#2ecc71] uppercase"
+                >Access / Edge</span
+              >
+            </div><p class="mb-[6px] text-[12px] text-text2">
+              Directly connects servers, storage, firewalls, and load balancers. Every Leaf connects
+              to <strong>every Spine</strong>. Acts as a VTEP in VXLAN overlay designs.
+            </p><div class="grid grid-cols-1 gap-[6px] text-[11.5px] text-text2 md:grid-cols-2">
+              <div>
+                <Icon name="box" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Devices:</strong> ToR L3 switches, VTEP endpoints
+              </div><div>
+                <Icon name="link" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Connects:</strong> Servers, storage, firewalls, LBs
+              </div><div>
+                <Icon name="globe" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Overlay:</strong> VXLAN/EVPN for L2 extension
+              </div><div>
+                <Icon name="chart-line" class="mr-1 inline align-[-2px] text-accent" />
+                <strong>Scale:</strong> Add leaves for more server ports
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="ruler" /> Spine-Leaf Diagram</h3><div
+        class="overflow-x-auto rounded-field bg-bg p-[16px]"
+      >
+        <pre
+          class="m-0 font-mono text-[11.5px] leading-[1.9] text-text2">           SPINE LAYER
+      [Spine-1]   [Spine-2]   [Spine-3]
+       /  |  \      /  |  \      /  |  \
+      /   |   \    /   |   \    /   |   \
+ [Leaf-1][Leaf-2][Leaf-3][Leaf-4]   <-- LEAF LAYER (ToR)
+    |       |       |       |
+ [Svr]   [Svr]   [Svr]   [Svr]  <-- Servers / Storage / Endpoints
+
+ Every Leaf connects to EVERY Spine  (full partial-mesh)
+ Server A to Server B = always 2 hops: Leaf -> Spine -> Leaf</pre>
+      </div><div class="tip mt-[10px]">
+        A <strong>Super-Spine</strong> layer can be added above Spine switches to connect multiple Spine-Leaf
+        fabrics (pods) in massive, multi-site data centers.
+      </div>
+    </div></TabPanel
+  ><TabPanel id="arch-compare"
+    ><div class="panel">
+      <h3><Icon name="scale-balanced" /> Architecture Comparison</h3><div class="table-wrap">
+        <table class="ref-table">
+          <thead
+            ><tr><th>Feature</th><th>Three-Tier (Core/Dist/Access)</th><th>Spine-Leaf</th></tr
+            ></thead
+          ><tbody
+            ><tr
+              ><td><strong>Layers</strong></td><td>3 (or 2 collapsed)</td><td>2 (Spine + Leaf)</td
+              ></tr
+            ><tr
+              ><td><strong>Primary Use</strong></td><td>Campus, enterprise LAN</td><td
+                >Data center, modern campus</td
+              ></tr
+            ><tr
+              ><td><strong>Traffic Pattern</strong></td><td>North-South (client &#8596; server)</td
+              ><td>East-West (server &#8596; server)</td></tr
+            ><tr
+              ><td><strong>Latency</strong></td><td>Variable (3&#8211;5+ hops)</td><td
+                >Consistent (always 2 hops)</td
+              ></tr
+            ><tr
+              ><td><strong>Scalability</strong></td><td>STP-limited in L2; good in L3</td><td
+                >Linear &#8212; add leaf or spine switches</td
+              ></tr
+            ><tr
+              ><td><strong>Redundancy</strong></td><td>HSRP/VRRP at Distribution</td><td
+                >ECMP across all Spine paths</td
+              ></tr
+            ><tr
+              ><td><strong>Routing Protocol</strong></td><td>OSPF / EIGRP at Distribution+</td><td
+                >BGP (eBGP) or OSPF underlay</td
+              ></tr
+            ><tr
+              ><td><strong>Overlay</strong></td><td>VLANs (802.1Q) typically</td><td
+                >VXLAN/EVPN for L2 over L3</td
+              ></tr
+            ><tr
+              ><td><strong>Complexity</strong></td><td>Moderate &#8212; well understood</td><td
+                >Higher &#8212; requires BGP/VXLAN knowledge</td
+              ></tr
+            ><tr
+              ><td><strong>Cost</strong></td><td>Lower for campus deployments</td><td
+                >Higher initial investment</td
+              ></tr
+            ><tr
+              ><td><strong>STP Dependency</strong></td><td>Yes (at L2 access layer)</td><td
+                >Minimal or none (L3 to leaf)</td
+              ></tr
+            ></tbody
+          >
+        </table>
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="bullseye" /> When to Use Each</h3><div class="result-grid mt-[8px]">
+        <div class="result-item">
+          <div class="ri-label">Three-Tier &#8594; Campus / Enterprise</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Multi-building campus, office networks, WAN edge, traditional enterprise wiring closets
+            with north-south traffic dominance
+          </div>
+        </div><div class="result-item">
+          <div class="ri-label">Two-Tier &#8594; Collapsed Core</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Smaller buildings or single-floor deployments where a separate Core layer adds
+            unnecessary cost and complexity
+          </div>
+        </div><div class="result-item">
+          <div class="ri-label">Spine-Leaf &#8594; Data Center</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Modern data centers with heavy east-west traffic, VM mobility, multi-tenant
+            environments, and VXLAN/EVPN overlays
+          </div>
+        </div><div class="result-item">
+          <div class="ri-label">Spine-Leaf &#8594; Modern Campus</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Large campus redesigns with high-density wireless, SD-Access, or where eliminating STP
+            is a priority
+          </div>
+        </div>
+      </div>
+    </div></TabPanel
+  ><TabPanel id="arch-fabric"
+    ><div class="panel">
+      <h3>What is a Network Fabric?</h3><p>
+        A <strong>network fabric</strong> is the complete, interconnected switching and routing infrastructure
+        that carries traffic between all devices in a network domain &#8212; think of it as the underlying
+        &ldquo;weave&rdquo; of switches, links, and protocols that forms the transport substrate. The
+        term is most commonly used in data center and modern campus designs to describe the entire forwarding
+        plane as a unified system rather than individual boxes.
+      </p><p class="mt-[8px]">
+        In practice, &ldquo;fabric&rdquo; often refers to a <strong>Spine-Leaf topology</strong> running
+        an IP underlay (OSPF or eBGP) with a VXLAN/EVPN overlay &#8212; but the word can apply equally
+        to a three-tier campus backbone or an SD-Access fabric.
+      </p>
+    </div><div class="panel">
+      <h3><Icon name="chart-line" /> Underlay vs. Overlay</h3><p>
+        Every modern fabric has two planes working together:
+      </p><div class="table-wrap mt-[10px]">
+        <table class="ref-table">
+          <thead><tr><th>Plane</th><th>What It Is</th><th>Protocols</th><th>Job</th></tr></thead
+          ><tbody
+            ><tr
+              ><td><strong>Underlay</strong></td><td
+                >The physical IP network &#8212; routers, switches, and links</td
+              ><td class="mono">OSPF, IS-IS, eBGP</td><td
+                >Provide reachability between all fabric nodes (VTEPs, spines, leaves)</td
+              ></tr
+            ><tr
+              ><td><strong>Overlay</strong></td><td
+                >The virtual network tunneled on top of the underlay</td
+              ><td class="mono">VXLAN, EVPN, MPLS, GRE</td><td
+                >Carry tenant/VLAN traffic across the fabric regardless of physical location</td
+              ></tr
+            ></tbody
+          >
+        </table>
+      </div><div class="tip mt-[10px]">
+        <Icon name="lightbulb" />
+        <strong>Rule of Thumb:</strong> The <strong>underlay</strong> gets packets from VTEP to VTEP.
+        The <strong>overlay</strong> carries the original L2/L3 frames of your end devices inside those
+        tunnels. Keep them separate &#8212; never let overlay failures bleed into underlay stability.
+      </div>
+    </div><div class="panel">
+      <h3>Common Fabric Types</h3><div class="table-wrap mt-[10px]">
+        <table class="ref-table">
+          <thead
+            ><tr
+              ><th>Fabric Type</th><th>Topology</th><th>Underlay</th><th>Overlay</th><th
+                >Best For</th
+              ></tr
+            ></thead
+          ><tbody
+            ><tr
+              ><td><strong>Spine-Leaf / IP Fabric</strong></td><td
+                >Every leaf connects to every spine</td
+              ><td class="mono">eBGP or OSPF</td><td class="mono">VXLAN + EVPN</td><td
+                >Data centers, modern campus east-west traffic</td
+              ></tr
+            ><tr
+              ><td><strong>Three-Tier Campus Fabric</strong></td><td
+                >Core &#8594; Distribution &#8594; Access</td
+              ><td class="mono">OSPF / EIGRP</td><td class="mono">VLANs (802.1Q)</td><td
+                >Traditional campus, north-south client-server</td
+              ></tr
+            ><tr
+              ><td><strong>SD-Access Fabric</strong></td><td
+                >Cisco DNA Center managed, LISP + VXLAN</td
+              ><td class="mono">IS-IS underlay</td><td class="mono">VXLAN + LISP</td><td
+                >Enterprise campus with policy-based segmentation</td
+              ></tr
+            ><tr
+              ><td><strong>SD-WAN Fabric</strong></td><td
+                >Hub-spoke or full-mesh over WAN transport</td
+              ><td class="mono">Internet / MPLS</td><td class="mono">IPsec tunnels</td><td
+                >Branch office connectivity across WAN</td
+              ></tr
+            ></tbody
+          >
+        </table>
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="clipboard-list" /> Key Fabric Terminology</h3><div
+        class="table-wrap mt-[10px]"
+      >
+        <table class="ref-table">
+          <thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody
+            ><tr
+              ><td><strong>Fabric Edge</strong></td><td
+                >Where end devices connect to the fabric &#8212; a Leaf switch (spine-leaf) or
+                Access switch (three-tier). The first point of policy enforcement.</td
+              ></tr
+            ><tr
+              ><td><strong>Fabric Border</strong></td><td
+                >Where the fabric connects to external networks &#8212; ISP, WAN, or another fabric
+                domain. Handles route leaking and external reachability.</td
+              ></tr
+            ><tr
+              ><td><strong>Fabric Control Plane</strong></td><td
+                >The protocol managing host location and reachability across the fabric (e.g., EVPN
+                distributes MAC/IP bindings so leaves know where endpoints are).</td
+              ></tr
+            ><tr
+              ><td><strong>VTEP</strong></td><td
+                >VXLAN Tunnel Endpoint &#8212; the fabric node (leaf switch or server NIC) that
+                encapsulates/de-encapsulates VXLAN packets at the fabric edge.</td
+              ></tr
+            ><tr
+              ><td><strong>VNI</strong></td><td
+                >VXLAN Network Identifier &#8212; the 24-bit segment ID in the overlay, equivalent
+                to a VLAN but with 16 million possible values.</td
+              ></tr
+            ><tr
+              ><td><strong>Anycast Gateway</strong></td><td
+                >All leaf switches share the same default gateway IP/MAC for a VNI/VLAN, enabling
+                hosts to move across leaves without re-ARPing.</td
+              ></tr
+            ><tr
+              ><td><strong>BUM Traffic</strong></td><td
+                >Broadcast, Unknown unicast, Multicast &#8212; traffic that must be flooded across
+                the fabric; handled by EVPN (preferred) or IP multicast in VXLAN fabrics.</td
+              ></tr
+            ></tbody
+          >
+        </table>
+      </div><div class="tip mt-[10px]">
+        <Icon name="thumbtack" />
+        <strong>Broadcast domain boundary:</strong> In a spine-leaf fabric each <strong>Leaf</strong
+        > is the broadcast domain boundary. In a three-tier campus, that boundary lives at the <strong
+          >Distribution</strong
+        > layer. Knowing where your broadcast domains end is key to diagnosing ARP storms and STP issues.
+      </div>
+    </div></TabPanel
+  ><TabPanel id="arch-bestpractice"
+    ><div class="panel">
+      <h3><Icon name="lightbulb" /> Design Best Practices</h3><div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Layer / Element</th><th>Best Practice</th></tr></thead><tbody
+            ><tr
+              ><td><strong>Core</strong></td><td
+                >Keep it simple &#8212; route fast, no ACLs or complex policy. Redundant links
+                minimum.</td
+              ></tr
+            ><tr
+              ><td><strong>Distribution</strong></td><td
+                >Deploy in pairs with HSRP/VRRP as default gateway. Apply ACLs and QoS here, not at
+                Access.</td
+              ></tr
+            ><tr
+              ><td><strong>Access</strong></td><td
+                >Enable BPDU Guard, PortFast, port-security, DHCP Snooping, and 802.1X on all user
+                ports.</td
+              ></tr
+            ><tr
+              ><td><strong>Spine</strong></td><td
+                >Use eBGP between Spine and Leaf with unique ASNs per leaf for simple, scalable
+                policy.</td
+              ></tr
+            ><tr
+              ><td><strong>Leaf (ToR)</strong></td><td
+                >Each leaf is a broadcast domain boundary. Use VXLAN/EVPN to extend L2 across the
+                fabric.</td
+              ></tr
+            ><tr
+              ><td><strong>Links</strong></td><td
+                >Use routed point-to-point /30 or /31 links between tiers. Avoid L2 trunks in
+                spine-leaf.</td
+              ></tr
+            ><tr
+              ><td><strong>Redundancy</strong></td><td
+                >Minimum 2 Spine switches for HA. Dual-home all Leaf switches to both Spines.</td
+              ></tr
+            ><tr
+              ><td><strong>Oversubscription</strong></td><td
+                >Target 3:1 at Access, 2:1 at Distribution/Leaf, 1:1 at Core/Spine for best
+                performance.</td
+              ></tr
+            ></tbody
+          >
+        </table>
+      </div>
+    </div><div class="tip">
+      <strong>Key Rule:</strong> In three-tier, push policy (ACLs, QoS, routing) to <strong
+        >Distribution</strong
+      > and keep Core clean. In spine-leaf, route at each <strong>Leaf</strong> and keep Spine as a pure
+      IP forwarder with ECMP.
+    </div></TabPanel
+  ></Tabs
+>

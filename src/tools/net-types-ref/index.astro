@@ -1,0 +1,417 @@
+---
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'ntype-overview', label: 'Overview', icon: 'earth-americas' },
+    { id: 'ntype-lanwlan', label: 'LAN / WLAN', icon: 'laptop' },
+    { id: 'ntype-canman', label: 'CAN / MAN', icon: 'building' },
+    { id: 'ntype-sanwan', label: 'SAN / WAN', icon: 'database' },
+    { id: 'ntype-p2pvpn', label: 'P2P / VPN', icon: 'lock' },
+  ]}
+  ><TabPanel id="ntype-overview" selected
+    ><div class="panel">
+      <h3><Icon name="globe" /> Network Types Overview</h3>
+      <p>
+        Networks are classified by their <strong>size</strong>, <strong>purpose</strong>, and <strong
+          >geographic scope</strong
+        >. Think of it like roads &mdash; a driveway (PAN), a city street (LAN), a highway (MAN),
+        and an interstate (WAN) all serve different distances and traffic volumes. Understanding
+        these types helps you pick the right design for the job.
+      </p>
+    </div><div class="panel">
+      <h3><Icon name="chart-column" /> Network Types at a Glance</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead
+            ><tr
+              ><th>Type</th><th>Full Name</th><th>Scope</th><th>Speed</th><th>Example</th><th
+                >Who Owns It?</th
+              ></tr
+            ></thead
+          >
+          <tbody>
+            <tr
+              ><td><strong>PAN</strong></td><td>Personal Area Network</td><td
+                >~1&ndash;10 meters (your desk)</td
+              ><td>Low&ndash;Medium</td><td>Bluetooth headset to phone, USB to laptop</td><td
+                >You</td
+              ></tr
+            >
+            <tr
+              ><td><strong>LAN</strong></td><td>Local Area Network</td><td>One building or floor</td
+              ><td class="mono">1&ndash;10 Gbps typical</td><td
+                >Office PCs, printers, servers on a switch</td
+              ><td>Your organization</td></tr
+            >
+            <tr
+              ><td><strong>WLAN</strong></td><td>Wireless LAN</td><td>Same as LAN but wireless</td
+              ><td class="mono">Up to 9.6 Gbps (Wi-Fi 6)</td><td
+                >Wi-Fi in an office, home Wi-Fi router</td
+              ><td>Your organization</td></tr
+            >
+            <tr
+              ><td><strong>CAN</strong></td><td>Campus Area Network</td><td
+                >Multiple buildings, ~1&ndash;5 km</td
+              ><td class="mono">1&ndash;100 Gbps fiber backbone</td><td
+                >University campus, hospital complex, business park</td
+              ><td>Your organization</td></tr
+            >
+            <tr
+              ><td><strong>MAN</strong></td><td>Metropolitan Area Network</td><td
+                >A city or metro area</td
+              ><td class="mono">10 Mbps&ndash;100 Gbps</td><td
+                >City-wide fiber ring connecting multiple offices</td
+              ><td>Service provider or city</td></tr
+            >
+            <tr
+              ><td><strong>SAN</strong></td><td>Storage Area Network</td><td
+                >Data center (dedicated)</td
+              ><td class="mono">8&ndash;128 Gbps (Fibre Channel)</td><td
+                >Servers connected to shared disk arrays</td
+              ><td>Your organization</td></tr
+            >
+            <tr
+              ><td><strong>WAN</strong></td><td>Wide Area Network</td><td
+                >Cities, countries, worldwide</td
+              ><td class="mono">1 Mbps&ndash;100+ Gbps</td><td
+                >Connecting branch offices across the country</td
+              ><td>Service provider(s)</td></tr
+            >
+            <tr
+              ><td><strong>P2P</strong></td><td>Point-to-Point Network</td><td
+                >Any distance (2 endpoints)</td
+              ><td class="mono">Varies (up to 100 Gbps)</td><td
+                >Dedicated fiber link between two buildings</td
+              ><td>Leased from provider or owned</td></tr
+            >
+            <tr
+              ><td><strong>VPN</strong></td><td>Virtual Private Network</td><td
+                >Over any public/private network</td
+              ><td class="mono">Depends on underlay</td><td
+                >Remote worker connecting securely to HQ</td
+              ><td>Your organization (logical)</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="map" /> How They All Fit Together</h3>
+      <div class="overflow-x-auto rounded-field bg-bg p-[16px]">
+        <pre
+          class="m-0 font-mono text-[11.5px] leading-[1.9] text-text2">
+  [Phone]---Bluetooth---[Laptop]     &lt;- PAN (Personal)
+       |
+   [Switch]---[PC]---[Printer]       &lt;- LAN (one building)
+       |         |
+   [Wi-Fi AP]--[Tablet]              &lt;- WLAN (wireless LAN)
+       |
+  ~~~Fiber between buildings~~~       &lt;- CAN (campus)
+       |
+  ===Metro Fiber across city===       &lt;- MAN (metro area)
+       |
+  ---MPLS / Internet / DIA---         &lt;- WAN (wide area)
+       |
+  [Branch Office LAN]                 &lt;- Another LAN
+       |
+  ===VPN Tunnel (encrypted)===        &lt;- VPN (secure overlay)
+       |
+  [Remote Worker Laptop]              &lt;- Remote Access VPN
+
+  [Server]===Fibre Channel===[SAN Storage]  &lt;- SAN (dedicated)
+
+  [Studio]======P2P Fiber======[Transmitter] &lt;- P2P (dedicated link)
+</pre>
+      </div>
+    </div></TabPanel
+  ><TabPanel id="ntype-lanwlan"
+    ><div class="panel">
+      <h3><Icon name="laptop" /> LAN &mdash; Local Area Network</h3>
+      <p>
+        A <strong>LAN</strong> connects devices in a <strong>single building or floor</strong> using Ethernet
+        cables (Cat5e/6/6a) and switches. It&rsquo;s the network you work on every day at the office.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li>
+          <strong>Speed:</strong> Typically 1 Gbps per port, 10 Gbps uplinks; very fast because distances
+          are short
+        </li>
+        <li>
+          <strong>Ownership:</strong> You (or your org) own and manage it &mdash; your switches, your
+          cables, your rules
+        </li>
+        <li><strong>Devices:</strong> PCs, printers, IP phones, servers, wireless access points</li>
+        <li>
+          <strong>Layer:</strong> Primarily Layer 2 (Ethernet/switching), with Layer 3 routing between
+          VLANs
+        </li>
+      </ul>
+      <div class="tip">
+        <Icon name="lightbulb" />
+        <strong>New Tech Tip:</strong> A LAN is where VLANs, port security, and spanning tree all live.
+        If you can ping the printer across the hall, you&rsquo;re on a LAN.
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="wifi" /> WLAN &mdash; Wireless LAN</h3>
+      <p>
+        A <strong>WLAN</strong> is simply a LAN that uses <strong>Wi-Fi (802.11)</strong> instead of cables.
+        Same network, just wireless.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li>
+          <strong>Uses:</strong> Laptops, phones, tablets &mdash; anything that needs to move around
+        </li>
+        <li>
+          <strong>Standards:</strong> Wi-Fi 5 (802.11ac), Wi-Fi 6/6E (802.11ax), Wi-Fi 7 (802.11be)
+        </li>
+        <li><strong>Managed by:</strong> Wireless controllers and access points (APs)</li>
+        <li>
+          <strong>Key concern:</strong> Security &mdash; always use WPA3 or WPA2-Enterprise (802.1X)
+        </li>
+      </ul>
+    </div></TabPanel
+  ><TabPanel id="ntype-canman"
+    ><div class="panel">
+      <h3>CAN &mdash; Campus Area Network</h3>
+      <p>
+        A <strong>CAN</strong> connects <strong>multiple buildings</strong> in a limited area like a university
+        campus, hospital complex, or corporate park. Think of it as &ldquo;several LANs tied together
+        with fiber.&rdquo;
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li><strong>Span:</strong> Typically 1&ndash;5 km between buildings</li>
+        <li>
+          <strong>Backbone:</strong> Fiber optic (OM3/OM4 multimode or OS2 singlemode) running 10G&ndash;100G
+          between buildings
+        </li>
+        <li>
+          <strong>Design:</strong> Often uses the three-tier model (Core / Distribution / Access) from
+          the Network Architecture reference
+        </li>
+        <li>
+          <strong>Ownership:</strong> Your organization &mdash; you own the fiber runs between buildings
+        </li>
+      </ul>
+      <div class="tip">
+        <Icon name="lightbulb" />
+        <strong>Real-World Example:</strong> A public TV/radio station campus with a TOC building, transmitter
+        building, and office building all connected by fiber &mdash; that&rsquo;s a CAN.
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="building" /> MAN &mdash; Metropolitan Area Network</h3>
+      <p>
+        A <strong>MAN</strong> spans a <strong>city or metro area</strong>, connecting buildings
+        that are too far apart for a campus network but in the same general region.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li><strong>Span:</strong> 5&ndash;50+ km across a city</li>
+        <li><strong>Technology:</strong> Usually Metro Ethernet (carrier fiber) or dark fiber</li>
+        <li>
+          <strong>Provider:</strong> Typically leased from a service provider (ISP or carrier)
+        </li>
+        <li>
+          <strong>Use case:</strong> Connecting your main office to a remote studio or transmitter site
+          across town
+        </li>
+      </ul>
+    </div></TabPanel
+  ><TabPanel id="ntype-sanwan"
+    ><div class="panel">
+      <h3><Icon name="database" /> SAN &mdash; Storage Area Network</h3>
+      <p>
+        A <strong>SAN</strong> is a <strong>dedicated high-speed network just for storage</strong>.
+        It connects servers to shared disk arrays (like a NetApp or Dell EMC) so multiple servers
+        can read/write to the same storage pool.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li>
+          <strong>Purpose:</strong> Centralize storage so it&rsquo;s not trapped inside individual servers
+        </li>
+        <li>
+          <strong>Protocols:</strong> Fibre Channel (FC), iSCSI (IP-based), FCoE (Fibre Channel over Ethernet)
+        </li>
+        <li>
+          <strong>Speed:</strong> 8G, 16G, 32G, 64G, or 128G Fibre Channel; 10G&ndash;100G for iSCSI
+        </li>
+        <li>
+          <strong>Not on your LAN:</strong> SANs are physically or logically separate from user traffic
+        </li>
+      </ul>
+      <div class="warn">
+        <Icon name="triangle-exclamation" />️ <strong>Don&rsquo;t confuse SAN with NAS:</strong> A NAS
+        (Network Attached Storage) is a file server on your regular LAN. A SAN is a separate dedicated
+        storage network that presents raw block storage to servers.
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="earth-americas" /> WAN &mdash; Wide Area Network</h3>
+      <p>
+        A <strong>WAN</strong> connects <strong>geographically distant locations</strong> &mdash; different
+        cities, states, or countries. If you have a main office in La Crosse and a branch in Madison,
+        the connection between them is a WAN link.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li>
+          <strong>Span:</strong> Unlimited &mdash; across cities, states, countries, continents
+        </li>
+        <li>
+          <strong>Provider:</strong> Almost always involves a service provider (ISP or carrier)
+        </li>
+        <li>
+          <strong>Technologies:</strong> MPLS, DIA, MetroE, Dark Fiber, SD-WAN, Broadband (see WAN &amp;
+          VPN Services tool)
+        </li>
+        <li><strong>The Internet</strong> is the world&rsquo;s largest WAN</li>
+      </ul>
+      <div class="tip">
+        <Icon name="lightbulb" />
+        <strong>Key Takeaway:</strong> You <em>own</em> your LAN but you <em>lease</em> your WAN from
+        a service provider. WAN links are slower and more expensive per Mbps than LAN connections.
+      </div>
+    </div></TabPanel
+  ><TabPanel id="ntype-p2pvpn"
+    ><div class="panel">
+      <h3><Icon name="link" /> P2P &mdash; Point-to-Point Network</h3>
+      <p>
+        A <strong>Point-to-Point (P2P)</strong> connection is a <strong
+          >dedicated link between exactly two endpoints</strong
+        >. No shared infrastructure, no other traffic &mdash; just a direct pipe from A to B.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li>
+          <strong>Wired P2P:</strong> A dedicated fiber or copper circuit between two buildings (leased
+          line, EPL)
+        </li>
+        <li>
+          <strong>Wireless P2P:</strong> Microwave or licensed radio link between two towers or rooftops
+        </li>
+        <li>
+          <strong>Virtual P2P:</strong> A VPN tunnel or GRE tunnel creating a logical point-to-point path
+          over a shared network
+        </li>
+      </ul>
+      <div class="result-grid mt-[10px]">
+        <div class="result-item">
+          <div class="ri-label">Common Use</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Connecting a studio to a transmitter site, linking two data centers
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Advantage</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Guaranteed bandwidth, lowest latency, highest security
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Disadvantage</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Expensive &mdash; you&rsquo;re paying for a dedicated circuit
+          </div>
+        </div>
+      </div>
+      <div class="tip mt-[12px]">
+        <Icon name="lightbulb" />
+        <strong>Broadcast Example:</strong> A dedicated fiber P2P link from your studio to your transmitter
+        tower is a classic point-to-point connection. No internet, no sharing &mdash; just your audio/video
+        data going from A to B.
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="lock" /> VPN &mdash; Virtual Private Network</h3>
+      <p>
+        A <strong>VPN</strong> creates a <strong>secure, encrypted tunnel</strong> over an untrusted network
+        (like the internet) so it <em>feels</em> like a private connection. Think of it as a &ldquo;secret
+        tunnel through a public highway.&rdquo;
+      </p>
+
+      <h3 class="mt-[16px]">VPN Types</h3>
+      <div class="table-wrap mt-[8px]">
+        <table class="ref-table">
+          <thead
+            ><tr><th>VPN Type</th><th>What It Connects</th><th>Best For</th><th>Protocol</th></tr
+            ></thead
+          >
+          <tbody>
+            <tr
+              ><td><strong>Site-to-Site</strong></td><td>Two office networks (LAN to LAN)</td><td
+                >Permanently linking branch offices</td
+              ><td>IPsec, GRE over IPsec</td></tr
+            >
+            <tr
+              ><td><strong>Remote Access</strong></td><td
+                >Individual user &#8594; corporate network</td
+              ><td>Work-from-home, field techs</td><td>SSL/TLS, IPsec (IKEv2)</td></tr
+            >
+            <tr
+              ><td><strong>SSL/TLS VPN</strong></td><td
+                >User&rsquo;s browser &#8594; specific apps</td
+              ><td>Quick access without installing software</td><td>SSL/TLS (port 443)</td></tr
+            >
+            <tr
+              ><td><strong>Client-Based</strong></td><td>User device &#8594; full network access</td
+              ><td>Full tunnel for complete network access</td><td
+                >AnyConnect, GlobalProtect, WireGuard</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="mt-[16px]">VPN Protocols Quick Reference</h3>
+      <div class="table-wrap mt-[8px]">
+        <table class="ref-table">
+          <thead
+            ><tr><th>Protocol</th><th>Security</th><th>Speed</th><th>Status</th><th>Notes</th></tr
+            ></thead
+          >
+          <tbody>
+            <tr
+              ><td><strong>IPsec</strong></td><td class="text-green">Strong</td><td>Good</td><td
+                class="text-green">Recommended</td
+              ><td>Industry standard for site-to-site; uses IKEv2 for key exchange</td></tr
+            >
+            <tr
+              ><td><strong>WireGuard</strong></td><td class="text-green">Strong</td><td
+                >Excellent</td
+              ><td class="text-green">Recommended</td><td
+                >Modern, lightweight, very fast; great for remote access</td
+              ></tr
+            >
+            <tr
+              ><td><strong>OpenVPN</strong></td><td class="text-green">Strong</td><td>Good</td><td
+                class="text-green">Widely Used</td
+              ><td>Open-source, very configurable, runs on TCP or UDP</td></tr
+            >
+            <tr
+              ><td><strong>SSL/TLS</strong></td><td class="text-green">Strong</td><td>Good</td><td
+                class="text-green">Recommended</td
+              ><td>Browser-based, uses port 443 (HTTPS), firewall-friendly</td></tr
+            >
+            <tr
+              ><td><strong>L2TP/IPsec</strong></td><td>Moderate</td><td>Moderate</td><td
+                class="text-orange">Legacy</td
+              ><td>Double encapsulation adds overhead; being replaced</td></tr
+            >
+            <tr
+              ><td><strong>PPTP</strong></td><td class="text-red">Weak</td><td>Fast</td><td
+                class="text-red">Avoid</td
+              ><td>Broken encryption &mdash; never use for anything sensitive</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tip mt-[12px]">
+        <Icon name="lightbulb" />
+        <strong>Simple Rule:</strong> Site-to-site VPN = connecting two offices permanently. Remote access
+        VPN = one person connecting from home/field. If someone says &ldquo;connect to the VPN,&rdquo;
+        they usually mean remote access.
+      </div>
+    </div></TabPanel
+  ></Tabs
+>

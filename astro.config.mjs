@@ -17,6 +17,10 @@ export default defineConfig({
   site,
 
   trailingSlash: 'always',
+  // compressHTML drops the line break between text and an inline tag that
+  // Prettier wraps onto the next line, running words together ("low-latency"
+  // + <strong>2-hop</strong> became "low-latency2-hop").
+  compressHTML: false,
   build: {
     format: 'directory',
     assets: '_astro',

@@ -1,0 +1,80 @@
+---
+import Icon from '@/components/Icon.astro';
+
+const sections: [string, string[]][] = [
+  [
+    'Device Access',
+    [
+      'Set enable secret (not enable password)',
+      'service password-encryption',
+      'Set minimum password length (10+)',
+      'Create named user accounts (no shared passwords)',
+      'Configure login block-for 120 attempts 3 within 60',
+      'Set exec-timeout on all lines (5 min or less)',
+      'Disable unused VTY lines',
+    ],
+  ],
+  [
+    'Remote Access',
+    [
+      'Enable SSH v2, disable Telnet',
+      'Use 2048+ bit RSA keys',
+      'transport input ssh on all VTY lines',
+      'Configure ACL to restrict management access',
+      'Use RADIUS/TACACS+ for centralized AAA',
+    ],
+  ],
+  [
+    'Ports & Interfaces',
+    [
+      'Shutdown all unused interfaces',
+      'switchport mode access on user ports',
+      'Enable port-security (sticky MAC, max 1, violation shutdown)',
+      'Disable CDP/LLDP on user-facing ports',
+      'Set native VLAN to unused VLAN (not VLAN 1)',
+      'switchport nonegotiate on all access ports',
+      'Enable BPDU Guard on access ports',
+      'Enable DHCP snooping',
+    ],
+  ],
+  [
+    'Routing & Services',
+    [
+      'Disable unused services (no ip http server, no cdp run)',
+      'Set passive-interface default on routing protocols',
+      'Enable uRPF (ip verify unicast source reachable-via)',
+      'Configure NTP with authentication',
+      'Configure logging to syslog server',
+      'Banner motd with legal warning',
+      'no ip source-route',
+      'no ip directed-broadcast',
+    ],
+  ],
+  [
+    'Monitoring',
+    [
+      'Enable SNMP v3 (disable v1/v2c)',
+      'Configure syslog (logging host)',
+      'Enable NTP for log correlation',
+      'Set logging trap informational',
+      'Archive config changes (archive log config)',
+    ],
+  ],
+];
+---
+
+{
+  sections.map(([title, items]) => (
+    <div class="panel">
+      <h3>
+        <Icon name="circle-check" /> {title}
+      </h3>
+      {items.map((item) => (
+        <label class="flex cursor-pointer items-center gap-2 border-b border-line py-[5px] text-[12.5px] text-text2">
+          <input type="checkbox" class="shrink-0 accent-accent" />
+          <span>{item}</span>
+        </label>
+      ))}
+    </div>
+  ))
+}

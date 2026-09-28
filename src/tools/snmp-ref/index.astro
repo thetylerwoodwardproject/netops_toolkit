@@ -1,0 +1,43 @@
+---
+import Icon from '@/components/Icon.astro';
+
+const rows = [
+  ['Authentication', 'Community (plaintext)', 'Community (plaintext)', 'User-based (MD5, SHA)'],
+  ['Encryption', 'None', 'None', 'DES, AES-128/192/256'],
+  ['Counters', '32-bit', '64-bit', '64-bit'],
+  ['GetBulk', 'No', 'Yes', 'Yes'],
+  ['Replay Protection', 'No', 'No', 'Yes'],
+  ['Access Control', 'Limited', 'Limited', 'VACM (role-based)'],
+];
+---
+
+<div class="table-wrap">
+  <table class="ref-table">
+    <thead><tr><th>Feature</th><th>SNMPv1</th><th>SNMPv2c</th><th>SNMPv3</th></tr></thead>
+    <tbody>
+      {
+        rows.map(([feature, v1, v2, v3]) => (
+          <tr>
+            <td>
+              <strong>{feature}</strong>
+            </td>
+            <td>{v1}</td>
+            <td>{v2}</td>
+            <td>{v3}</td>
+          </tr>
+        ))
+      }
+      <tr>
+        <td><strong>Recommendation</strong></td>
+        <td class="text-red">Legacy only</td>
+        <td class="text-orange">Internal nets</td>
+        <td class="text-green"><strong>Recommended</strong></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="warn mt-3">
+  <Icon name="triangle-exclamation" />
+  SNMPv1/v2c send community strings in <strong>plaintext</strong>. Always use SNMPv3 on
+  security-sensitive networks.
+</div>

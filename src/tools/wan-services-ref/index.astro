@@ -1,0 +1,527 @@
+---
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'wan-overview', label: 'Overview', icon: 'chart-column' },
+    { id: 'wan-internet', label: 'Internet', icon: 'earth-americas' },
+    { id: 'wan-private', label: 'Private WAN', icon: 'tag' },
+    { id: 'wan-sdwan', label: 'SD-WAN', icon: 'brain' },
+    { id: 'wan-vpn', label: 'VPN', icon: 'lock' },
+  ]}
+  ><TabPanel id="wan-overview" selected
+    ><div class="panel">
+      <h3><Icon name="link" /> WAN Connectivity &amp; VPN Services</h3>
+      <p>
+        When you need to connect locations that are <strong
+          >too far apart for your own cables</strong
+        >, you buy a WAN service from a provider. This guide explains every major WAN service type
+        so a new tech can understand what they do, when to use them, and how they compare.
+      </p>
+      <div class="tip">
+        <Icon name="lightbulb" />
+        <strong>Think of it this way:</strong> Your LAN is your house. A WAN service is the road connecting
+        your house to another house. Different road types (dirt road vs. highway vs. private road) offer
+        different speeds, reliability, and costs.
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="chart-column" /> WAN Services Comparison</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead
+            ><tr
+              ><th>Service</th><th>What It Is (Simple)</th><th>Speed Range</th><th>SLA?</th><th
+                >Cost</th
+              ><th>Best For</th></tr
+            ></thead
+          >
+          <tbody>
+            <tr
+              ><td><strong>Broadband</strong></td><td>Shared internet (cable/DSL/fiber-to-home)</td
+              ><td class="mono">25 Mbps &ndash; 1 Gbps</td><td class="text-red">No</td><td
+                class="text-green">$</td
+              ><td>Small offices, backup links</td></tr
+            >
+            <tr
+              ><td><strong>FIA</strong></td><td
+                >Fixed Internet Access &mdash; business-grade shared internet</td
+              ><td class="mono">50 Mbps &ndash; 10 Gbps</td><td class="text-orange">Basic</td><td
+                class="text-green">$$</td
+              ><td>SMB with moderate needs</td></tr
+            >
+            <tr
+              ><td><strong>DIA</strong></td><td
+                >Dedicated Internet Access &mdash; your own private pipe</td
+              ><td class="mono">10 Mbps &ndash; 100 Gbps</td><td class="text-green">Yes</td><td
+                class="text-orange">$$$</td
+              ><td>Mission-critical internet, cloud-heavy orgs</td></tr
+            >
+            <tr
+              ><td><strong>MPLS</strong></td><td>Private carrier network connecting your sites</td
+              ><td class="mono">1 Mbps &ndash; 10 Gbps</td><td class="text-green">Yes</td><td
+                class="text-red">$$$$</td
+              ><td>Multi-site with strict QoS requirements</td></tr
+            >
+            <tr
+              ><td><strong>Metro Ethernet</strong></td><td>Carrier Ethernet within a metro area</td
+              ><td class="mono">10 Mbps &ndash; 100 Gbps</td><td class="text-green">Yes</td><td
+                class="text-orange">$$$</td
+              ><td>High-bandwidth links between nearby sites</td></tr
+            >
+            <tr
+              ><td><strong>Dark Fiber</strong></td><td
+                >Raw fiber strands &mdash; you supply the optics</td
+              ><td class="mono">1G &ndash; 400G+ (your choice)</td><td class="text-orange"
+                >Fiber only</td
+              ><td class="text-red">$$$$</td><td>Maximum control, long-term high-bandwidth</td></tr
+            >
+            <tr
+              ><td><strong>SD-WAN</strong></td><td>Smart software layer across any WAN links</td><td
+                class="mono">Depends on underlay</td
+              ><td class="text-orange">Varies</td><td class="text-green">$$</td><td
+                >Replacing MPLS with cheaper smart routing</td
+              ></tr
+            >
+            <tr
+              ><td><strong>P2P / Leased Line</strong></td><td
+                >Dedicated circuit between exactly 2 sites</td
+              ><td class="mono">1.5 Mbps &ndash; 100 Gbps</td><td class="text-green">Yes</td><td
+                class="text-red">$$$$</td
+              ><td>Studio-to-transmitter, DC interconnect</td></tr
+            >
+            <tr
+              ><td><strong>Site-to-Site VPN</strong></td><td>Encrypted tunnel over the internet</td
+              ><td class="mono">Depends on internet</td><td class="text-red">No</td><td
+                class="text-green">$</td
+              ><td>Budget inter-office connectivity</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="compass" /> Which WAN Service Should I Use?</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>If You Need...</th><th>Choose</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr
+              ><td>Cheapest option for basic internet</td><td><strong>Broadband</strong></td><td
+                >Low cost, good enough for non-critical use</td
+              ></tr
+            >
+            <tr
+              ><td>Reliable internet with guaranteed speed</td><td><strong>DIA</strong></td><td
+                >Dedicated bandwidth with SLA</td
+              ></tr
+            >
+            <tr
+              ><td>Connect 3+ offices with QoS for voice</td><td><strong>MPLS</strong></td><td
+                >Built-in traffic prioritization, any-to-any</td
+              ></tr
+            >
+            <tr
+              ><td>Same thing but cheaper and more flexible</td><td><strong>SD-WAN</strong></td><td
+                >Uses cheaper links + smart routing</td
+              ></tr
+            >
+            <tr
+              ><td>High-speed link between 2 nearby locations</td><td
+                ><strong>Metro Ethernet</strong></td
+              ><td>Low latency, high bandwidth within a city</td></tr
+            >
+            <tr
+              ><td>Maximum bandwidth, full control, long-term</td><td
+                ><strong>Dark Fiber</strong></td
+              ><td>You own the optics, scale by swapping SFPs</td></tr
+            >
+            <tr
+              ><td>Dedicated link between exactly 2 sites</td><td
+                ><strong>P2P Leased Line</strong></td
+              ><td>Guaranteed bandwidth, zero sharing</td></tr
+            >
+            <tr
+              ><td>Secure connection over internet (permanent)</td><td
+                ><strong>Site-to-Site VPN</strong></td
+              ><td>Encrypted tunnel, low cost, needs internet</td></tr
+            >
+            <tr
+              ><td>Remote worker needs access to office network</td><td
+                ><strong>Remote Access VPN</strong></td
+              ><td>AnyConnect/WireGuard from home</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="wrench" /> Common Real-World Combinations</h3>
+      <div class="result-grid mt-[8px]">
+        <div class="result-item">
+          <div class="ri-label">Typical Enterprise</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            DIA at HQ + SD-WAN across all sites + broadband as backup links + remote access VPN for
+            travelers
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Budget-Conscious</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Broadband at each site + site-to-site VPN between them + SD-WAN for smart failover
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Broadcast Station</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            P2P fiber (studio to transmitter) + DIA at studio + Metro Ethernet between studio and
+            remote facility + remote access VPN for engineers
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Data Center Interconnect</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Dark fiber or Metro Ethernet between DCs + DIA for internet + MPLS or SD-WAN for branch
+            sites
+          </div>
+        </div>
+      </div>
+    </div></TabPanel
+  ><TabPanel id="wan-internet"
+    ><div class="panel">
+      <h3><Icon name="wifi" /> Broadband</h3>
+      <p>
+        <strong>What it is:</strong> The same type of internet service you have at home &mdash; cable,
+        DSL, or fiber delivered by an ISP. Your traffic <strong>shares bandwidth</strong> with other customers
+        in your area.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li>
+          <strong>Asymmetrical speeds:</strong> Download faster than upload (e.g., 500 Mbps down / 50
+          Mbps up)
+        </li>
+        <li><strong>Shared bandwidth:</strong> Speed can vary based on neighborhood congestion</li>
+        <li><strong>No SLA:</strong> Provider doesn&rsquo;t guarantee uptime or speeds</li>
+        <li>
+          <strong>Best use:</strong> Low-priority backup link, small remote offices, guest Wi-Fi
+        </li>
+      </ul>
+      <div class="tip">
+        <Icon name="lightbulb" />
+        <strong>Pro Tip:</strong> Broadband makes a great <strong>backup link</strong> for SD-WAN &mdash;
+        keep it cheap and let SD-WAN fail over to it only when the primary DIA is down.
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="mobile-screen" /> FIA &mdash; Fixed Internet Access</h3>
+      <p>
+        <strong>What it is:</strong> A step up from basic broadband &mdash; a <strong
+          >business-grade internet service</strong
+        > with better reliability and basic support, but still <em>shared</em> bandwidth in the provider
+        network.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li>
+          <strong>Business SLA:</strong> Basic uptime commitment (e.g., 99.9%), faster repair times than
+          residential
+        </li>
+        <li>
+          <strong>Higher speeds:</strong> 50 Mbps to 10 Gbps depending on technology and location
+        </li>
+        <li>
+          <strong>Shared last mile:</strong> Still contended in the provider network, just with fewer
+          users
+        </li>
+        <li>
+          <strong>Middle ground:</strong> More reliable than broadband but less expensive than DIA
+        </li>
+      </ul>
+    </div><div class="panel">
+      <h3><Icon name="house" /> DIA &mdash; Dedicated Internet Access</h3>
+      <p>
+        <strong>What it is:</strong> A <strong>private internet connection just for you</strong>.
+        Unlike broadband where you share a pipe with neighbors, DIA gives you <strong
+          >guaranteed, symmetrical bandwidth</strong
+        > that nobody else touches.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li><strong>Symmetrical speeds:</strong> Upload = Download (e.g., 500 Mbps both ways)</li>
+        <li>
+          <strong>Guaranteed bandwidth:</strong> If you pay for 100 Mbps, you get 100 Mbps 24/7
+        </li>
+        <li><strong>SLA included:</strong> Uptime guarantees (99.99%), repair time commitments</li>
+        <li><strong>Delivery:</strong> Over dedicated fiber, Ethernet, or T1/T3 (legacy)</li>
+      </ul>
+      <div class="tip">
+        <Icon name="lightbulb" />
+        <strong>Analogy:</strong> Broadband = flying commercial (shared, delays possible). DIA = your
+        own private runway (always available, guaranteed capacity).
+      </div>
+    </div></TabPanel
+  ><TabPanel id="wan-private"
+    ><div class="panel">
+      <h3><Icon name="tag" /> MPLS &mdash; Multiprotocol Label Switching</h3>
+      <p>
+        <strong>What it is:</strong> A <strong>private carrier network</strong> that connects your sites
+        together. Your traffic never touches the public internet &mdash; it travels on the provider&rsquo;s
+        private backbone using &ldquo;labels&rdquo; to route packets efficiently.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li>
+          <strong>How it works:</strong> The provider puts a &ldquo;label&rdquo; on your packets at the
+          edge and switches them through their network based on that label (faster than reading full IP
+          headers)
+        </li>
+        <li>
+          <strong>QoS (Quality of Service):</strong> Can prioritize voice/video over data &mdash; critical
+          for real-time applications
+        </li>
+        <li>
+          <strong>Any-to-any:</strong> All sites can talk to each other directly (hub-and-spoke or full
+          mesh)
+        </li>
+        <li>
+          <strong>Private:</strong> Your traffic is isolated from other customers (like a VPN but at the
+          provider level)
+        </li>
+      </ul>
+      <div class="result-grid mt-[10px]">
+        <div class="result-item">
+          <div class="ri-label">Pros</div><div class="ri-value font-sans text-[11.5px] text-text2">
+            Guaranteed QoS, low latency, high reliability, SLA-backed
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Cons</div><div class="ri-value font-sans text-[11.5px] text-text2">
+            Expensive, long lead times, inflexible bandwidth changes, vendor lock-in
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Being Replaced By</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            SD-WAN (for many use cases, not all)
+          </div>
+        </div>
+      </div>
+      <div class="warn mt-[10px]">
+        <Icon name="triangle-exclamation" />️ <strong>MPLS is NOT internet:</strong> MPLS connects your
+        sites privately but does NOT give you internet access. You still need a separate DIA or broadband
+        circuit for internet.
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="building" /> Metro Ethernet (MetroE)</h3>
+      <p>
+        <strong>What it is:</strong> High-speed <strong
+          >Ethernet-based connectivity within a metro area</strong
+        >, delivered over carrier fiber. It extends your LAN across the city as if both locations
+        were plugged into the same switch.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li>
+          <strong>Layer 2 service:</strong> Operates at the data link layer &mdash; transparent to your
+          routers
+        </li>
+        <li><strong>Service types (MEF standard):</strong></li>
+      </ul>
+      <div class="table-wrap mt-[8px]">
+        <table class="ref-table">
+          <thead
+            ><tr><th>MEF Service</th><th>Name</th><th>Topology</th><th>Description</th></tr></thead
+          >
+          <tbody>
+            <tr
+              ><td><strong>E-Line</strong></td><td>EPL / EVPL</td><td>Point-to-Point</td><td
+                >Dedicated or virtual private line between 2 sites</td
+              ></tr
+            >
+            <tr
+              ><td><strong>E-LAN</strong></td><td>EP-LAN / EVP-LAN</td><td
+                >Multipoint-to-Multipoint</td
+              ><td>All sites talk directly to all other sites (like a big switch)</td></tr
+            >
+            <tr
+              ><td><strong>E-Tree</strong></td><td>EP-Tree / EVP-Tree</td><td>Hub-and-Spoke</td><td
+                >Branches talk to HQ but not to each other</td
+              ></tr
+            >
+            <tr
+              ><td><strong>E-Access</strong></td><td>Access EPL/EVPL</td><td>Inter-carrier</td><td
+                >Extends service across provider boundaries</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+      <div class="tip mt-[10px]">
+        <Icon name="lightbulb" />
+        <strong>EPL vs EVPL:</strong> EPL = one customer, one circuit, full dedicated port. EVPL = multiple
+        virtual circuits can share one physical port using VLAN tags. EPL costs more but gives dedicated
+        bandwidth.
+      </div>
+    </div><div class="panel">
+      <h3>Dark Fiber</h3>
+      <p>
+        <strong>What it is:</strong> You lease <strong>raw, unlit fiber optic strands</strong> from a
+        provider. The fiber has no electronics on it &mdash; you supply your own optics (SFPs/QSFPs) and
+        equipment on each end. &ldquo;Dark&rdquo; means the fiber has no light/signal until YOU light
+        it up.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li><strong>Maximum control:</strong> You choose the speed, protocol, and equipment</li>
+        <li>
+          <strong>Scalable:</strong> Upgrade speed by swapping optics, not the fiber (1G &#8594; 10G &#8594;
+          100G &#8594; 400G)
+        </li>
+        <li><strong>Low latency:</strong> Direct physical path, nothing in between</li>
+        <li>
+          <strong>Your responsibility:</strong> You maintain the electronics; provider maintains the physical
+          fiber
+        </li>
+      </ul>
+      <div class="result-grid mt-[10px]">
+        <div class="result-item">
+          <div class="ri-label">Best For</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Data center interconnect, high-bandwidth campus links, long-term needs
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Watch Out</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Long lead times, fiber cuts need provider repair, contracts are 3&ndash;20 years
+          </div>
+        </div>
+      </div>
+    </div><div class="panel">
+      <h3><Icon name="map-pin" /> P2P / Leased Lines</h3>
+      <p>
+        <strong>What it is:</strong> A <strong>dedicated, always-on, private circuit</strong> between
+        exactly two locations. You get guaranteed bandwidth that nobody else shares. This is the oldest
+        and most reliable form of WAN connectivity.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li>
+          <strong>Technologies:</strong> T1 (1.5 Mbps, legacy), T3 (45 Mbps, legacy), Ethernet Private
+          Line (EPL), wavelength/DWDM
+        </li>
+        <li><strong>Symmetrical:</strong> Same speed in both directions</li>
+        <li>
+          <strong>Always on:</strong> No dialing, no tunnels &mdash; circuit is permanently up
+        </li>
+        <li>
+          <strong>Layer 1 or 2:</strong> Provider gives you a transparent pipe; you run whatever protocol
+          you want
+        </li>
+      </ul>
+      <div class="tip mt-[10px]">
+        <Icon name="lightbulb" />
+        <strong>Broadcast Use Case:</strong> P2P circuits are commonly used to carry audio/video feeds
+        between studios and transmitter sites. A dedicated fiber P2P between your studio and tower ensures
+        zero contention and lowest possible latency for on-air signals.
+      </div>
+    </div></TabPanel
+  ><TabPanel id="wan-sdwan"
+    ><div class="panel">
+      <h3><Icon name="brain" /> SD-WAN &mdash; Software-Defined WAN</h3>
+      <p>
+        <strong>What it is:</strong> A <strong>smart software layer</strong> that sits on top of your
+        WAN links (broadband, DIA, MPLS, LTE) and <strong>automatically picks the best path</strong> for
+        each type of traffic in real-time.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li>
+          <strong>How it works:</strong> SD-WAN appliances at each site monitor link quality (latency,
+          jitter, loss) and dynamically steer traffic to the healthiest link
+        </li>
+        <li>
+          <strong>Uses multiple links:</strong> Can combine broadband + DIA + LTE for redundancy and load
+          balancing
+        </li>
+        <li>
+          <strong>Cloud-friendly:</strong> Can send cloud traffic (Microsoft 365, Zoom) directly to the
+          internet instead of backhauling through HQ
+        </li>
+        <li>
+          <strong>Centralized management:</strong> Configure policies for all sites from one dashboard
+        </li>
+        <li>
+          <strong>Built-in encryption:</strong> Creates IPsec tunnels between sites automatically
+        </li>
+      </ul>
+      <div class="result-grid mt-[10px]">
+        <div class="result-item">
+          <div class="ri-label">Replaces</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            MPLS for many use cases (cheaper, more flexible)
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Vendors</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Cisco Viptela/Meraki, Fortinet, VMware VeloCloud, Palo Alto Prisma
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Still Needs</div><div
+            class="ri-value font-sans text-[11.5px] text-text2"
+          >
+            Underlay circuits (broadband, DIA) &mdash; SD-WAN is the brain, not the road
+          </div>
+        </div>
+      </div>
+      <div class="tip mt-[10px]">
+        <Icon name="lightbulb" />
+        <strong>Analogy:</strong> SD-WAN is like a GPS that picks the fastest route in real-time. MPLS
+        is like a toll road &mdash; reliable and fast but expensive. Broadband is like a public highway
+        &mdash; cheap but unpredictable. SD-WAN can use all of them and pick the best one for each trip.
+      </div>
+    </div></TabPanel
+  ><TabPanel id="wan-vpn"
+    ><div class="panel">
+      <h3><Icon name="lock" /> VPN as a WAN Service</h3>
+      <p>
+        VPNs are often used as a <strong>low-cost alternative to dedicated WAN circuits</strong>.
+        Instead of paying for MPLS or a leased line, you encrypt traffic over the internet.
+      </p>
+
+      <h3 class="mt-[14px]">Site-to-Site VPN</h3>
+      <p>
+        Connects two <strong>entire networks</strong> (office LANs) over the internet with a permanent
+        encrypted tunnel. A VPN gateway/firewall at each site handles the encryption.
+      </p>
+      <ul class="mt-[4px] ml-[20px] list-disc leading-[1.9]">
+        <li>Always-on tunnel between two firewalls/routers</li>
+        <li>All devices on both LANs can communicate through the tunnel</li>
+        <li>Uses IPsec (IKEv2) or GRE over IPsec</li>
+        <li>No software needed on individual PCs &mdash; the router handles it</li>
+      </ul>
+
+      <h3 class="mt-[14px]">Remote Access VPN</h3>
+      <p>
+        Connects a <strong>single user</strong> (laptop/phone) to the corporate network from anywhere.
+        The user runs VPN client software that creates a temporary tunnel.
+      </p>
+      <ul class="mt-[4px] ml-[20px] list-disc leading-[1.9]">
+        <li>User initiates connection; authenticates with credentials/MFA</li>
+        <li>Common clients: Cisco AnyConnect, Palo Alto GlobalProtect, WireGuard, OpenVPN</li>
+        <li>
+          Full tunnel (all traffic through VPN) or split tunnel (only corporate traffic through VPN)
+        </li>
+        <li>Essential for work-from-home and traveling staff</li>
+      </ul>
+      <div class="warn mt-[10px]">
+        <Icon name="triangle-exclamation" />️ <strong>VPN depends on internet quality:</strong> Unlike
+        MPLS, VPNs ride on best-effort internet. If the internet link is congested or down, the VPN suffers.
+        Use SD-WAN + VPN for automatic failover.
+      </div>
+    </div></TabPanel
+  ></Tabs
+>
