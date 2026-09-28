@@ -1,0 +1,511 @@
+---
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'n101-what', label: 'What is a Network?', icon: 'earth-americas' },
+    { id: 'n101-devices', label: 'Devices Explained', icon: 'box' },
+    { id: 'n101-ip', label: 'IP Addresses', icon: 'code' },
+    { id: 'n101-packets', label: 'How Data Travels', icon: 'envelope-open' },
+    { id: 'n101-day1', label: 'Your First Day', icon: 'rocket' },
+  ]}
+  ><TabPanel id="n101-what" selected>
+    <div class="panel">
+      <h3><Icon name="earth-americas" /> What is a Network — in plain English?</h3>
+      <p>
+        A <strong>network</strong> is just a group of devices that can talk to each other. Think of it
+        like a building's postal system — every office (device) has an address, and there are hallways
+        (cables or Wi-Fi) that carry the mail (data) between them.
+      </p>
+    </div>
+    <div class="panel">
+      <h3><Icon name="box" /> The Three Big Building Blocks</h3>
+      <table class="ref-table">
+        <thead><tr><th>Block</th><th>Real-World Analogy</th><th>What it does</th></tr></thead><tbody
+        >
+          <tr
+            ><td><strong>Switch</strong></td><td
+              >Office hallway — connects rooms on the same floor</td
+            ><td>Moves data between devices on the <em>same</em> network (LAN)</td></tr
+          >
+          <tr
+            ><td><strong>Router</strong></td><td
+              >Post office — routes mail between neighbourhoods</td
+            ><td>Moves data <em>between</em> different networks (LAN ↔ Internet)</td></tr
+          >
+          <tr
+            ><td><strong>Firewall</strong></td><td>Security guard at the front door</td><td
+              >Decides what traffic is allowed in or out</td
+            ></tr
+          >
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <h3><Icon name="house" /> LAN vs WAN — What's the difference?</h3>
+      <p>
+        A <strong>LAN (Local Area Network)</strong> is your building — all the devices on your private
+        network. A <strong>WAN (Wide Area Network)</strong> is everything outside — the internet, your
+        office in another city, a cloud provider. Your <strong>router</strong> sits at the boundary between
+        the two.
+      </p>
+    </div>
+    <div class="panel">
+      <h3><Icon name="plug" /> Wired vs Wireless</h3>
+      <table class="ref-table">
+        <thead><tr><th>Type</th><th>How it works</th><th>Best for</th></tr></thead><tbody>
+          <tr
+            ><td><strong>Ethernet (wired)</strong></td><td
+              >Physical cable (Cat5e, Cat6, fiber) plugged into a switch port</td
+            ><td>Reliability — servers, workstations, AV gear</td></tr
+          >
+          <tr
+            ><td><strong>Wi-Fi (wireless)</strong></td><td
+              >Radio waves from a Wireless Access Point (WAP/AP)</td
+            ><td>Mobility — laptops, phones, tablets</td></tr
+          >
+        </tbody>
+      </table>
+      <div class="tip">
+        <Icon name="lightbulb" />
+        <strong>Rule of thumb:</strong> If the device doesn't move, plug it in. Wired is faster, more
+        reliable, and easier to troubleshoot.
+      </div>
+    </div>
+  </TabPanel><TabPanel id="n101-devices">
+    <div class="panel">
+      <h3><Icon name="box" /> Network Devices — What does each one actually do?</h3>
+      <p>Here's every device you'll hear about, explained without jargon:</p>
+    </div>
+    <table class="ref-table mb-[14px]">
+      <thead
+        ><tr
+          ><th>Device</th><th>One-Line Job</th><th>Where you find it</th><th>Jargon you'll hear</th
+          ></tr
+        ></thead
+      ><tbody>
+        <tr
+          ><td
+            ><Icon name="shuffle" class="mr-1 inline align-[-2px] text-accent" />
+            <strong>Switch</strong></td
+          ><td>Connects devices on the same network</td><td>Wiring closet, rack</td><td
+            >Layer 2, MAC address, port, VLAN</td
+          ></tr
+        >
+        <tr
+          ><td
+            ><Icon name="globe" class="mr-1 inline align-[-2px] text-accent" />
+            <strong>Router</strong></td
+          ><td>Connects different networks together</td><td>Network edge, data center</td><td
+            >Layer 3, IP routing, default gateway</td
+          ></tr
+        >
+        <tr
+          ><td
+            ><Icon name="shield-halved" class="mr-1 inline align-[-2px] text-accent" />
+            <strong>Firewall</strong></td
+          ><td>Allows or blocks traffic by rule</td><td>Network edge, between zones</td><td
+            >ACL, policy, stateful, NAT</td
+          ></tr
+        >
+        <tr
+          ><td
+            ><Icon name="signal" class="mr-1 inline align-[-2px] text-accent" />
+            <strong>Access Point (AP/WAP)</strong></td
+          ><td>Broadcasts Wi-Fi so devices can connect wirelessly</td><td>Ceilings, walls</td><td
+            >SSID, 2.4/5/6 GHz, 802.11</td
+          ></tr
+        >
+        <tr
+          ><td
+            ><Icon name="plug" class="mr-1 inline align-[-2px] text-accent" />
+            <strong>Patch Panel</strong></td
+          ><td>Centralises all cable terminations in one neat place</td><td>Wiring closet</td><td
+            >Punch-down, jack, port</td
+          ></tr
+        >
+        <tr
+          ><td
+            ><Icon name="bolt" class="mr-1 inline align-[-2px] text-yellow" />
+            <strong>PoE Switch</strong></td
+          ><td>Powers devices (like APs, phones, cameras) over the network cable</td><td
+            >Wiring closet</td
+          ><td>Power over Ethernet, PoE+</td></tr
+        >
+        <tr
+          ><td
+            ><Icon name="tower-broadcast" class="mr-1 inline align-[-2px] text-accent" />
+            <strong>Modem</strong></td
+          ><td>Translates your ISP's signal into Ethernet your router understands</td><td
+            >Demarc point, comms room</td
+          ><td>DSL, cable, ONT, demarc</td></tr
+        >
+        <tr
+          ><td
+            ><Icon name="desktop" class="mr-1 inline align-[-2px] text-accent" />
+            <strong>Server</strong></td
+          ><td>A computer that provides a shared service (files, DHCP, DNS, email)</td><td
+            >Server room, data center</td
+          ><td>Host, node, VM, rack unit</td></tr
+        >
+        <tr
+          ><td
+            ><Icon name="floppy-disk" class="mr-1 inline align-[-2px] text-accent" />
+            <strong>NAS</strong></td
+          ><td>Network-attached storage — shared file storage for the office</td><td>Server room</td
+          ><td>SMB, NFS, iSCSI, share</td></tr
+        >
+        <tr
+          ><td
+            ><Icon name="repeat" class="mr-1 inline align-[-2px] text-accent" />
+            <strong>UPS</strong></td
+          ><td>Battery backup — keeps gear alive during a power blip</td><td>Every rack</td><td
+            >Uninterruptible Power Supply, runtime</td
+          ></tr
+        >
+      </tbody>
+    </table>
+    <div class="tip">
+      <Icon name="lightbulb" />
+      <strong>Remember:</strong> Switches keep traffic <em>local</em>. Routers move traffic <em
+        >between</em
+      > networks. When in doubt, ask "is the destination on the same network or a different one?"
+    </div>
+  </TabPanel><TabPanel id="n101-ip">
+    <div class="panel">
+      <h3><Icon name="code" /> IP Addresses — The network's postal codes</h3>
+      <p>
+        Every device on a network needs a unique <strong>IP address</strong> — just like every house needs
+        a unique street address so mail gets delivered to the right place. IP stands for <strong
+          >Internet Protocol</strong
+        >.
+      </p>
+      <p>
+        A typical IP address looks like: <code class="font-mono text-accent">192.168.1.10</code> — four
+        numbers 0–255 separated by dots.
+      </p>
+    </div>
+    <div class="panel">
+      <h3><Icon name="house" /> Private vs Public IPs</h3>
+      <table class="ref-table">
+        <thead
+          ><tr><th>Type</th><th>Example</th><th>Who uses it</th><th>Can reach the Internet?</th></tr
+          ></thead
+        ><tbody>
+          <tr
+            ><td><strong>Private</strong></td><td
+              ><code class="mono">192.168.x.x</code>, <code class="mono">10.x.x.x</code>, <code
+                class="mono">172.16–31.x.x</code
+              ></td
+            ><td>Inside your office/home</td><td
+              ><Icon name="circle-xmark" class="mr-1 inline align-[-2px] text-red" /> No — needs NAT</td
+            ></tr
+          >
+          <tr
+            ><td><strong>Public</strong></td><td
+              >Anything else (e.g. <code class="mono">8.8.8.8</code>)</td
+            ><td>Internet-facing servers, ISP assigned</td><td
+              ><Icon name="circle-check" class="mr-1 inline align-[-2px] text-green" /> Yes</td
+            ></tr
+          >
+        </tbody>
+      </table>
+      <div class="tip">
+        <Icon name="lightbulb" /> Your company's desktops almost certainly have private addresses like
+        <code>192.168.1.x</code> or <code>10.x.x.x</code>. Your router's "outside" interface has the
+        public IP your ISP gave you.
+      </div>
+    </div>
+    <div class="panel">
+      <h3><Icon name="puzzle-piece" /> Subnet Masks — What's the neighborhood?</h3>
+      <p>
+        A <strong>subnet mask</strong> tells a device which part of an IP address is the "neighborhood"
+        (network) and which part is the "house number" (host). You'll see it written two ways — they mean
+        the same thing:
+      </p>
+      <table class="ref-table">
+        <thead
+          ><tr><th>Notation</th><th>Example</th><th>Usable Hosts</th><th>Think of it as…</th></tr
+          ></thead
+        ><tbody>
+          <tr
+            ><td>Dotted decimal</td><td><code class="mono">255.255.255.0</code></td><td>254</td><td
+              >Standard office network</td
+            ></tr
+          >
+          <tr
+            ><td>CIDR (slash)</td><td><code class="mono">/24</code></td><td>254</td><td
+              >Exactly the same thing, shorter to write</td
+            ></tr
+          >
+          <tr
+            ><td><code class="mono">255.255.255.252</code></td><td><code class="mono">/30</code></td
+            ><td>2</td><td>Point-to-point link between two routers</td></tr
+          >
+          <tr
+            ><td><code class="mono">255.255.0.0</code></td><td><code class="mono">/16</code></td><td
+              >65,534</td
+            ><td>Large campus or data center</td></tr
+          >
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <h3><Icon name="robot" /> DHCP — The automatic address giver</h3>
+      <p>
+        <strong>DHCP (Dynamic Host Configuration Protocol)</strong> automatically assigns IP addresses
+        to devices so you don't have to type one in manually on every laptop and phone. Your router or
+        a server runs DHCP. When your laptop joins the Wi-Fi, it shouts "can someone give me an address?"
+        and the DHCP server replies with an IP, subnet mask, default gateway, and DNS server.
+      </p>
+    </div>
+    <div class="panel">
+      <h3><Icon name="certificate" /> DNS — The internet's phone book</h3>
+      <p>
+        <strong>DNS (Domain Name System)</strong> translates human-readable names like <code
+          >google.com</code
+        > into IP addresses like <code>142.250.80.46</code>. Without DNS, you'd have to memorise
+        numbers for every website. Common DNS servers: <code>8.8.8.8</code> (Google), <code
+          >1.1.1.1</code
+        > (Cloudflare).
+      </p>
+    </div>
+  </TabPanel><TabPanel id="n101-packets">
+    <div class="panel">
+      <h3><Icon name="envelope-open" /> How data actually gets from A to B</h3>
+      <p>
+        Data doesn't travel as one big blob — it gets chopped into small chunks called <strong
+          >packets</strong
+        >. Each packet gets wrapped in addressing information, sent across the network, and
+        reassembled at the other end. Think of it like shipping a large painting in multiple small
+        boxes — each box is labelled, sent separately, and reassembled on arrival.
+      </p>
+    </div>
+    <div class="panel">
+      <h3><Icon name="folder" /> The journey of a packet — ping google.com</h3>
+      <table class="ref-table">
+        <thead><tr><th>Step</th><th>What happens</th><th>Device involved</th></tr></thead><tbody>
+          <tr
+            ><td>1</td><td>Your laptop asks DNS: "What's the IP for google.com?"</td><td
+              >Your PC → DNS server</td
+            ></tr
+          >
+          <tr><td>2</td><td>DNS replies: "142.250.80.46"</td><td>DNS server → Your PC</td></tr>
+          <tr
+            ><td>3</td><td>Your PC creates a packet addressed to 142.250.80.46</td><td
+              >Your PC (NIC)</td
+            ></tr
+          >
+          <tr
+            ><td>4</td><td>The packet goes to your switch, which forwards it to your router</td><td
+              >Switch</td
+            ></tr
+          >
+          <tr
+            ><td>5</td><td
+              >The router looks up its routing table and sends it toward the internet via your ISP</td
+            ><td>Router</td></tr
+          >
+          <tr
+            ><td>6</td><td
+              >The packet hops across many routers on the internet until it reaches Google</td
+            ><td>Internet routers</td></tr
+          >
+          <tr
+            ><td>7</td><td>Google sends a reply back the same way</td><td
+              >Google → your router → switch → PC</td
+            ></tr
+          >
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <h3>The Envelope Analogy — Encapsulation</h3>
+      <p>
+        At each layer of the OSI model, your data gets wrapped in another "envelope" with addressing
+        for that layer. A switch only looks at the innermost envelope (MAC address). A router opens
+        one more layer to see the IP address. This wrapping and unwrapping process is called <strong
+          >encapsulation</strong
+        > and <strong>decapsulation</strong>.
+      </p>
+      <div class="tip">
+        <Icon name="lightbulb" /> Use the <strong>OSI Model</strong> tool (in Reference) to see all 7
+        layers. As a junior engineer, focus on Layers 1–4 first — Physical, Data Link, Network, and Transport.
+        That covers 90% of day-to-day troubleshooting.
+      </div>
+    </div>
+    <div class="panel">
+      <h3>TCP vs UDP — Reliable vs Fast</h3>
+      <table class="ref-table">
+        <thead><tr><th></th><th>TCP</th><th>UDP</th></tr></thead><tbody>
+          <tr
+            ><td><strong>What it does</strong></td><td
+              >Guarantees delivery — resends lost packets</td
+            ><td>Best-effort — fire and forget</td></tr
+          >
+          <tr
+            ><td><strong>Speed</strong></td><td>Slower (handshake + acknowledgements)</td><td
+              >Faster (no overhead)</td
+            ></tr
+          >
+          <tr
+            ><td><strong>Used for</strong></td><td>Web (HTTP/S), email, file transfers</td><td
+              >Video streaming, VoIP, DNS, gaming</td
+            ></tr
+          >
+          <tr
+            ><td><strong>Analogy</strong></td><td>Certified mail — you get a receipt</td><td
+              >Dropping a flyer in someone's letterbox</td
+            ></tr
+          >
+        </tbody>
+      </table>
+    </div>
+  </TabPanel><TabPanel id="n101-day1">
+    <div class="panel">
+      <h3><Icon name="rocket" /> What every junior network engineer should know on Day 1</h3>
+      <p>
+        You don't need to know everything — but these fundamentals will make your first weeks much
+        smoother:
+      </p>
+    </div>
+    <div class="panel">
+      <h3><Icon name="circle-check" /> Core Concepts Checklist</h3>
+      <table class="ref-table">
+        <thead><tr><th>Concept</th><th>Why it matters</th><th>Where to learn more</th></tr></thead
+        ><tbody>
+          <tr
+            ><td>IP addressing &amp; subnets</td><td
+              >Every device needs one — you'll configure these constantly</td
+            ><td>Subnet Calculator &amp; Cheat Sheet</td></tr
+          >
+          <tr
+            ><td>Switch vs Router</td><td>Knowing which device to touch saves hours of confusion</td
+            ><td>Devices Explained (this tab)</td></tr
+          >
+          <tr
+            ><td>VLANs</td><td
+              >How you separate traffic (voice, data, security cameras) on one switch</td
+            ><td>Network Types, VLAN Config Gen</td></tr
+          >
+          <tr
+            ><td>DNS &amp; DHCP</td><td
+              >The two services that keep devices talking without manual config</td
+            ><td>Port Lookup (port 53, 67, 68), DHCP Gen</td></tr
+          >
+          <tr
+            ><td>OSI Model</td><td>A shared language for describing where a problem lives</td><td
+              >OSI Model tool</td
+            ></tr
+          >
+          <tr
+            ><td>ping &amp; traceroute</td><td>First two commands to run when something's broken</td
+            ><td>Linux Commands, Troubleshooting Guide</td></tr
+          >
+          <tr
+            ><td>Ethernet cabling</td><td>You will run and terminate cables — know T568B</td><td
+              >Cable Pinouts tool</td
+            ></tr
+          >
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <h3><Icon name="wrench" /> First 5 Commands to Know</h3>
+      <table class="ref-table">
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead><tbody>
+          <tr
+            ><td><code class="mono">ping 8.8.8.8</code></td><td
+              >Test basic connectivity — "can I reach that address?"</td
+            ></tr
+          >
+          <tr
+            ><td
+              ><code class="mono">traceroute 8.8.8.8</code> (Linux) / <code class="mono"
+                >tracert</code
+              > (Windows)</td
+            ><td>Shows every hop between you and the destination</td></tr
+          >
+          <tr
+            ><td
+              ><code class="mono">ipconfig</code> (Windows) / <code class="mono">ip addr</code> (Linux)</td
+            ><td>Shows your device's IP address and subnet mask</td></tr
+          >
+          <tr
+            ><td><code class="mono">nslookup google.com</code></td><td
+              >Tests DNS — "can I resolve names to IPs?"</td
+            ></tr
+          >
+          <tr
+            ><td><code class="mono">show ip interface brief</code> (Cisco)</td><td
+              >Shows all interfaces and their IP addresses on a router/switch</td
+            ></tr
+          >
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <h3><Icon name="comment" /> Jargon You'll Hear in the First Week</h3>
+      <p>
+        Don't panic if you hear these — check the <strong>Jargon Decoder</strong> tool for plain-English
+        definitions of 100+ terms. Common first-week words:
+      </p>
+      <p class="mt-[8px] leading-[2]">
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >uplink</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >trunk port</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >access port</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >demarc</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >latency</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >bandwidth</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >throughput</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >loop</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >spanning tree</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >default gateway</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >subnet</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >VLAN</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >802.1Q</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >NAT</span
+        >
+        <span class="m-[2px] inline-block rounded-[6px] bg-surface2 px-[8px] py-[3px] text-[12px]"
+          >ACL</span
+        >
+      </p>
+    </div>
+    <div class="warn">
+      <Icon name="triangle-exclamation" />
+      <strong>Golden Rule:</strong> Always check with your team before changing anything in production.
+      Take a config backup first. If in doubt, ask — nobody expects a junior engineer to know everything
+      on day one.
+    </div>
+  </TabPanel></Tabs
+>

@@ -1,0 +1,112 @@
+---
+import Icon from '@/components/Icon.astro';
+---
+
+<div class="panel">
+  <h3><Icon name="wrench" /> Structured Methodology</h3><ol
+    class="list-decimal pl-[20px] text-[12.5px] leading-[2] text-text2"
+  >
+    <li>
+      <strong class="text-text">Identify the Problem</strong> — Gather info, question users, check logs,
+      try to replicate
+    </li>
+    <li>
+      <strong class="text-text">Establish a Theory</strong> — Most probable cause first (layer-by-layer,
+      bottom-up)
+    </li>
+    <li>
+      <strong class="text-text">Test the Theory</strong> — If confirmed, proceed. If not, re-theorize
+    </li>
+    <li>
+      <strong class="text-text">Establish a Plan</strong> — Plan the fix, assess impact, schedule if needed
+    </li>
+    <li>
+      <strong class="text-text">Implement the Solution</strong> — Make the change, escalate if necessary
+    </li>
+    <li>
+      <strong class="text-text">Verify Full Functionality</strong> — Confirm fix and check for new issues
+    </li>
+    <li>
+      <strong class="text-text">Document Findings</strong> — Root cause, steps taken, lessons learned
+    </li>
+  </ol>
+</div><div class="panel">
+  <h3><Icon name="magnifying-glass" /> Can't Communicate Across VLANs</h3><ol
+    class="list-decimal pl-[20px] text-[12.5px] leading-[1.8] text-text2"
+  >
+    <li>Verify VLAN config (show vlan brief)</li><li>
+      Check trunk allowed VLANs (show interfaces trunk)
+    </li><li>Confirm IP addresses and subnets match</li><li>
+      Verify inter-VLAN routing is configured
+    </li><li>Check ACLs blocking traffic (show access-lists)</li>
+  </ol>
+</div><div class="panel">
+  <h3><Icon name="magnifying-glass" /> Interface Down / Flapping</h3><ol
+    class="list-decimal pl-[20px] text-[12.5px] leading-[1.8] text-text2"
+  >
+    <li>Check physical cables and connections</li><li>
+      show interface &lt;intf&gt; — look for errors, CRC, resets
+    </li><li>Try shutdown / no shutdown</li><li>Check speed/duplex mismatch (both sides)</li><li>
+      Verify SFP/transceiver compatibility
+    </li><li>Check for port-security violations</li><li>
+      Default the port to reset all config: default interface &lt;intf&gt; — then reconfigure from
+      scratch
+    </li>
+  </ol>
+</div><div class="panel">
+  <h3><Icon name="magnifying-glass" /> No Internet / WAN Down</h3><ol
+    class="list-decimal pl-[20px] text-[12.5px] leading-[1.8] text-text2"
+  >
+    <li>Ping default gateway, then upstream</li><li>
+      Check NAT translations (show ip nat translations)
+    </li><li>Verify default route exists (show ip route)</li><li>
+      Check ISP-facing interface status
+    </li><li>Verify DNS resolution (nslookup)</li>
+  </ol>
+</div><div class="panel">
+  <h3><Icon name="magnifying-glass" /> DHCP Not Working</h3><ol
+    class="list-decimal pl-[20px] text-[12.5px] leading-[1.8] text-text2"
+  >
+    <li>Verify DHCP pool config (show run | section dhcp)</li><li>
+      Check excluded addresses aren't overlapping the pool
+    </li><li>Verify ip helper-address if DHCP server is remote</li><li>
+      Confirm client interface is up and in correct VLAN
+    </li><li>Check DHCP bindings (show ip dhcp binding)</li>
+  </ol>
+</div><div class="panel">
+  <h3><Icon name="magnifying-glass" /> Slow Network / High Latency</h3><ol
+    class="list-decimal pl-[20px] text-[12.5px] leading-[1.8] text-text2"
+  >
+    <li>Check interface utilization (show interfaces)</li><li>
+      Look for CRC errors, collisions, drops
+    </li><li>Verify duplex settings (full duplex expected)</li><li>
+      Check for broadcast storms (show interfaces counters)
+    </li><li>Monitor bandwidth with SNMP/NetFlow</li><li>
+      Verify QoS policies if VoIP affected
+    </li><li>Check service-policy drops: show policy-map interface &lt;intf&gt;</li>
+  </ol>
+</div><div class="panel">
+  <h3><Icon name="magnifying-glass" /> OSPF Neighbor Not Forming</h3><ol
+    class="list-decimal pl-[20px] text-[12.5px] leading-[1.8] text-text2"
+  >
+    <li>Verify interfaces are in correct area (show ip ospf interface)</li><li>
+      Check hello/dead timers match on both sides
+    </li><li>Verify subnet masks match</li><li>Check area type matches (stub, NSSA)</li><li>
+      Verify authentication matches
+    </li><li>Check MTU (must match for adjacency)</li>
+  </ol>
+</div><div class="panel">
+  <h3><Icon name="magnifying-glass" /> QoS / Service Policy Issues</h3><ol
+    class="list-decimal pl-[20px] text-[12.5px] leading-[1.8] text-text2"
+  >
+    <li>Confirm policy applied: show run interface &lt;intf&gt; | include service-policy</li><li>
+      View live counters and drops per class: show policy-map interface &lt;intf&gt;
+    </li><li>Check for queue tail-drops or WRED drops in the output direction</li><li>
+      Verify class-map match conditions are correct: show class-map
+    </li><li>Confirm correct policy-map is attached: show run | section service-policy</li><li>
+      Check DSCP/CoS markings on ingress traffic: show mls qos interface &lt;intf&gt;
+    </li><li>Reset counters: remove service-policy, re-apply, observe fresh counts</li><li>
+      Verify DSCP-to-queue mappings: show mls qos maps dscp-output-q
+    </li>
+  </ol>
+</div>

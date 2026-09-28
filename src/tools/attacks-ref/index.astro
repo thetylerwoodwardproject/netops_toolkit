@@ -1,0 +1,61 @@
+---
+
+---
+
+<div class="table-wrap">
+  <table class="ref-table">
+    <thead><tr><th>Attack</th><th>Description</th><th>Indicators</th><th>Mitigation</th></tr></thead
+    ><tbody
+      ><tr
+        ><td><strong>DoS / DDoS</strong></td><td>Overwhelms target with traffic or requests</td><td
+          >Service unavailability, high CPU/bandwidth</td
+        ><td class="text-green">Rate limiting, IPS, traffic scrubbing, ACLs</td></tr
+      ><tr
+        ><td><strong>VLAN Hopping</strong></td><td>Exploits DTP to trunk or double-tags frames</td
+        ><td>Unauthorized VLAN access</td><td class="text-green"
+          >Disable DTP (nonegotiate), set native VLAN, prune</td
+        ></tr
+      ><tr
+        ><td><strong>MAC Flooding</strong></td><td
+          >Floods switch MAC table to force broadcast mode</td
+        ><td>Traffic sniffing</td><td class="text-green">Port security, MAC limit, storm control</td
+        ></tr
+      ><tr
+        ><td><strong>ARP Spoofing</strong></td><td>Sends fake ARP replies to intercept traffic</td
+        ><td>On-path attacks, data theft</td><td class="text-green"
+          >Dynamic ARP Inspection (DAI), static ARP</td
+        ></tr
+      ><tr
+        ><td><strong>DNS Poisoning</strong></td><td>Injects false DNS records</td><td
+          >Redirects to malicious sites</td
+        ><td class="text-green">DNSSEC, secure DNS servers</td></tr
+      ><tr
+        ><td><strong>Rogue DHCP</strong></td><td>Unauthorized DHCP server gives bad config</td><td
+          >Traffic interception, DoS</td
+        ><td class="text-green">DHCP Snooping, trusted ports</td></tr
+      ><tr
+        ><td><strong>Evil Twin</strong></td><td>Fake AP mimics legitimate wireless network</td><td
+          >Credential theft</td
+        ><td class="text-green">802.1X, WPA3, wireless IDS</td></tr
+      ><tr
+        ><td><strong>On-Path (MITM)</strong></td><td
+          >Intercepts communications between two parties</td
+        ><td>Data theft, session hijack</td><td class="text-green"
+          >Encryption (TLS), certificate pinning</td
+        ></tr
+      ><tr
+        ><td><strong>Phishing</strong></td><td>Social engineering via email/web</td><td
+          >Credential theft, malware</td
+        ><td class="text-green">User training, email filtering, MFA</td></tr
+      ><tr
+        ><td><strong>Brute Force</strong></td><td>Automated password guessing</td><td
+          >Account compromise</td
+        ><td class="text-green">Account lockout, MFA, strong passwords</td></tr
+      ><tr
+        ><td><strong>MAC Spoofing</strong></td><td>Changes device MAC to bypass controls</td><td
+          >Unauthorized access</td
+        ><td class="text-green">802.1X, port security (sticky)</td></tr
+      ></tbody
+    >
+  </table>
+</div>

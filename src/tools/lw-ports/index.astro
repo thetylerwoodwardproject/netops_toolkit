@@ -1,0 +1,147 @@
+---
+import Icon from '@/components/Icon.astro';
+---
+
+<div class="panel">
+  <h3><Icon name="server" /> Control &amp; Transport Ports</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead
+        ><tr><th>Protocol</th><th>Port</th><th>Transport</th><th>Direction</th><th>Purpose</th></tr
+        ></thead
+      >
+      <tbody>
+        <tr>
+          <td><strong>LWRP</strong></td>
+          <td class="mono">93</td>
+          <td
+            ><span
+              class="rounded-[10px] bg-[#60a5fa]/15 px-[7px] py-[1px] text-[10px] font-bold text-blue"
+              >TCP</span
+            ></td
+          >
+          <td>Bidirectional</td>
+          <td>Livewire Routing Protocol — source/destination assignment, GPIO</td>
+        </tr>
+        <tr>
+          <td><strong>LWCP</strong></td>
+          <td class="mono">4010</td>
+          <td
+            ><span
+              class="rounded-[10px] bg-[#60a5fa]/15 px-[7px] py-[1px] text-[10px] font-bold text-blue"
+              >TCP</span
+            ></td
+          >
+          <td>Bidirectional</td>
+          <td>Console control — VMix, fader/bus, AES67 mixing</td>
+        </tr>
+        <tr>
+          <td><strong>Audio (RTP)</strong></td>
+          <td class="mono">5004</td>
+          <td
+            ><span
+              class="rounded-[10px] bg-[#fb923c]/15 px-[7px] py-[1px] text-[10px] font-bold text-orange"
+              >UDP</span
+            ></td
+          >
+          <td>Source → Destinations</td>
+          <td>Livewire &amp; AES67 audio stream delivery (RTP/UDP multicast)</td>
+        </tr>
+        <tr>
+          <td><strong>SAP Discovery</strong></td>
+          <td class="mono">9875</td>
+          <td
+            ><span
+              class="rounded-[10px] bg-[#fb923c]/15 px-[7px] py-[1px] text-[10px] font-bold text-orange"
+              >UDP</span
+            ></td
+          >
+          <td>Source → Network</td>
+          <td>Session Announcement Protocol — AES67 stream advertisement</td>
+        </tr>
+        <tr>
+          <td><strong>PTP Event</strong></td>
+          <td class="mono">319</td>
+          <td
+            ><span
+              class="rounded-[10px] bg-[#fb923c]/15 px-[7px] py-[1px] text-[10px] font-bold text-orange"
+              >UDP</span
+            ></td
+          >
+          <td>Network-wide</td>
+          <td>IEEE 1588 PTP clock sync — time-critical event messages</td>
+        </tr>
+        <tr>
+          <td><strong>PTP General</strong></td>
+          <td class="mono">320</td>
+          <td
+            ><span
+              class="rounded-[10px] bg-[#fb923c]/15 px-[7px] py-[1px] text-[10px] font-bold text-orange"
+              >UDP</span
+            ></td
+          >
+          <td>Network-wide</td>
+          <td>IEEE 1588 PTP clock sync — general messages (announce, management)</td>
+        </tr>
+        <tr>
+          <td><strong>NMOS IS-04</strong></td>
+          <td class="mono">3212</td>
+          <td
+            ><span
+              class="rounded-[10px] bg-[#60a5fa]/15 px-[7px] py-[1px] text-[10px] font-bold text-blue"
+              >TCP</span
+            ></td
+          >
+          <td>Device → Registry</td>
+          <td>AES67 / ST 2110 device discovery and registration</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="panel">
+  <h3><Icon name="network-wired" /> Multicast Address Ranges</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead><tr><th>Stream Type</th><th>Base Address</th><th>Range</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr
+          ><td>Standard</td><td class="mono">239.192.0.0</td><td class="mono">.0.1 → .127.255</td
+          ><td>Up to 32,767 channels</td></tr
+        >
+        <tr
+          ><td>Backfeed</td><td class="mono">239.193.0.0</td><td class="mono">.0.1 → .127.255</td
+          ><td>Return feeds to studios</td></tr
+        >
+        <tr
+          ><td>Backfeed Livestream</td><td class="mono">239.195.0.0</td><td class="mono"
+            >.0.1 → .127.255</td
+          ><td>Low-latency return streams</td></tr
+        >
+        <tr
+          ><td>Surround / 5.1</td><td class="mono">239.196.0.0</td><td class="mono"
+            >.0.1 → .127.255</td
+          ><td>8-channel surround audio</td></tr
+        >
+        <tr
+          ><td>AES67 SAP Announcement</td><td class="mono">239.255.255.255</td><td class="mono"
+            >n/a</td
+          ><td>Session advertisement multicast group</td></tr
+        >
+        <tr
+          ><td>PTP (IEEE 1588)</td><td class="mono">224.0.1.129</td><td class="mono">n/a</td><td
+            >Default PTP multicast group</td
+          ></tr
+        >
+      </tbody>
+    </table>
+  </div>
+  <div class="tip mt-[12px]">
+    <strong>IGMP snooping must be enabled</strong> on all switches in a Livewire network. Without it,
+    multicast audio floods every port on every VLAN — saturating links and crashing endpoints.
+  </div>
+  <div class="warn mt-[8px]">
+    <strong>QoS is critical.</strong> Mark RTP audio packets (DSCP EF / 46) and PTP packets (DSCP CS7
+    / 56) for priority queuing. Mixed IP traffic on an unmanaged switch will cause dropouts.
+  </div>
+</div>
