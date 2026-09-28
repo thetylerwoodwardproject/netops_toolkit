@@ -1,0 +1,28 @@
+---
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+import Flow from './Flow.astro';
+import Generator from './Generator.svelte';
+import Reference from './Reference.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'reference', label: 'Reference', icon: 'book-open' },
+    { id: 'config', label: 'VRF Config', icon: 'wrench' },
+    { id: 'flow', label: 'Flow Diagram', icon: 'compass' },
+  ]}
+>
+  <TabPanel id="reference" selected><Reference /></TabPanel>
+  <TabPanel id="config">
+    <div data-island="vrf-gen" data-ssr><Generator /></div>
+  </TabPanel>
+  <TabPanel id="flow"><Flow /></TabPanel>
+</Tabs>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="vrf-gen"]', Generator);
+</script>

@@ -1,0 +1,55 @@
+---
+import Icon from '@/components/Icon.astro';
+import Calculator from './Calculator.svelte';
+---
+
+<div class="panel">
+  <h3><Icon name="gauge-high" /> Livewire Bandwidth Calculator</h3>
+  <p class="mb-3.5">
+    Livewire streams use RTP/UDP multicast. Bandwidth per stream varies by packet cadence and
+    channel count.
+  </p>
+  <div data-island="lw-bandwidth" data-ssr><Calculator /></div>
+</div>
+<div class="panel">
+  <h3><Icon name="circle-info" /> Stream Type Reference</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead
+        ><tr
+          ><th>Stream Type</th><th>Packet Time</th><th>Samples/Packet</th><th>Channels</th><th
+            >~Mbps/Stream</th
+          ></tr
+        ></thead
+      >
+      <tbody>
+        <tr
+          ><td>Standard</td><td>5 ms</td><td>240</td><td>2 (stereo)</td><td class="mono">~2.43</td
+          ></tr
+        >
+        <tr
+          ><td>Livestream</td><td>1 ms</td><td>12</td><td>2 (stereo)</td><td class="mono">~4.80</td
+          ></tr
+        >
+        <tr
+          ><td>Surround / 5.1</td><td>5 ms</td><td>240</td><td>8</td><td class="mono">~9.70</td></tr
+        >
+        <tr
+          ><td>AES67 (default)</td><td>1 ms</td><td>48</td><td>2 (stereo)</td><td class="mono"
+            >~4.80</td
+          ></tr
+        >
+      </tbody>
+    </table>
+  </div>
+  <div class="tip mt-[12px]">
+    All figures assume 48 kHz / 24-bit audio and include Ethernet, IP, UDP, and RTP header overhead.
+  </div>
+</div>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Calculator from './Calculator.svelte';
+
+  start('[data-island="lw-bandwidth"]', Calculator);
+</script>

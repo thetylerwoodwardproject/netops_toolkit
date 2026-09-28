@@ -1,0 +1,25 @@
+---
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+import Generator from './Generator.svelte';
+import Reference from './Reference.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'generator', label: 'Generator', icon: 'key' },
+    { id: 'reference', label: 'Reference', icon: 'book-open' },
+  ]}
+>
+  <TabPanel id="generator" selected>
+    <div data-island="rsa-key-gen" data-ssr><Generator /></div>
+  </TabPanel>
+  <TabPanel id="reference"><Reference /></TabPanel>
+</Tabs>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="rsa-key-gen"]', Generator);
+</script>

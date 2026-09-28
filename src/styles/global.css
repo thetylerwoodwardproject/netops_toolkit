@@ -204,8 +204,10 @@
     @apply font-sans text-[12px] text-text2;
   }
 
+  /* Config output never wraps: a wrapped "ip address 10.1.1.1 255.255.255.0"
+     reads as two commands. Long lines scroll inside the block instead. */
   .code {
-    @apply relative my-2.5 overflow-x-auto rounded-field border border-line bg-bg p-3.5 font-mono text-[12px] leading-relaxed break-words whitespace-pre-wrap text-text;
+    @apply relative my-2.5 overflow-x-auto rounded-field border border-line bg-bg p-3.5 font-mono text-[12px] leading-relaxed whitespace-pre text-text;
   }
 
   /* The inline-code look (base layer) is for code in running text, not in blocks. */

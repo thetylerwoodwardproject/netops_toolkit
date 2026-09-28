@@ -1,0 +1,188 @@
+---
+import Icon from '@/components/Icon.astro';
+---
+
+<div class="panel">
+  <h3><Icon name="key" /> What is RSA?</h3>
+  <p>
+    <strong>RSA (Rivest&ndash;Shamir&ndash;Adleman)</strong> is the most widely-used asymmetric (public-key)
+    cryptographic algorithm. It relies on the practical difficulty of factoring the product of two large
+    prime numbers. RSA underpins TLS/HTTPS, SSH, S/MIME, code signing, and VPN certificates.
+  </p>
+  <p class="mt-[8px]">
+    Every RSA key pair consists of a <strong>public key</strong> (safe to share) and a mathematically
+    linked <strong>private key</strong> (must stay secret). Data encrypted with the public key can only
+    be decrypted with the private key, and vice versa.
+  </p>
+</div>
+
+<div class="panel">
+  <h3><Icon name="ruler" /> Key Size Guide</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead
+        ><tr><th>Key Size</th><th>Security Level</th><th>Use Case</th><th>Performance</th></tr
+        ></thead
+      >
+      <tbody>
+        <tr
+          ><td class="mono">1024-bit</td><td class="text-red"
+            ><Icon name="triangle-exclamation" class="mr-1 inline align-[-2px] text-orange" /> Broken</td
+          ><td>Legacy only &mdash; do not use</td><td>Fast</td></tr
+        >
+        <tr
+          ><td class="mono">2048-bit</td><td class="text-orange">Acceptable</td><td
+            >General TLS, SSH keys (minimum recommended)</td
+          ><td>Fast</td></tr
+        >
+        <tr
+          ><td class="mono">3072-bit</td><td class="text-green">Strong</td><td
+            >CA certificates, long-lived keys</td
+          ><td>Moderate</td></tr
+        >
+        <tr
+          ><td class="mono">4096-bit</td><td class="text-green">High Security</td><td
+            >Root CAs, sensitive infrastructure, long-term keys</td
+          ><td>Slower</td></tr
+        >
+      </tbody>
+    </table>
+  </div>
+  <div class="tip mt-[10px]">
+    NIST recommends a minimum of <strong>2048-bit RSA</strong> through 2030. For new deployments consider
+    4096-bit or migrating to elliptic-curve (ECDSA/Ed25519) for better performance at equivalent security.
+  </div>
+</div>
+
+<div class="panel">
+  <h3><Icon name="arrows-rotate" /> RSA Use Cases</h3>
+  <div class="result-grid mt-[8px]">
+    <div class="result-item">
+      <div class="ri-label">TLS / HTTPS</div><div
+        class="ri-value font-sans text-[11.5px] text-text2"
+      >
+        Server certificates use RSA public key; private key stays on the server for the TLS
+        handshake.
+      </div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">SSH Authentication</div><div
+        class="ri-value font-sans text-[11.5px] text-text2"
+      >
+        Public key added to ~/.ssh/authorized_keys; private key authenticates the client.
+      </div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">Code Signing</div><div
+        class="ri-value font-sans text-[11.5px] text-text2"
+      >
+        Developer signs with private key; recipients verify authenticity with the public key.
+      </div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">VPN Certificates</div><div
+        class="ri-value font-sans text-[11.5px] text-text2"
+      >
+        IPsec and SSL VPNs use RSA certificates for peer authentication and key exchange.
+      </div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">S/MIME Email</div><div
+        class="ri-value font-sans text-[11.5px] text-text2"
+      >
+        Encrypt email to recipient's public key; recipient decrypts with their private key.
+      </div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">Cisco Crypto RSA</div><div
+        class="ri-value font-sans text-[11.5px] text-text2"
+      >
+        <code>crypto key generate rsa modulus 2048</code> &mdash; generates an RSA pair for SSH on IOS.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <h3><Icon name="file" /> PEM Format Explained</h3>
+  <p class="text-[12.5px] text-text2">
+    PEM (Privacy Enhanced Mail) is the standard Base64-encoded text format for cryptographic keys
+    and certificates. Each file is bookended by ASCII header/footer lines.
+  </p>
+  <div class="table-wrap mt-[10px]">
+    <table class="ref-table">
+      <thead><tr><th>Header / Footer</th><th>Contains</th></tr></thead>
+      <tbody>
+        <tr
+          ><td class="mono">-----BEGIN PUBLIC KEY-----</td><td
+            >SPKI-encoded RSA public key (SubjectPublicKeyInfo)</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">-----BEGIN PRIVATE KEY-----</td><td
+            >PKCS#8-encoded RSA private key (unencrypted)</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">-----BEGIN RSA PRIVATE KEY-----</td><td
+            >PKCS#1 legacy format (OpenSSL traditional)</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">-----BEGIN CERTIFICATE-----</td><td
+            >X.509 certificate (contains the public key + identity)</td
+          ></tr
+        >
+      </tbody>
+    </table>
+  </div>
+  <div class="tip mt-[10px]">
+    This tool generates <strong>PKCS#8 private keys</strong> and <strong>SPKI public keys</strong> &mdash;
+    the modern standard compatible with OpenSSL, Node.js, Java, Python, and most current libraries.
+  </div>
+</div>
+
+<div class="panel">
+  <h3><Icon name="hammer" /> Common OpenSSL Commands</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr
+          ><td class="mono">openssl genrsa -out private.pem 4096</td><td
+            >Generate 4096-bit RSA private key (PKCS#1)</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">openssl rsa -in private.pem -pubout -out public.pem</td><td
+            >Extract public key from private key</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">openssl rsa -in private.pem -text -noout</td><td
+            >Inspect key details (modulus, exponent)</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">openssl rsa -check -in private.pem</td><td
+            >Verify private key integrity</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">openssl pkcs8 -topk8 -nocrypt -in priv.pem -out pkcs8.pem</td><td
+            >Convert PKCS#1 &rarr; PKCS#8 format</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">openssl rsautl -encrypt -inkey pub.pem -pubin -in f.txt -out f.enc</td
+          ><td>Encrypt a file with public key</td></tr
+        >
+        <tr
+          ><td class="mono">openssl rsautl -decrypt -inkey priv.pem -in f.enc -out f.txt</td><td
+            >Decrypt a file with private key</td
+          ></tr
+        >
+      </tbody>
+    </table>
+  </div>
+</div>

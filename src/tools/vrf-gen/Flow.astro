@@ -1,0 +1,90 @@
+---
+import Icon from '@/components/Icon.astro';
+---
+
+<div class="panel">
+  <h3><Icon name="compass" /> VRF + VLAN + EIGRP + DMVPN Flow</h3>
+  <p class="text-[12.5px] text-text2">
+    How a VLAN on the access switch, a VRF on the spoke router, EIGRP, and a DMVPN tunnel all work
+    together in your single-VRF-per-spoke design.
+  </p>
+</div>
+<div class="panel">
+  <div class="overflow-x-auto">
+    <pre
+      class="m-0 font-mono text-[11.5px] leading-[1.9] text-text2">
+ +-------------------+   802.1Q Trunk    +-------------------------------+
+ |  Access Switch    |                   |  Spoke Router                 |
+ |                   |                   |                               |
+ |  [VLAN 10 Users]--+-------------------+ interface Vlan10              |
+ |  [VLAN 20 Voice]  |                   |   vrf forwarding PROD         |
+ +-------------------+                   |   ip address 10.10.10.1 /24   |
+                                          |   (default GW for users)      |
+                                          |                               |
+                                          |  interface Tunnel0            |
+                                          |   vrf forwarding PROD         |
+                                          |   ip nhrp nhs &lt;hub&gt;          |
+                                          |   tunnel mode gre multipoint  |
+                                          |                               |
+                                          |  router eigrp 100             |
+                                          |   address-family ipv4 vrf PROD|
+                                          |    (advertises Vlan10 subnet) |
+                                          +---------------+---------------+
+                                                          |
+                                                 DMVPN / mGRE
+                                                 (over Internet
+                                                  or private WAN)
+                                                          |
+                                          +---------------+---------------+
+                                          |  Hub Router                   |
+                                          |                               |
+                                          |  interface Tunnel0            |
+                                          |   vrf forwarding PROD         |
+                                          |   tunnel mode gre multipoint  |
+                                          |   ip nhrp map multicast dyn   |
+                                          |                               |
+                                          |  router eigrp 100             |
+                                          |   address-family ipv4 vrf PROD|
+                                          |    (learns all spoke subnets) |
+                                          +-------------------------------+
+</pre>
+  </div>
+  <div class="tip mt-[12px]">
+    <strong>Step-by-step:</strong>
+    <ul class="mt-[4px] ml-[20px] list-disc leading-[1.9]">
+      <li>
+        <strong>Step 1</strong> &mdash; Users connect to <strong>VLAN 10</strong> on the access switch.
+        Trunk carries VLAN 10 to the spoke router.
+      </li>
+      <li>
+        <strong>Step 2</strong> &mdash; The spoke router has a <strong>Vlan10 SVI</strong> placed inside
+        <strong>VRF PROD</strong>. This SVI is the users default gateway.
+      </li>
+      <li>
+        <strong>Step 3</strong> &mdash; <strong>Tunnel0</strong> (DMVPN mGRE) is also placed inside <strong
+          >VRF PROD</strong
+        >. Both the SVI and the tunnel share the same routing table.
+      </li>
+      <li>
+        <strong>Step 4</strong> &mdash; <strong>EIGRP</strong> runs <em>inside VRF PROD</em> and advertises
+        the Vlan10 subnet across the DMVPN tunnel to the hub.
+      </li>
+      <li>
+        <strong>Step 5</strong> &mdash; The <strong>Hub Router</strong> has a matching <strong
+          >VRF PROD</strong
+        > with its own Tunnel0 and EIGRP address-family. It learns all spoke subnets dynamically.
+      </li>
+    </ul>
+  </div>
+  <div class="warn mt-[10px]">
+    <strong
+      ><Icon name="triangle-exclamation" class="mr-1 inline align-[-2px] text-orange" />️ Key rule:</strong
+    > When you add <code>vrf forwarding PROD</code> to an existing interface, IOS removes the IP address
+    automatically. Always re-apply the IP after binding the VRF.
+  </div>
+  <div class="tip mt-[10px]">
+    Use the <strong>DMVPN Generator</strong> for tunnel config &bull; <strong
+      >BGP &amp; EIGRP</strong
+    > for address-family routing &bull; <strong>VLAN Config Generator</strong> for VLANs and SVIs.
+  </div>
+</div>

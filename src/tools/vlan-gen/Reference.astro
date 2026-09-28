@@ -1,0 +1,280 @@
+---
+import Icon from '@/components/Icon.astro';
+---
+
+<div class="panel">
+  <h3><Icon name="tag" /> What is a VLAN?</h3>
+  <p>
+    <strong>A VLAN (Virtual Local Area Network)</strong> is a logical segmentation of a physical network
+    at Layer 2. Devices in the same VLAN communicate as if on the same physical switch, regardless of
+    location. Traffic between VLANs requires a Layer 3 device to route between them.
+  </p>
+  <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+    <li>
+      <strong>Broadcast domain reduction</strong> — limits scope of broadcast traffic, reducing unnecessary
+      load
+    </li>
+    <li>
+      <strong>Security isolation</strong> — separates management, voice, and sensitive traffic from user
+      traffic
+    </li>
+    <li><strong>Flexibility</strong> — group users by function, not physical location</li>
+    <li>
+      <strong>Simplified management</strong> — move users between segments by reassigning VLAN, not rewiring
+    </li>
+  </ul>
+</div>
+
+<div class="panel">
+  <h3><Icon name="clipboard-list" /> VLAN Types</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead><tr><th>Type</th><th>Purpose</th><th>Notes</th></tr></thead><tbody>
+        <tr
+          ><td><strong>Data</strong></td><td>Regular user traffic (PCs, servers)</td><td
+            >One per logical group; most common type</td
+          ></tr
+        >
+        <tr
+          ><td><strong>Management</strong></td><td>SSH, SNMP, syslog, switch admin</td><td
+            >Always use a dedicated VLAN — never VLAN 1</td
+          ></tr
+        >
+        <tr
+          ><td><strong>Native</strong></td><td>Untagged 802.1Q trunk traffic</td><td
+            >Default is VLAN 1 — always change to unused VLAN</td
+          ></tr
+        >
+        <tr
+          ><td><strong>Voice</strong></td><td>IP phone traffic with higher QoS priority</td><td
+            >Separate from data for consistent voice quality</td
+          ></tr
+        >
+        <tr
+          ><td><strong>Default (VLAN 1)</strong></td><td>All ports start here by default</td><td
+            >Cannot be deleted or renamed — never use for traffic</td
+          ></tr
+        >
+        <tr
+          ><td><strong>Black Hole</strong></td><td>Unused VLAN for inactive/unused ports</td><td
+            >Security best practice — shut down ports assigned here</td
+          ></tr
+        >
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel">
+  <h3><Icon name="tower-broadcast" /> 802.1Q Tagging</h3>
+  <p>
+    <strong>IEEE 802.1Q</strong> is the industry standard for VLAN tagging. A 4-byte tag is inserted into
+    the Ethernet frame between the source MAC address and the EtherType field when the frame crosses a
+    trunk link.
+  </p>
+  <div class="result-grid mt-[10px]">
+    <div class="result-item">
+      <div class="ri-label">TPID</div><div class="ri-value">0x8100</div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">Tag Size</div><div class="ri-value">4 bytes</div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">PCP (QoS)</div><div class="ri-value">3 bits (0–7)</div>
+    </div>
+    <div class="result-item"><div class="ri-label">DEI</div><div class="ri-value">1 bit</div></div>
+    <div class="result-item">
+      <div class="ri-label">VLAN ID</div><div class="ri-value">12 bits</div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">Usable IDs</div><div class="ri-value">1 – 4094</div>
+    </div>
+  </div>
+  <div class="tip mt-[10px]">
+    <strong>Native VLAN:</strong> Frames on the native VLAN cross a trunk <em>without</em> a tag. Both
+    ends must agree, or STP issues and VLAN hopping attacks can occur. Always change native from VLAN
+    1.
+  </div>
+</div>
+
+<div class="panel">
+  <h3><Icon name="code" /> VLAN ID Ranges</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead><tr><th>Range</th><th>VLANs</th><th>Notes</th></tr></thead><tbody>
+        <tr
+          ><td>IEEE Reserved</td><td class="mono">0, 4095</td><td>Cannot be assigned or used</td
+          ></tr
+        >
+        <tr
+          ><td>Default VLAN</td><td class="mono">1</td><td
+            >Default for all ports; cannot be deleted or renamed</td
+          ></tr
+        >
+        <tr
+          ><td>Normal Range</td><td class="mono">1 – 1005</td><td
+            >Stored in <code>flash:/vlan.dat</code>; all VTP modes</td
+          ></tr
+        >
+        <tr
+          ><td>Legacy Reserved</td><td class="mono">1002 – 1005</td><td>Token Ring/FDDI; avoid</td
+          ></tr
+        >
+        <tr
+          ><td>Extended Range</td><td class="mono">1006 – 4094</td><td
+            >VTP transparent/off required; stored in running-config</td
+          ></tr
+        >
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel">
+  <h3><Icon name="repeat" /> 802.1Q vs ISL Trunking</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead><tr><th>Feature</th><th>802.1Q</th><th>ISL (Legacy)</th></tr></thead><tbody>
+        <tr><td>Standard</td><td>IEEE open standard</td><td>Cisco proprietary</td></tr>
+        <tr
+          ><td>Encapsulation</td><td>4-byte tag inserted in frame</td><td
+            >26-byte header + 4-byte trailer wrap</td
+          ></tr
+        >
+        <tr><td>Native VLAN</td><td>Supported (untagged)</td><td>Not supported</td></tr>
+        <tr
+          ><td>Status</td><td
+            ><Icon name="circle-check" class="mr-1 inline align-[-2px] text-green" /> Current standard
+            — always use</td
+          ><td
+            ><Icon name="circle-xmark" class="mr-1 inline align-[-2px] text-red" /> Deprecated — avoid</td
+          ></tr
+        >
+        <tr
+          ><td>IOS Command</td><td class="mono">encapsulation dot1q</td><td class="mono"
+            >encapsulation isl</td
+          ></tr
+        >
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel">
+  <h3><Icon name="arrows-rotate" /> VTP (VLAN Trunking Protocol)</h3>
+  <p>
+    Cisco-proprietary protocol that propagates VLAN database changes between switches. Convenient
+    but dangerous — a single misconfigured switch can wipe all VLANs from your entire network.
+  </p>
+  <div class="table-wrap mt-[10px]">
+    <table class="ref-table">
+      <thead
+        ><tr
+          ><th>Mode</th><th>Creates VLANs</th><th>Propagates</th><th>Stores DB</th><th
+            >Recommended</th
+          ></tr
+        ></thead
+      ><tbody>
+        <tr
+          ><td><strong>Server</strong></td><td
+            ><Icon name="circle-check" class="mr-1 inline align-[-2px] text-green" /> Yes</td
+          ><td><Icon name="circle-check" class="mr-1 inline align-[-2px] text-green" /> Yes</td><td
+            >flash:/vlan.dat</td
+          ><td>Use carefully</td></tr
+        >
+        <tr
+          ><td><strong>Client</strong></td><td
+            ><Icon name="circle-xmark" class="mr-1 inline align-[-2px] text-red" /> No</td
+          ><td><Icon name="circle-check" class="mr-1 inline align-[-2px] text-green" /> Forwards</td
+          ><td>RAM only</td><td>Access layer</td></tr
+        >
+        <tr
+          ><td><strong>Transparent</strong></td><td
+            ><Icon name="circle-check" class="mr-1 inline align-[-2px] text-green" /> Local only</td
+          ><td><Icon name="circle-check" class="mr-1 inline align-[-2px] text-green" /> Forwards</td
+          ><td>running-config</td><td
+            ><Icon name="star" class="mr-1 inline align-[-2px] text-accent" /> Preferred</td
+          ></tr
+        >
+        <tr
+          ><td><strong>Off</strong></td><td
+            ><Icon name="circle-check" class="mr-1 inline align-[-2px] text-green" /> Local only</td
+          ><td><Icon name="circle-xmark" class="mr-1 inline align-[-2px] text-red" /> No</td><td
+            >running-config</td
+          ><td><Icon name="star" class="mr-1 inline align-[-2px] text-accent" /> Most secure</td
+          ></tr
+        >
+      </tbody>
+    </table>
+  </div>
+  <div class="warn">
+    <strong
+      ><Icon name="triangle-exclamation" class="mr-1 inline align-[-2px] text-orange" /> VTP Revision
+      Risk:</strong
+    > Connecting a switch with a higher revision number overwrites the entire VLAN DB on every switch
+    in the domain instantly. Always reset by running <code>vtp mode transparent</code> then back to <code
+      >vtp mode server</code
+    > before adding any new switch.
+  </div>
+</div>
+
+<div class="panel">
+  <h3><Icon name="circle-check" /> VLAN Best Practices</h3>
+  <ul class="ml-[20px] list-disc leading-[2]">
+    <li>Never use <strong>VLAN 1</strong> for user, management, or voice traffic</li>
+    <li>
+      Change <strong>native VLAN</strong> to an unused ID on all trunks; prevents VLAN hopping
+    </li>
+    <li>
+      Always explicitly set <code>switchport trunk allowed vlan</code> — never allow all VLANs implicitly
+    </li>
+    <li>
+      Hard-set <code>switchport mode access</code> or <code>trunk</code>; disable DTP with <code
+        >switchport nonegotiate</code
+      >
+    </li>
+    <li>
+      Assign unused ports to a <strong>black hole VLAN</strong> and issue <code>shutdown</code>
+    </li>
+    <li>Use <strong>VTP transparent or off</strong> mode for safe, predictable VLAN management</li>
+    <li>
+      Document your numbering scheme (e.g., 10=DATA, 20=OPS, 30=VOICE, 40=SECURITY, 99=MANAGEMENT)
+    </li>
+  </ul>
+</div>
+
+<div class="panel">
+  <h3><Icon name="clipboard-list" /> Key VLAN Show Commands</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead><tr><th>Command</th><th>Purpose</th></tr></thead><tbody>
+        <tr
+          ><td class="mono">show vlan brief</td><td
+            >VLAN ID, name, status, and assigned access ports</td
+          ></tr
+        >
+        <tr><td class="mono">show vlan id &lt;id&gt;</td><td>Full detail for a single VLAN</td></tr>
+        <tr
+          ><td class="mono">show interfaces trunk</td><td
+            >All trunks: encap, native VLAN, allowed/active VLANs</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">show interfaces &lt;intf&gt; switchport</td><td
+            >Full switchport detail: mode, VLANs, DTP state</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">show mac address-table vlan &lt;id&gt;</td><td
+            >MAC table filtered to one VLAN</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">show vtp status</td><td>VTP domain, mode, version, revision number</td
+          ></tr
+        >
+        <tr><td class="mono">show vtp counters</td><td>VTP advertisements sent/received</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>

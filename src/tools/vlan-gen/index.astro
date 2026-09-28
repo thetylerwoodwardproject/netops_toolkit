@@ -1,0 +1,25 @@
+---
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+import Generator from './Generator.svelte';
+import Reference from './Reference.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'reference', label: 'Reference', icon: 'book-open' },
+    { id: 'config', label: 'Config Generator', icon: 'gear' },
+  ]}
+>
+  <TabPanel id="reference" selected><Reference /></TabPanel>
+  <TabPanel id="config">
+    <div data-island="vlan-gen" data-ssr><Generator /></div>
+  </TabPanel>
+</Tabs>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="vlan-gen"]', Generator);
+</script>

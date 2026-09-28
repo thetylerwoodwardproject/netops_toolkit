@@ -1,0 +1,12 @@
+---
+import Generator from './Generator.svelte';
+---
+
+<div data-island="pw-gen" data-ssr><Generator /></div>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="pw-gen"]', Generator);
+</script>

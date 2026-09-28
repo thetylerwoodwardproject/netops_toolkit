@@ -1,0 +1,139 @@
+---
+import Icon from '@/components/Icon.astro';
+---
+
+<div class="panel">
+  <h3><Icon name="box" /> What is a VRF?</h3>
+  <p>
+    <strong>Virtual Routing and Forwarding (VRF)</strong> lets a single router hold multiple completely
+    separate routing tables at the same time. Think of it as running several independent routers inside
+    one physical box.
+  </p>
+  <ul class="mt-[6px] ml-[20px] list-disc leading-[1.9]">
+    <li>Each VRF has its own interfaces, routing table, and default gateway.</li>
+    <li>
+      The same IP network (e.g. <code>10.0.0.0/24</code>) can be reused in different VRFs without
+      conflict.
+    </li>
+    <li>
+      Traffic in one VRF stays completely isolated from other VRFs unless you explicitly leak routes
+      between them.
+    </li>
+    <li>
+      Used without MPLS this is called <strong>VRF-Lite</strong> &mdash; very common on Cisco branch and
+      campus routers.
+    </li>
+  </ul>
+</div>
+
+<div class="panel">
+  <h3><Icon name="link" /> VRF vs VLAN</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead><tr><th>Feature</th><th>VLAN</th><th>VRF</th></tr></thead>
+      <tbody>
+        <tr
+          ><td><strong>OSI Layer</strong></td><td>Layer 2 &mdash; switch / broadcast domain</td><td
+            >Layer 3 &mdash; IP routing table instance</td
+          ></tr
+        >
+        <tr
+          ><td><strong>What it separates</strong></td><td>MAC broadcasts and switch ports</td><td
+            >IP routing, subnets, and default routes</td
+          ></tr
+        >
+        <tr
+          ><td><strong>Typical example</strong></td><td>VLAN 10 Users, VLAN 20 Voice</td><td
+            >VRF PROD, VRF MGMT, VRF GUEST</td
+          ></tr
+        >
+        <tr
+          ><td><strong>Used together?</strong></td><td colspan="2"
+            >Yes &mdash; the SVI for VLAN 10 can live inside VRF PROD so users in VLAN 10 use the
+            PROD routing table and default gateway.</td
+          ></tr
+        >
+      </tbody>
+    </table>
+  </div>
+  <div class="tip mt-[10px]">
+    For VLAN config use the <strong>VLAN Config Generator</strong>. For WAN/VPN background see <strong
+      >WAN &amp; VPN Services</strong
+    > and <strong>Network Types</strong> in this toolkit.
+  </div>
+</div>
+
+<div class="panel">
+  <h3><Icon name="bullseye" /> Common VRF Use Cases</h3>
+  <div class="result-grid mt-[8px]">
+    <div class="result-item">
+      <div class="ri-label">VRF-Lite on Campus</div><div
+        class="ri-value font-sans text-[11.5px] text-text2"
+      >
+        Split management, users, and guest into separate VRFs on the same distribution router or
+        firewall.
+      </div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">WAN / DMVPN Segmentation</div><div
+        class="ri-value font-sans text-[11.5px] text-text2"
+      >
+        Run a DMVPN tunnel per VRF so production and management traffic stay separate over the same
+        physical WAN.
+      </div>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">Per-Customer VPN</div><div
+        class="ri-value font-sans text-[11.5px] text-text2"
+      >
+        Each customer gets its own VRF &mdash; overlapping RFC1918 addresses are no problem because
+        each VRF is isolated.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <h3><Icon name="clipboard-list" /> Show &amp; Verify Commands</h3>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">show vrf</td><td>List all VRFs, interfaces assigned, and state</td></tr
+        >
+        <tr
+          ><td class="mono">show vrf detail</td><td
+            >Full VRF details including RD, RT, and interfaces</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">show ip route vrf NAME</td><td>Routing table for a specific VRF</td></tr
+        >
+        <tr
+          ><td class="mono">show ip interface brief</td><td
+            >Verify interface VRF assignment and IP</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">ping vrf NAME x.x.x.x</td><td
+            >Ping sourced from inside a specific VRF</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">traceroute vrf NAME x.x.x.x</td><td>Traceroute inside a specific VRF</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">show ip eigrp vrf NAME neighbors</td><td
+            >EIGRP neighbors inside a VRF</td
+          ></tr
+        >
+        <tr
+          ><td class="mono">show ip bgp vpnv4 vrf NAME</td><td
+            >BGP prefixes for a specific VRF (MPLS/VPNv4)</td
+          ></tr
+        >
+      </tbody>
+    </table>
+  </div>
+</div>
