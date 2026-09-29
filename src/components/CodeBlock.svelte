@@ -13,7 +13,7 @@
   }
 </script>
 
-<!-- The button sits outside the <pre> so it stays put when long lines scroll. -->
+<!-- The button sits outside the <pre> so it never overlaps the text. -->
 <div class="relative my-2.5">
   <pre class="code my-0" class:pr-20={copy}><code>{code}</code></pre>
   {#if copy}
