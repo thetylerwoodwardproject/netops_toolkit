@@ -13,6 +13,9 @@ dist.next
 # This instance's settings (see toolkit.config.ts)
 toolkit.config.local.ts
 
+# npm cache when installed by deploy/install.sh
+.npm/
+
 # OS / editor
 .DS_Store
 .idea/

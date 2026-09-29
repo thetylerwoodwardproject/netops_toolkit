@@ -19,7 +19,7 @@
 <p align="center">
   <a href="https://dev.tools.tylerwoodward.me/">Live demo</a> ·
   <a href="#what-it-does">What it does</a> ·
-  <a href="#run-your-own">Run your own</a> ·
+  <a href="#install">Install</a> ·
   <a href="#make-it-yours">Make it yours</a> ·
   <a href="#build-and-deploy">Deploy</a> ·
   <a href="#adding-a-tool">Add a tool</a> ·
@@ -69,7 +69,35 @@ Nothing is sent to a server except by the IP Checker, which you can turn off. A 
 
 Rename it, recolor it, hide categories and add your own links from one small config file
 
-## Run your own
+## Install
+
+### On a server
+
+On Debian 12 or Ubuntu 22.04 or newer, one line installs Node, builds the site and runs it as a systemd service:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/thetylerwoodwardproject/netops_toolkit/main/deploy/install.sh | sudo bash
+```
+
+That serves it on port 80. To put [Caddy](https://caddyserver.com) in front with automatic HTTPS, add your domain (point its DNS at the server and open ports 80 and 443 first):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/thetylerwoodwardproject/netops_toolkit/main/deploy/install.sh | sudo bash -s -- --domain tools.example.com
+```
+
+Run the same line again to upgrade. Other options: `--proxy none`, `--port`, `--dir`, `--ref`; see `deploy/install.sh --help`.
+
+### With Docker
+
+```sh
+git clone https://github.com/thetylerwoodwardproject/netops_toolkit && cd netops_toolkit
+docker compose up -d --build                                          # http://localhost:8080
+SITE_ADDRESS=tools.example.com docker compose --profile caddy up -d --build   # https://tools.example.com
+```
+
+The site is built into the image, so put your `toolkit.config.local.ts` (see [Make it yours](#make-it-yours)) in the checkout before you build.
+
+## Run it locally
 
 ```sh
 git clone https://github.com/thetylerwoodwardproject/netops_toolkit && cd netops_toolkit
@@ -117,10 +145,13 @@ tools/build          # type-check, build into .build/, verify
 tools/publish        # the same into .releases/<stamp>/, then point `dist` at it
 ```
 
-Serve the `dist` symlink as a static site. `tools/publish` swaps it only after
-the build and verification pass, so a broken build never goes live.
-`deploy/nginx.conf.example` is a starting point for nginx, with the Content
-Security Policy the site is built for.
+`tools/publish` swaps the `dist` link only after the build and verification
+pass, so a broken build never goes live.
+
+Serve `dist` with `node tools/serve.mjs`, a small dependency-free server that
+sends the Content Security Policy the site is built for (the installer and the
+Docker image run it), or with any static server: `deploy/nginx.conf.example` is
+a starting point for nginx.
 
 `tools/verify.mjs` fails a build that contains any inline script, style or
 event handler, because the site is meant to run under `script-src 'self'` and

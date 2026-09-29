@@ -1,0 +1,17 @@
+.git
+.astro
+.build
+.build-default
+.releases
+.publish.lock
+dist
+dist.next
+node_modules
+.parity
+.idea
+CLAUDE.md
+PORTING.md
+docs
+deploy
+Dockerfile
+docker-compose.yml

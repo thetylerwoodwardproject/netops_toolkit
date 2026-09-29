@@ -1,0 +1,7 @@
+# Used by docker-compose.yml's `caddy` profile. SITE_ADDRESS is your domain;
+# Caddy gets and renews its certificate by itself.
+{$SITE_ADDRESS} {
+	encode zstd gzip
+	header Strict-Transport-Security "max-age=31536000"
+	reverse_proxy netops-toolkit:8080
+}

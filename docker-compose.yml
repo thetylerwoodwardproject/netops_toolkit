@@ -1,0 +1,42 @@
+# NetOps Toolkit with Docker Compose.
+#
+#   docker compose up -d --build
+#       -> http://localhost:8080
+#
+#   SITE_ADDRESS=tools.example.com docker compose --profile caddy up -d --build
+#       -> https://tools.example.com, with a certificate from Let's Encrypt.
+#          Point the domain's DNS at this machine first, and open ports 80 and 443.
+#
+# The toolkit itself only listens on 127.0.0.1:8080. With the caddy profile,
+# Caddy is the only thing exposed to the internet.
+
+services:
+  netops-toolkit:
+    build: .
+    image: netops-toolkit
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    ports:
+      - '127.0.0.1:8080:8080'
+
+  caddy:
+    profiles: [caddy]
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on: [netops-toolkit]
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:?set SITE_ADDRESS to your domain, e.g. tools.example.com}
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - ./deploy/Caddyfile.docker:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
