@@ -1,0 +1,190 @@
+---
+import Generator from './Generator.svelte';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'vxlan-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'vxlan-cfg-tab', label: 'Config Generator', icon: 'gear' },
+  ]}
+  ><TabPanel id="vxlan-ref-tab" selected>
+    <div class="panel">
+      <h3><Icon name="earth-americas" /> What is VXLAN?</h3>
+      <p>
+        <strong>VXLAN (Virtual Extensible LAN)</strong> is a network virtualization technology that addresses
+        scalability problems in large cloud computing deployments. It uses a MAC-in-UDP encapsulation
+        scheme to extend Layer 2 segments across Layer 3 networks.
+      </p>
+      <p class="mt-[8px]"><strong>Key Benefits:</strong></p>
+      <ul class="mt-[4px] ml-[20px] list-disc leading-[1.8]">
+        <li>
+          Supports up to <strong>16 million logical networks</strong> (24-bit VNI vs. 4096 VLANs)
+        </li>
+        <li>Overcomes physical infrastructure limitations</li>
+        <li>Enables multi-tenancy in data centers</li>
+        <li>Leverages ECMP for optimal traffic distribution</li>
+        <li>Maintains Layer 2 adjacency across Layer 3 networks</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="plug" /> VTEP (VXLAN Tunnel Endpoint)</h3>
+      <p>
+        <strong>VTEP devices</strong> perform VXLAN encapsulation and de-encapsulation. Each VTEP has:
+      </p>
+      <ul class="mt-[4px] ml-[20px] list-disc leading-[1.8]">
+        <li><strong>Local LAN interface:</strong> Bridges communication with local endpoints</li>
+        <li>
+          <strong>IP interface:</strong> Connects to the transport IP network (infrastructure VLAN)
+        </li>
+      </ul>
+      <p class="mt-[8px]">
+        VTEPs use their unique IP address to encapsulate Ethernet frames and transmit them over the
+        IP network to destination VTEPs.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="box" /> VXLAN Packet Format</h3>
+      <div class="mt-[10px] rounded-field bg-bg p-[16px] font-mono text-[11px] leading-[1.8]">
+        <div class="mb-[4px] border-l-3 border-l-text3 bg-surface p-[6px]">
+          Outer Ethernet Header (14 bytes) - Source/Dest MAC of transport devices
+        </div>
+        <div class="mb-[4px] border-l-3 border-l-blue bg-surface p-[6px]">
+          Outer IP Header (20 bytes IPv4 / 40 bytes IPv6) - VTEP source/dest IPs
+        </div>
+        <div class="mb-[4px] border-l-3 border-l-accent bg-surface p-[6px]">
+          Outer UDP Header (8 bytes) - Dest Port: <strong>4789</strong> (IANA), Src Port: flow hash
+        </div>
+        <div class="mb-[4px] border-l-3 border-l-green bg-surface p-[6px]">
+          VXLAN Header (8 bytes) - Flags + <strong>VNI (24-bit)</strong> + Reserved
+        </div>
+        <div class="border-l-3 border-l-purple bg-surface p-[6px]">
+          Inner Ethernet Frame - Original L2 frame with payload
+        </div>
+      </div>
+      <div class="tip mt-[12px]">
+        <strong>Total Overhead:</strong> 50 bytes (IPv4) or 70 bytes (IPv6). Increase MTU to 1554+ (IPv4)
+        or 1574+ (IPv6) to accommodate encapsulation.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="key" /> Key Components</h3>
+      <table class="ref-table">
+        <thead>
+          <tr><th>Component</th><th>Description</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr
+            ><td><strong>VNI</strong></td><td>VXLAN Network Identifier</td><td class="mono"
+              >24-bit field (16.7M networks)</td
+            ></tr
+          >
+          <tr
+            ><td><strong>VTEP</strong></td><td>VXLAN Tunnel Endpoint</td><td
+              >Encap/decap device (physical or virtual)</td
+            ></tr
+          >
+          <tr
+            ><td><strong>UDP Port</strong></td><td>Transport protocol port</td><td class="mono"
+              >4789 (IANA standard)</td
+            ></tr
+          >
+          <tr
+            ><td><strong>Outer IP</strong></td><td>VTEP addressing</td><td
+              >Source and destination VTEP IPs</td
+            ></tr
+          >
+          <tr
+            ><td><strong>Multicast</strong></td><td>BUM traffic handling</td><td
+              >Broadcast, Unknown unicast, Multicast</td
+            ></tr
+          >
+          <tr
+            ><td><strong>EVPN</strong></td><td>Control plane (optional)</td><td
+              >MP-BGP for MAC/IP distribution</td
+            ></tr
+          >
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="gear" /> How VXLAN Works</h3>
+      <ol class="ml-[20px] list-decimal text-[12.5px] leading-[2] text-text2">
+        <li>
+          <strong class="text-text">VM1 sends Ethernet frame</strong> to VM3 on different host
+        </li>
+        <li>
+          <strong class="text-text">Source VTEP</strong> looks up destination MAC and VNI in forwarding
+          table
+        </li>
+        <li><strong class="text-text">Encapsulation:</strong> Add 8-byte VXLAN header with VNI</li>
+        <li>
+          <strong class="text-text">UDP/IP encapsulation:</strong> Wrap in UDP packet with dest port 4789
+        </li>
+        <li>
+          <strong class="text-text">Routing:</strong> Packet routed across Layer 3 network to destination
+          VTEP
+        </li>
+        <li>
+          <strong class="text-text">Destination VTEP</strong> de-encapsulates and forwards inner frame
+          to VM3
+        </li>
+      </ol>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="lightbulb" /> Use Cases</h3>
+      <div class="result-grid mt-[10px]">
+        <div class="result-item">
+          <div class="ri-label">Data Center Virtualization</div>
+          <div class="ri-value font-sans text-[11.5px] text-text2">
+            Multi-tenant isolation with 16M segments
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">VM Mobility</div>
+          <div class="ri-value font-sans text-[11.5px] text-text2">
+            Layer 2 adjacency across data centers
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Hybrid Cloud</div>
+          <div class="ri-value font-sans text-[11.5px] text-text2">
+            Extend on-prem networks to cloud
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Network Segmentation</div>
+          <div class="ri-value font-sans text-[11.5px] text-text2">
+            Micro-segmentation for security
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warn">
+      <strong>MTU Considerations:</strong> VXLAN adds 50-70 bytes of overhead. Configure jumbo frames
+      (MTU 1600+) on all underlay devices to prevent fragmentation.
+    </div>
+
+    <div class="tip">
+      <strong>ECMP Load Balancing:</strong> VXLAN encodes flow information in the UDP source port, enabling
+      routers to perform flow-based load balancing across multiple paths.
+    </div>
+  </TabPanel><TabPanel id="vxlan-cfg-tab"
+    ><div data-island="vxlan-gen" data-ssr><Generator /></div></TabPanel
+  ></Tabs
+>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="vxlan-gen"]', Generator);
+</script>

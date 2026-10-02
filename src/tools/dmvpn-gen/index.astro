@@ -1,0 +1,331 @@
+---
+import Tunnel from './Tunnel.svelte';
+import CopyScript from '@/components/CopyScript.astro';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'dmvpn-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'dmvpn-hub-tab', label: 'Hub Config', icon: 'wrench' },
+    { id: 'dmvpn-hub-ipsec-tab', label: 'Hub + IPsec', icon: 'lock' },
+    { id: 'dmvpn-spoke-tab', label: 'Spoke Config', icon: 'wrench' },
+    { id: 'dmvpn-spoke-ipsec-tab', label: 'Spoke + IPsec', icon: 'lock' },
+  ]}
+  ><TabPanel id="dmvpn-ref-tab" selected>
+    <div class="panel">
+      <h3><Icon name="link" /> What is DMVPN?</h3>
+      <p>
+        <strong>Dynamic Multipoint VPN (DMVPN)</strong> is a Cisco IOS solution combining <strong
+          >mGRE (Multipoint GRE)</strong
+        >, <strong>NHRP (Next Hop Resolution Protocol)</strong>, and optionally <strong
+          >IPsec</strong
+        > to create a scalable hub-and-spoke overlay. Spokes register their public IPs with the hub dynamically,
+        enabling on-demand spoke-to-spoke tunnels without per-spoke static config on the hub.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.8]">
+        <li>
+          Spokes can have <strong>dynamic public IPs</strong> (DHCP from ISP) &mdash; no static config
+          required on the hub.
+        </li>
+        <li>
+          Phase 2/3 allows spoke-to-spoke traffic to go <strong>directly</strong> without hairpinning
+          through the hub.
+        </li>
+        <li>
+          Supports <strong>multicast</strong> (unlike plain IPsec) &mdash; OSPF, EIGRP, and BGP work over
+          the tunnel.
+        </li>
+        <li>Single mGRE interface on the hub replaces hundreds of point-to-point GRE tunnels.</li>
+        <li>
+          IPsec is <strong>optional</strong>: skip it on trusted private WAN, add it for public
+          internet deployments.
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="gear" /> DMVPN Phases</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead
+            ><tr
+              ><th>Phase</th><th>Spoke-to-Spoke</th><th>How it Works</th><th>Routing Notes</th></tr
+            ></thead
+          >
+          <tbody>
+            <tr
+              ><td><strong>Phase 1</strong></td><td>Always via Hub</td><td
+                >Classic hub-and-spoke. All traffic flows through hub. Simplest to configure.</td
+              ><td>Any dynamic routing protocol. Hub may summarize spoke routes.</td></tr
+            >
+            <tr
+              ><td><strong>Phase 2</strong></td><td>Direct after first packet</td><td
+                >Hub sends NHRP redirect. Spoke learns peer NBMA IP and builds a direct mGRE tunnel
+                dynamically.</td
+              ><td>EIGRP: disable split-horizon on hub. OSPF: point-to-multipoint.</td></tr
+            >
+            <tr
+              ><td><strong>Phase 3</strong></td><td>Direct, scalable</td><td
+                >Hub sends NHRP redirect; spoke sends NHRP resolution. Requires <code
+                  >ip nhrp redirect</code
+                > on hub. Most scalable.</td
+              ><td>BGP or EIGRP named mode recommended. No split-horizon issues.</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="box" /> Protocol Stack</h3>
+      <div class="mt-[10px] rounded-field bg-bg p-[16px] font-mono text-[11px] leading-[1.8]">
+        <div class="mb-[4px] border-l-3 border-l-purple bg-surface p-[6px]">
+          IPsec ESP (optional) &mdash; Encrypts the GRE packet end-to-end
+        </div>
+        <div class="mb-[4px] border-l-3 border-l-blue bg-surface p-[6px]">
+          Outer IP Header &mdash; Public NBMA source/dest IPs (hub or spoke)
+        </div>
+        <div class="mb-[4px] border-l-3 border-l-accent bg-surface p-[6px]">
+          mGRE Header &mdash; Tunnel encapsulation, carries multicast/broadcast
+        </div>
+        <div class="border-l-3 border-l-green bg-surface p-[6px]">
+          Inner IP Packet &mdash; Original routed packet (tunnel overlay IPs)
+        </div>
+      </div>
+      <div class="tip mt-[12px]">
+        <strong>GRE vs GRE over IPsec:</strong> Plain GRE carries multicast and dynamic routing but provides
+        zero encryption. Add IPsec when traversing the public internet. For IPsec protocol details (IKEv1/IKEv2,
+        AES, SHA), see <strong>WAN &amp; VPN Services &rarr; VPN tab</strong> and <strong
+          >Network Types &rarr; P2P &amp; VPN tab</strong
+        > in this toolkit.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="map" /> Key Components</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Component</th><th>Role</th><th>Details</th></tr></thead>
+          <tbody>
+            <tr
+              ><td><strong>mGRE</strong></td><td>Tunnel encapsulation</td><td
+                >Single tunnel interface on hub handles all spokes. <code
+                  >tunnel mode gre multipoint</code
+                >.</td
+              ></tr
+            >
+            <tr
+              ><td><strong>NHRP</strong></td><td>Address resolution</td><td
+                >Maps tunnel (overlay) IPs to NBMA (public) IPs. Like ARP for the tunnel subnet.</td
+              ></tr
+            >
+            <tr
+              ><td><strong>NHS</strong></td><td>Next Hop Server (Hub)</td><td
+                >Hub stores the NHRP registration database. Spokes register at boot.</td
+              ></tr
+            >
+            <tr
+              ><td><strong>NHC</strong></td><td>Next Hop Client (Spoke)</td><td
+                >Spoke registers its NBMA IP with the hub NHS on startup.</td
+              ></tr
+            >
+            <tr
+              ><td><strong>NBMA IP</strong></td><td>Public/underlay IP</td><td
+                >Real routable IP used to reach the device &mdash; may be dynamic DHCP from ISP.</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Tunnel IP</strong></td><td>Overlay IP</td><td
+                >IP on the tunnel interface &mdash; forms the DMVPN subnet (e.g. 10.0.0.0/24).</td
+              ></tr
+            >
+            <tr
+              ><td><strong>IPsec Profile</strong></td><td>Optional encryption</td><td
+                >Attached via <code>tunnel protection ipsec profile</code>. Uses transport mode.</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="arrows-rotate" /> Routing Over DMVPN</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead
+            ><tr><th>Protocol</th><th>Phase 1</th><th>Phase 2</th><th>Phase 3</th><th>Notes</th></tr
+            ></thead
+          >
+          <tbody>
+            <tr
+              ><td><strong>EIGRP</strong></td><td
+                ><Icon name="check" class="mr-1 inline align-[-2px] text-green" /></td
+              ><td
+                ><Icon name="triangle-exclamation" class="mr-1 inline align-[-2px] text-orange" /> Disable
+                split-horizon on hub</td
+              ><td><Icon name="check" class="mr-1 inline align-[-2px] text-green" /> Named mode</td
+              ><td
+                >Most common on Cisco. Use <code>no ip split-horizon eigrp</code> on hub tunnel for Phase
+                2. See <strong>BGP &amp; EIGRP</strong> tool.</td
+              ></tr
+            >
+            <tr
+              ><td><strong>OSPF</strong></td><td
+                ><Icon name="check" class="mr-1 inline align-[-2px] text-green" /></td
+              ><td
+                ><Icon name="triangle-exclamation" class="mr-1 inline align-[-2px] text-orange" /> point-to-multipoint</td
+              ><td
+                ><Icon name="triangle-exclamation" class="mr-1 inline align-[-2px] text-orange" /> point-to-multipoint</td
+              ><td
+                >Set <code>ip ospf network point-to-multipoint</code> on tunnel. See <strong
+                  >OSPF Generator</strong
+                >.</td
+              ></tr
+            >
+            <tr
+              ><td><strong>BGP</strong></td><td
+                ><Icon name="check" class="mr-1 inline align-[-2px] text-green" /></td
+              ><td><Icon name="check" class="mr-1 inline align-[-2px] text-green" /></td><td
+                ><Icon name="check" class="mr-1 inline align-[-2px] text-green" /> Recommended</td
+              ><td
+                >Best for Phase 3 at scale. No split-horizon issues. See <strong
+                  >BGP &amp; EIGRP</strong
+                > tool.</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Static</strong></td><td
+                ><Icon name="check" class="mr-1 inline align-[-2px] text-green" /></td
+              ><td><Icon name="xmark" class="mr-1 inline align-[-2px] text-red" /></td><td
+                ><Icon name="xmark" class="mr-1 inline align-[-2px] text-red" /></td
+              ><td>Very small deployments only. See <strong>Static Route Generator</strong>.</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+      <div class="tip mt-[10px]">
+        For routing config help see <strong>BGP &amp; EIGRP</strong> (NBMA neighbors, split-horizon),
+        <strong>OSPF Generator</strong> (point-to-multipoint statements), or <strong
+          >Static Route Generator</strong
+        >. For IPsec background see <strong>WAN &amp; VPN Services &rarr; VPN tab</strong>.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="clipboard-list" /> Show &amp; Verify Commands</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">show dmvpn</td><td
+                >DMVPN session table &mdash; state, NBMA IPs, tunnel IPs, uptime</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show dmvpn detail</td><td
+                >Full NHRP and tunnel session details per peer</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show ip nhrp</td><td
+                >NHRP cache &mdash; tunnel-to-NBMA IP mappings</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show ip nhrp detail</td><td
+                >Full NHRP entry details including flags and expiry</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show tunnel endpoints</td><td>Active GRE/mGRE tunnel endpoints</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show crypto ikev2 sa</td><td
+                >IKEv2 SA state and stats (if IPsec used)</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show crypto ipsec sa</td><td
+                >IPsec SA &mdash; encrypt/decrypt packet counters</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show crypto isakmp sa</td><td
+                >IKEv1 Phase 1 SA (legacy, if IKEv1 used)</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show ip route</td><td
+                >Verify routing protocol learned routes over tunnel</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">debug nhrp</td><td
+                >NHRP registration and redirect debug &mdash; use with caution in production</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="lock" /> IPsec SA Resync</h3>
+      <p class="text-[12px] text-text2">
+        When the SAs of the peers get out of sync between peer devices, use the following commands
+        to force a resync.
+      </p>
+
+      <p class="mt-[14px] mb-[4px] text-[12px] font-semibold text-text">
+        Force SA resync with a specific peer:
+      </p>
+      <pre class="code pr-20" data-copy><code>clear crypto sa peer _____</code></pre>
+
+      <p class="mt-[14px] mb-[4px] text-[12px] font-semibold text-text">
+        Find and clear a specific ISAKMP SA by connection ID:
+      </p>
+      <pre
+        class="code pr-20"
+        data-copy><code>show crypto isakmp sa
+! Note the conn-id from the output, then clear by ID:
+clear crypto isakmp conn_id &lt;conn-id&gt;</code></pre>
+
+      <p class="mt-[14px] mb-[4px] text-[12px] font-semibold text-text">
+        Verify IPsec peer sessions:
+      </p>
+      <pre class="code pr-20" data-copy><code>show crypto ipsec sa | i peer</code></pre>
+    </div>
+  </TabPanel><TabPanel id="dmvpn-hub-tab"
+    ><div data-island="dmvpn-gen" data-ssr data-props='{"role":"hub","ipsec":false}'>
+      <Tunnel role="hub" ipsec={false} />
+    </div></TabPanel
+  ><TabPanel id="dmvpn-hub-ipsec-tab"
+    ><div data-island="dmvpn-gen" data-ssr data-props='{"role":"hub","ipsec":true}'>
+      <Tunnel role="hub" ipsec={true} />
+    </div></TabPanel
+  ><TabPanel id="dmvpn-spoke-tab"
+    ><div data-island="dmvpn-gen" data-ssr data-props='{"role":"spoke","ipsec":false}'>
+      <Tunnel role="spoke" ipsec={false} />
+    </div></TabPanel
+  ><TabPanel id="dmvpn-spoke-ipsec-tab"
+    ><div data-island="dmvpn-gen" data-ssr data-props='{"role":"spoke","ipsec":true}'>
+      <Tunnel role="spoke" ipsec={true} />
+    </div></TabPanel
+  ></Tabs
+>
+
+<CopyScript />
+
+<script>
+  import { start } from '@/lib/mount';
+  import Tunnel from './Tunnel.svelte';
+
+  start('[data-island="dmvpn-gen"]', Tunnel);
+</script>

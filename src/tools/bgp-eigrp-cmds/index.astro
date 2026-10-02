@@ -1,0 +1,258 @@
+---
+import BgpGenerator from './BgpGenerator.svelte';
+import EigrpGenerator from './EigrpGenerator.svelte';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'bgp-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'bgp-gen-tab', label: 'BGP Generator' },
+    { id: 'eigrp-gen-tab', label: 'EIGRP Generator' },
+    { id: 'bgp-show-tab', label: 'BGP Show Cmds' },
+    { id: 'eigrp-show-tab', label: 'EIGRP Show Cmds' },
+  ]}
+  ><TabPanel id="bgp-ref-tab" selected>
+    <div class="panel">
+      <h3>BGP vs EIGRP — When to Use Which</h3>
+      <p>
+        <strong>Border Gateway Protocol (BGP)</strong> is a path-vector routing protocol used primarily
+        between autonomous systems (Internet, ISP, WAN edge) and for large-scale policy-based routing.
+      </p>
+      <p class="mt-[6px]">
+        <strong>Enhanced Interior Gateway Routing Protocol (EIGRP)</strong> is an advanced distance-vector
+        protocol used inside an organization for fast convergence and simple operation.
+      </p>
+    </div>
+    <div class="panel">
+      <h3>Key Characteristics</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>BGP</th>
+              <th>EIGRP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Type</strong></td>
+              <td>Path-vector (policy based)</td>
+              <td>Advanced distance-vector (hybrid)</td>
+            </tr>
+            <tr>
+              <td><strong>Typical Use</strong></td>
+              <td>Internet, WAN edge, multi-homing, DC fabrics</td>
+              <td>Campus / enterprise interior routing</td>
+            </tr>
+            <tr>
+              <td><strong>Metric</strong></td>
+              <td>Path attributes (AS-path, local-pref, MED, communities)</td>
+              <td>Composite metric: bandwidth, delay, reliability, load, MTU</td>
+            </tr>
+            <tr>
+              <td><strong>Transport</strong></td>
+              <td>TCP port 179</td>
+              <td>IP protocol 88 (no TCP/UDP port)</td>
+            </tr>
+            <tr>
+              <td><strong>Neighbor Discovery</strong></td>
+              <td>Manual neighbor configuration</td>
+              <td>Multicast hello (224.0.0.10) and manual neighbors on NBMA</td>
+            </tr>
+            <tr>
+              <td><strong>Scalability</strong></td>
+              <td>Very high, millions of prefixes with policies</td>
+              <td>High inside an AS, not Internet-scale</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tip mt-[10px]">
+        Use <strong>BGP</strong> where you need policy and Internet reachability; use <strong
+          >EIGRP</strong
+        > inside the enterprise where fast convergence and simpler configs matter.
+      </div>
+    </div>
+    <div class="panel">
+      <h3>BGP Essentials</h3>
+      <ul class="mt-[4px] ml-[20px] list-disc text-[12.5px] leading-[1.8]">
+        <li>Forms explicit neighbor relationships over TCP <span class="mono">179</span>.</li>
+        <li>Exchanges full routing tables, then incremental updates.</li>
+        <li>
+          Best-path selection uses local-pref, AS-path length, origin, MED, eBGP vs iBGP, IGP
+          metric, router ID.
+        </li>
+        <li>iBGP requires full-mesh, route reflectors, or confederations for scale.</li>
+        <li>Commonly used to advertise default routes and specific prefixes to customers/peers.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>EIGRP Essentials</h3>
+      <ul class="mt-[4px] ml-[20px] list-disc text-[12.5px] leading-[1.8]">
+        <li>Uses Diffusing Update Algorithm (DUAL) for loop-free fast convergence.</li>
+        <li>
+          Supports unequal-cost load balancing with the <span class="mono">variance</span> command.
+        </li>
+        <li>Uses hello/hold timers and feasible successors for backups.</li>
+        <li>Can summarize routes at any interface to keep the topology small.</li>
+        <li>Supports IPv4 and IPv6 with classic and named mode configurations.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Design Tips</h3>
+      <div class="result-grid mt-[6px]">
+        <div class="result-item">
+          <div class="ri-label">BGP at Edge</div>
+          <div class="ri-value font-sans text-[11.5px] text-text2">
+            Terminate ISP links and control outbound/inbound traffic with local-pref, MED,
+            communities.
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">EIGRP in Core</div>
+          <div class="ri-value font-sans text-[11.5px] text-text2">
+            Use EIGRP for internal routing, summarizing at distribution to keep core tables small.
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="ri-label">Redistribution</div>
+          <div class="ri-value font-sans text-[11.5px] text-text2">
+            Carefully plan BGP&lt;-&gt;EIGRP redistribution to avoid loops; tag and filter routes.
+          </div>
+        </div>
+      </div>
+      <div class="warn mt-[10px]">
+        <strong>Warning:</strong> Mixing many protocols and uncontrolled redistribution can create loops
+        and suboptimal paths. Keep the design simple.
+      </div>
+    </div>
+  </TabPanel><TabPanel id="bgp-gen-tab"
+    ><div data-island="bgp-eigrp-cmds" data-ssr><BgpGenerator /></div></TabPanel
+  ><TabPanel id="eigrp-gen-tab"
+    ><div data-island="bgp-eigrp-cmds-2" data-ssr><EigrpGenerator /></div></TabPanel
+  ><TabPanel id="bgp-show-tab">
+    <div class="panel">
+      <h3>BGP Show &amp; Troubleshooting Commands</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">show ip bgp summary</td><td
+                >Peer status, state, prefixes received.</td
+              ></tr
+            >
+            <tr><td class="mono">show ip bgp</td><td>Global BGP table — all prefixes.</td></tr>
+            <tr
+              ><td class="mono">show ip bgp &lt;prefix&gt;</td><td
+                >Best-path selection, attributes for a prefix.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show ip bgp neighbors</td><td
+                >Detailed neighbor information and timers.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show ip bgp neighbors &lt;ip&gt; advertised-routes</td><td
+                >Routes sent to a neighbor.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show ip bgp neighbors &lt;ip&gt; received-routes</td><td
+                >Routes received (requires soft-reconfig).</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show ip bgp regexp _65001_</td><td
+                >Filter BGP table by AS-path regex.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">clear ip bgp * soft</td><td
+                >Soft-reset all BGP peers (no session drop).</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">clear ip bgp &lt;ip&gt; soft in</td><td
+                >Re-apply inbound policy without reset.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">debug ip bgp</td><td
+                >Debug BGP events — use with caution in production.</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tip">
+      <strong>Tip:</strong> Always use <strong>soft resets</strong> (<code>soft in</code> / <code
+        >soft out</code
+      >) instead of hard resets in production to avoid dropping established sessions.
+    </div>
+  </TabPanel><TabPanel id="eigrp-show-tab">
+    <div class="panel">
+      <h3>EIGRP Show &amp; Troubleshooting Commands</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">show ip eigrp neighbors</td><td>Neighbor table and hold timers.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show ip eigrp topology</td><td
+                >Successors and feasible successors for routes.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show ip eigrp topology all-links</td><td
+                >All routes including those not in table.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show ip eigrp interfaces</td><td
+                >Interfaces participating in EIGRP.</td
+              ></tr
+            >
+            <tr><td class="mono">show ip route eigrp</td><td>Routes learned via EIGRP.</td></tr>
+            <tr
+              ><td class="mono">show ip eigrp traffic</td><td
+                >Hello, update, query, reply packet counts.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">debug eigrp packets</td><td
+                >Debug hello/update/query/reply — use sparingly.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">debug eigrp fsm</td><td
+                >Debug DUAL finite state machine transitions.</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tip">
+      Run debugs during maintenance windows and <strong>always disable them when finished</strong> with
+      <code>undebug all</code>.
+    </div>
+  </TabPanel></Tabs
+>
+
+<script>
+  import { start } from '@/lib/mount';
+  import BgpGenerator from './BgpGenerator.svelte';
+  import EigrpGenerator from './EigrpGenerator.svelte';
+
+  start('[data-island="bgp-eigrp-cmds"]', BgpGenerator);
+  start('[data-island="bgp-eigrp-cmds-2"]', EigrpGenerator);
+</script>
