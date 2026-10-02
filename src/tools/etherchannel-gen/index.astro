@@ -1,0 +1,86 @@
+---
+import Generator from './Generator.svelte';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'ec-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'ec-gen-tab', label: 'EtherChannel Generator', icon: 'gear' },
+  ]}
+  ><TabPanel id="ec-ref-tab" selected>
+    <div class="panel">
+      <h3><Icon name="link" /> What is EtherChannel?</h3>
+      <p>
+        <strong>EtherChannel</strong> bundles multiple physical links into one logical Port‑Channel for
+        more bandwidth and redundancy.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.8]">
+        <li>All member ports must have matching speed, duplex, and VLAN/trunk settings.</li>
+        <li>
+          Traffic is load‑balanced across links using a hashing algorithm (e.g. by MAC or IP).
+        </li>
+        <li>If one link fails, the Port‑Channel stays up using remaining links.</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="gear" /> Control Protocol Modes</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Mode</th><th>Protocol</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">active / passive</td><td>LACP (802.3ad)</td><td
+                >Open standard, recommended.</td
+              ></tr
+            >
+            <tr><td class="mono">desirable / auto</td><td>PAgP</td><td>Cisco proprietary.</td></tr>
+            <tr
+              ><td class="mono">on</td><td>None (static)</td><td
+                >No negotiation; both sides must match exactly.</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="flask" /> Validation Commands</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">show etherchannel summary</td><td
+                >Check port‑channel status and member ports.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show interfaces port-channel &lt;n&gt;</td><td
+                >View mode (trunk/access) and errors.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show run interface range ...</td><td
+                >Verify configs are identical on all members.</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </TabPanel><TabPanel id="ec-gen-tab"
+    ><div data-island="etherchannel-gen" data-ssr><Generator /></div></TabPanel
+  ></Tabs
+>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="etherchannel-gen"]', Generator);
+</script>

@@ -1,0 +1,73 @@
+---
+import Generator from './Generator.svelte';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'ospf-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'ospf-gen-tab', label: 'OSPF Generator', icon: 'gear' },
+  ]}
+  ><TabPanel id="ospf-ref-tab" selected>
+    <div class="panel">
+      <h3><Icon name="map" /> What is OSPF?</h3>
+      <p>
+        <strong>Open Shortest Path First (OSPF)</strong> is a link‑state routing protocol used inside
+        an autonomous system. Routers share link information and compute the best paths using SPF (Dijkstra).
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.8]">
+        <li>OSPF divides the network into <strong>areas</strong>; Area 0 is the backbone.</li>
+        <li>Routers flood <strong>LSAs</strong> so every router has the same topology database.</li>
+        <li>Cost is usually based on bandwidth; lower cost = preferred path.</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="ruler" /> Key OSPF Concepts</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr
+              ><td>Process ID</td><td>Locally significant number identifying the OSPF instance.</td
+              ></tr
+            >
+            <tr><td>Router ID</td><td>Unique 32‑bit ID per router, often a loopback IP.</td></tr>
+            <tr
+              ><td>Area</td><td>Logical group of networks to keep SPF calculations smaller.</td></tr
+            >
+            <tr
+              ><td>Passive interface</td><td
+                >Advertises network but does not form OSPF neighbors.</td
+              ></tr
+            >
+            <tr
+              ><td>Reference bandwidth</td><td>Used to calculate interface cost from link speed.</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="puzzle-piece" /> Design Tips for New Engineers</h3>
+      <ul class="mt-[4px] ml-[20px] list-disc leading-[1.8]">
+        <li>Use a <strong>loopback</strong> interface as the Router ID for stability.</li>
+        <li>Keep the design simple at first: a single backbone plus a few leaf areas.</li>
+        <li>Make user‑facing interfaces <strong>passive</strong> to avoid unwanted neighbors.</li>
+      </ul>
+    </div>
+  </TabPanel><TabPanel id="ospf-gen-tab"
+    ><div data-island="ospf-gen" data-ssr><Generator /></div></TabPanel
+  ></Tabs
+>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="ospf-gen"]', Generator);
+</script>

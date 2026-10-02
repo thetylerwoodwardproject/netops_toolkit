@@ -1,0 +1,87 @@
+---
+import Generator from './Generator.svelte';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'acl-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'acl-gen-tab', label: 'ACL Generator', icon: 'gear' },
+  ]}
+  ><TabPanel id="acl-ref-tab" selected>
+    <div class="panel">
+      <h3><Icon name="shield-halved" /> What is an ACL?</h3>
+      <p>
+        <strong>Access Control Lists (ACLs)</strong> are ordered rules that match traffic and decide whether
+        to permit or deny it. They live on interfaces and are checked from top to bottom.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.8]">
+        <li>
+          <strong>Standard ACLs</strong> match <em>source IP only</em>, good for simple allow/deny
+          of networks.
+        </li>
+        <li>
+          <strong>Extended ACLs</strong> match source, destination, protocol and ports for fine‑grained
+          control.
+        </li>
+        <li>
+          ACLs are processed top‑down with an <strong>implicit deny</strong> at the end of every list.
+        </li>
+        <li>
+          Apply ACLs <strong>inbound or outbound</strong> using <code
+            >ip access-group NAME in|out</code
+          > under an interface.
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="map-pin" /> ACL Design Tips</h3>
+      <ul class="mt-[4px] ml-[20px] list-disc leading-[1.8]">
+        <li>
+          For <strong>standard</strong> ACLs, place them <strong>close to the destination</strong> network.
+        </li>
+        <li>
+          For <strong>extended</strong> ACLs, place them <strong>close to the source</strong> to drop
+          unwanted traffic early.
+        </li>
+        <li>
+          Group related rules together and keep numbering consistent across devices when possible.
+        </li>
+        <li>
+          Always permit important management traffic (SSH, monitoring) before broad deny statements.
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="magnifying-glass" /> Common Match Examples</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Goal</th><th>Example line</th></tr></thead>
+          <tbody>
+            <tr><td>Allow a subnet</td><td class="mono">permit 192.168.10.0 0.0.0.255</td></tr>
+            <tr><td>Deny guest VLAN</td><td class="mono">deny 10.50.0.0 0.0.255.255</td></tr>
+            <tr
+              ><td>Deny HTTP to server</td><td class="mono"
+                >deny tcp any 10.10.10.10 0.0.0.0 eq 80</td
+              ></tr
+            >
+            <tr><td>Permit DNS</td><td class="mono">permit udp any any eq 53</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </TabPanel><TabPanel id="acl-gen-tab"
+    ><div data-island="acl-builder" data-ssr><Generator /></div></TabPanel
+  ></Tabs
+>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="acl-builder"]', Generator);
+</script>

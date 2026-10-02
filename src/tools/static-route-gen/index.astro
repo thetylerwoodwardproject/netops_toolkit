@@ -1,0 +1,374 @@
+---
+import Generator from './Generator.svelte';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'sr-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'sr-gen-tab', label: 'Route Generator', icon: 'gear' },
+    { id: 'sr-show-tab', label: 'Show Commands', icon: 'magnifying-glass-plus' },
+    { id: 'sr-ts-tab', label: 'Troubleshooting', icon: 'wrench' },
+  ]}
+  ><TabPanel id="sr-ref-tab" selected>
+    <div class="panel">
+      <h3>What is a Static Route?</h3>
+      <p>
+        A <strong>static route</strong> is a manually configured route that tells the router exactly how
+        to reach a destination network via a specified next-hop IP or exit interface. Unlike dynamic routing
+        protocols (OSPF, EIGRP, BGP), static routes do not adapt automatically when the network changes.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.9]">
+        <li><strong>Predictable</strong> — traffic always follows the path you define.</li>
+        <li><strong>Lightweight</strong> — zero routing protocol overhead.</li>
+        <li><strong>Secure</strong> — no routing updates to spoof or hijack.</li>
+        <li><strong>Manual</strong> — must be updated by hand when topology changes.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Static Route Types</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Type</th><th>Command Format</th><th>Use Case</th></tr></thead>
+          <tbody>
+            <tr
+              ><td><strong>Standard</strong></td><td class="mono"
+                >ip route &lt;net&gt; &lt;mask&gt; &lt;next-hop or intf&gt;</td
+              ><td>Route to a specific network via next-hop IP or exit interface</td></tr
+            >
+            <tr
+              ><td><strong>Default Route</strong></td><td class="mono"
+                >ip route 0.0.0.0 0.0.0.0 &lt;next-hop&gt;</td
+              ><td
+                >Gateway of last resort — matches all traffic not matched by a more specific route</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Floating Static</strong></td><td class="mono"
+                >ip route &lt;net&gt; &lt;mask&gt; &lt;next-hop&gt; &lt;AD&gt;</td
+              ><td
+                >Backup route with higher Administrative Distance; only used if primary route fails</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Summary Static</strong></td><td class="mono"
+                >ip route &lt;supernet&gt; &lt;mask&gt; &lt;next-hop&gt;</td
+              ><td
+                >One route covering a block of contiguous networks to reduce routing table size</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Null0 (Black Hole)</strong></td><td class="mono"
+                >ip route &lt;net&gt; &lt;mask&gt; Null0</td
+              ><td
+                >Discard traffic matching the route; prevents routing loops and blocks unwanted
+                traffic</td
+              ></tr
+            >
+            <tr
+              ><td><strong>IPv6 Static</strong></td><td class="mono"
+                >ipv6 route &lt;prefix/len&gt; &lt;next-hop&gt;</td
+              ><td>Same as IPv4 but for IPv6 address space</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Administrative Distance (AD)</h3>
+      <p>
+        AD is a trustworthiness score for route sources. Lower AD wins. A <strong
+          >floating static route</strong
+        > uses a higher AD than the primary dynamic protocol so it only becomes active when the preferred
+        route disappears.
+      </p>
+      <div class="table-wrap mt-[10px]">
+        <table class="ref-table">
+          <thead><tr><th>Route Source</th><th>Default AD</th></tr></thead>
+          <tbody>
+            <tr><td>Connected</td><td class="mono">0</td></tr>
+            <tr><td>Static Route</td><td class="mono">1</td></tr>
+            <tr><td>eBGP</td><td class="mono">20</td></tr>
+            <tr><td>EIGRP (internal)</td><td class="mono">90</td></tr>
+            <tr><td>OSPF</td><td class="mono">110</td></tr>
+            <tr><td>IS-IS</td><td class="mono">115</td></tr>
+            <tr><td>RIP</td><td class="mono">120</td></tr>
+            <tr><td>EIGRP (external)</td><td class="mono">170</td></tr>
+            <tr><td>iBGP</td><td class="mono">200</td></tr>
+            <tr><td>Unreachable / Floating</td><td class="mono">255</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Next-Hop vs. Exit Interface</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Method</th><th>Example</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr
+              ><td><strong>Next-hop IP</strong></td><td class="mono"
+                >ip route 10.0.0.0 255.0.0.0 192.168.1.1</td
+              ><td>Most common. Router performs recursive lookup to find exit interface.</td></tr
+            >
+            <tr
+              ><td><strong>Exit Interface only</strong></td><td class="mono"
+                >ip route 10.0.0.0 255.0.0.0 GigabitEthernet0/1</td
+              ><td
+                >Avoid on multi-access (Ethernet) — causes ARP for every destination. OK on P2P
+                serial.</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Both (Recommended)</strong></td><td class="mono"
+                >ip route 10.0.0.0 255.0.0.0 Gi0/1 192.168.1.1</td
+              ><td>No recursion + ARP for only the next-hop IP. Best practice for Ethernet.</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tip">
+      <strong>Best Practice:</strong> On multi-access (Ethernet) interfaces, always specify <em
+        >both</em
+      > the exit interface and next-hop IP to avoid proxy-ARP issues and recursive lookup overhead.
+    </div>
+    <div class="warn">
+      <strong>Caution:</strong> Static routes require manual updates when network topology changes. Use
+      dynamic routing protocols for larger environments and static routes only at the edge or for specific
+      policy needs.
+    </div>
+  </TabPanel><TabPanel id="sr-gen-tab"
+    ><div data-island="static-route-gen" data-ssr><Generator /></div></TabPanel
+  ><TabPanel id="sr-show-tab">
+    <div class="panel">
+      <h3>Static Route Show &amp; Verification Commands</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show ip route</td><td
+                >Full IPv4 routing table — <code>S</code> = static, <code>S*</code> = default static</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show ip route static</td><td
+                >Show only static routes in the routing table</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show ip route 10.10.10.0</td><td
+                >Lookup a specific network — shows best path, AD, and metric</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show ip route 0.0.0.0</td><td
+                >Verify default route (gateway of last resort) is installed</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show running-config | include ip route</td><td
+                >View all configured static routes from running config</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show running-config | section ip route</td><td
+                >Full static route section of running config</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show ip route summary</td><td
+                >Route count by type: connected, static, OSPF, etc.</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show ip cef &lt;dest&gt;</td><td
+                >CEF forwarding lookup — shows actual forwarding path in hardware</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap"
+                >show ip cef exact-route &lt;src&gt; &lt;dst&gt;</td
+              ><td>CEF path for a specific source/destination pair</td></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show ip interface brief</td><td
+                >Verify exit interfaces are up/up before adding static routes</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">ping &lt;destination&gt; source &lt;intf&gt;</td
+              ><td>Test reachability to a static route destination from a specific source</td></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">traceroute &lt;destination&gt;</td><td
+                >Trace hop-by-hop path to verify routing</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show ipv6 route</td><td
+                >Full IPv6 routing table</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show ipv6 route static</td><td
+                >Show only IPv6 static routes</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">show running-config | include ipv6 route</td><td
+                >All configured IPv6 static routes</td
+              ></tr
+            >
+            <tr class="sr-cmd"
+              ><td class="mono whitespace-nowrap">debug ip routing</td><td
+                >Live debug when routes are added/removed from RIB (use with caution in production)</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tip">
+      <strong>Reading the Route Table:</strong>
+      <code>S</code> = Static &nbsp;|&nbsp; <code>S*</code> = Static default route &nbsp;|&nbsp; <code
+        >[1/0]</code
+      > = [AD/metric] &nbsp;|&nbsp; <code>via</code> = next-hop IP or interface.
+    </div>
+    <div class="panel mt-[14px]">
+      <h3>Route Table Code Legend</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">S</td><td>Static route</td></tr>
+            <tr><td class="mono">S*</td><td>Static default route / gateway of last resort</td></tr>
+            <tr><td class="mono">C</td><td>Connected (directly attached)</td></tr>
+            <tr><td class="mono">L</td><td>Local (router's own interface IP, /32)</td></tr>
+            <tr><td class="mono">O</td><td>OSPF</td></tr>
+            <tr><td class="mono">D</td><td>EIGRP</td></tr>
+            <tr><td class="mono">B</td><td>BGP</td></tr>
+            <tr><td class="mono">R</td><td>RIP</td></tr>
+            <tr><td class="mono">i</td><td>IS-IS</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </TabPanel><TabPanel id="sr-ts-tab">
+    <div class="panel">
+      <h3><Icon name="wrench" /> Static Route Not Working — Checklist</h3>
+      <ol class="ml-[20px] list-decimal text-[12.5px] leading-[2] text-text2">
+        <li>
+          <strong class="text-text">Route not in the table?</strong> Run <code
+            >show ip route static</code
+          >. If missing, the exit interface may be down or the next-hop is unreachable.
+        </li>
+        <li>
+          <strong class="text-text">Check exit interface state</strong> — <code
+            >show ip interface brief</code
+          >. A route pointing to a down interface is not installed in the RIB (unless next-hop IP is
+          also specified).
+        </li>
+        <li>
+          <strong class="text-text">Verify next-hop reachability</strong> — <code
+            >ping &lt;next-hop-IP&gt;</code
+          >. The next-hop must be directly reachable via a connected subnet.
+        </li>
+        <li>
+          <strong class="text-text">More-specific route overriding?</strong> — <code
+            >show ip route &lt;dest&gt;</code
+          >. A /28 always beats a /24 regardless of AD.
+        </li>
+        <li>
+          <strong class="text-text">Confirm correct subnet mask</strong> — a /24 entered as /25 will silently
+          miss half the range.
+        </li>
+        <li>
+          <strong class="text-text">Floating static not appearing?</strong> — The primary route is still
+          active. Remove it temporarily to test: <code
+            >no ip route &lt;net&gt; &lt;mask&gt; &lt;primary-nexthop&gt;</code
+          >.
+        </li>
+        <li>
+          <strong class="text-text">Null0 route causing unexpected drops?</strong> — Verify with <code
+            >show ip route null0</code
+          > that it is not matching traffic it should not.
+        </li>
+        <li>
+          <strong class="text-text">Recursive lookup failure</strong> — If the next-hop IP is not reachable
+          via a connected route, the static route will not be installed.
+        </li>
+        <li>
+          <strong class="text-text">IPv6 routes not working?</strong> — Confirm <code
+            >ipv6 unicast-routing</code
+          > is enabled globally, then check <code>show ipv6 route</code>.
+        </li>
+        <li>
+          <strong class="text-text">Use CEF for forwarding verification</strong> — <code
+            >show ip cef &lt;dest&gt;</code
+          > confirms what the forwarding plane actually uses.
+        </li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3>Common Mistakes</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr></thead>
+          <tbody>
+            <tr
+              ><td>Wrong subnet mask</td><td>Route installed but some hosts unreachable</td><td
+                >Recalculate mask; use <code>show ip route &lt;host-ip&gt;</code> to check the matching
+                route</td
+              ></tr
+            >
+            <tr
+              ><td>Next-hop not reachable</td><td>Route absent from routing table</td><td
+                >Ensure next-hop is on a directly connected subnet; ping it first</td
+              ></tr
+            >
+            <tr
+              ><td>Exit interface only on Ethernet</td><td>Massive ARP table, intermittent drops</td
+              ><td>Specify both exit interface and next-hop IP</td></tr
+            >
+            <tr
+              ><td>Floating AD too low</td><td>Floating route wins over dynamic protocol</td><td
+                >Set AD higher than primary (e.g., 210 for OSPF backup)</td
+              ></tr
+            >
+            <tr
+              ><td>Missing reverse route</td><td
+                >One-way reachability; ping works one direction only</td
+              ><td>Add a static route on the remote router pointing back</td></tr
+            >
+            <tr
+              ><td>Typo in destination</td><td>Traffic goes to wrong network or drops</td><td
+                ><code>show run | include ip route</code> and review carefully</td
+              ></tr
+            >
+            <tr
+              ><td>Forgetting to save</td><td>Routes disappear after reboot</td><td
+                ><code>copy running-config startup-config</code></td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="warn">
+      <strong>Routing Loop Risk:</strong> Never configure a static route where the next-hop is reachable
+      <em>only</em> via that same static route — this creates a recursive lookup loop and black-holes
+      traffic.
+    </div>
+  </TabPanel></Tabs
+>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="static-route-gen"]', Generator);
+</script>

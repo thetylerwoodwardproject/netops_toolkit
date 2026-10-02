@@ -1,0 +1,77 @@
+---
+import Generator from './Generator.svelte';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'nat-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'nat-gen-tab', label: 'NAT Generator', icon: 'gear' },
+  ]}
+  ><TabPanel id="nat-ref-tab" selected>
+    <div class="panel">
+      <h3><Icon name="arrows-rotate" /> What is NAT?</h3>
+      <p>
+        <strong>Network Address Translation (NAT)</strong> rewrites IP addresses as packets cross a router.
+        It is most often used so many private hosts can share a small number of public addresses.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.8]">
+        <li><strong>Static NAT</strong>: one inside IP mapped to one outside IP.</li>
+        <li><strong>Dynamic NAT</strong>: inside hosts take addresses from a public pool.</li>
+        <li>
+          <strong>PAT / Overload</strong>: many inside hosts share a single public IP using
+          different source ports.
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="earth-americas" /> Inside vs Outside</h3>
+      <ul class="mt-[4px] ml-[20px] list-disc leading-[1.8]">
+        <li><strong>Inside</strong> interface faces the LAN with private addresses.</li>
+        <li><strong>Outside</strong> interface faces the WAN/Internet.</li>
+        <li>
+          You must mark interfaces with <code>ip nat inside</code> and <code>ip nat outside</code> or
+          NAT will not work.
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="map-pin" /> Typical Use Cases</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Goal</th><th>Type</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr
+              ><td>Internet access for office</td><td>PAT</td><td
+                >Most common, uses one public IP.</td
+              ></tr
+            >
+            <tr
+              ><td>Publish internal web server</td><td>Static NAT</td><td
+                >Server always reachable at same public IP.</td
+              ></tr
+            >
+            <tr
+              ><td>Pool of public IPs</td><td>Dynamic NAT</td><td
+                >Internal hosts borrow from public pool.</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </TabPanel><TabPanel id="nat-gen-tab"
+    ><div data-island="nat-gen" data-ssr><Generator /></div></TabPanel
+  ></Tabs
+>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="nat-gen"]', Generator);
+</script>

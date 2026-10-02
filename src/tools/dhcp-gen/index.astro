@@ -1,0 +1,71 @@
+---
+import Generator from './Generator.svelte';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'dhcp-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'dhcp-gen-tab', label: 'DHCP Generator', icon: 'gear' },
+  ]}
+  ><TabPanel id="dhcp-ref-tab" selected>
+    <div class="panel">
+      <h3><Icon name="box" /> What is DHCP?</h3>
+      <p>
+        <strong>Dynamic Host Configuration Protocol (DHCP)</strong> automatically hands out IP addresses
+        and options (gateway, DNS, lease) to clients so you do not configure every device by hand.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.8]">
+        <li>Each DHCP <strong>pool</strong> usually maps to a single VLAN or IP subnet.</li>
+        <li>
+          Always <strong>exclude</strong> static addresses for gateways, servers and printers.
+        </li>
+        <li>
+          On Cisco routers, the default gateway is configured as <code>default-router</code> inside the
+          pool.
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="puzzle-piece" /> Basic DHCP Message Flow</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Step</th><th>Message</th><th>Direction</th></tr></thead>
+          <tbody>
+            <tr
+              ><td>1</td><td>DHCPDISCOVER</td><td>Client → broadcast, looking for any server</td
+              ></tr
+            >
+            <tr><td>2</td><td>DHCPOFFER</td><td>Server → client, offers an IP and options</td></tr>
+            <tr
+              ><td>3</td><td>DHCPREQUEST</td><td>Client → server, requests that specific offer</td
+              ></tr
+            >
+            <tr><td>4</td><td>DHCPACK</td><td>Server → client, confirms lease and options</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="shield-halved" /> DHCP Design Tips</h3>
+      <ul class="mt-[4px] ml-[20px] list-disc leading-[1.8]">
+        <li>Use <strong>DHCP snooping</strong> on access switches; mark uplinks as trusted.</li>
+        <li>Keep scopes sized for your actual user count plus growth.</li>
+        <li>Document reservations and critical devices that must not change IP.</li>
+      </ul>
+    </div>
+  </TabPanel><TabPanel id="dhcp-gen-tab"
+    ><div data-island="dhcp-gen" data-ssr><Generator /></div></TabPanel
+  ></Tabs
+>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="dhcp-gen"]', Generator);
+</script>

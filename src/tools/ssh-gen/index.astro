@@ -1,0 +1,85 @@
+---
+import Generator from './Generator.svelte';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'ssh-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'ssh-gen-tab', label: 'SSH Config Generator', icon: 'gear' },
+  ]}
+  ><TabPanel id="ssh-ref-tab" selected>
+    <div class="panel">
+      <h3><Icon name="key" /> What is SSH?</h3>
+      <p>
+        <strong>Secure Shell (SSH)</strong> gives encrypted remote CLI access to your devices. It replaces
+        Telnet, which sends usernames and passwords in clear text.
+      </p>
+      <ul class="mt-[8px] ml-[20px] list-disc leading-[1.8]">
+        <li>Always use <strong>SSH version 2</strong> only.</li>
+        <li>
+          Routers and switches need an <strong>RSA key pair</strong> to accept SSH connections.
+        </li>
+        <li>
+          Use <strong>local users</strong> or AAA (RADIUS/TACACS+) instead of simple line passwords.
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="layer-group" /> SSH Building Blocks</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Component</th><th>Example</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr
+              ><td>Hostname</td><td class="mono">hostname SW-CORE-01</td><td
+                >Used in the device identity and prompts.</td
+              ></tr
+            >
+            <tr
+              ><td>Domain</td><td class="mono">ip domain-name lab.local</td><td
+                >Required for RSA key generation.</td
+              ></tr
+            >
+            <tr
+              ><td>Keys</td><td class="mono">crypto key generate rsa modulus 2048</td><td
+                >Creates SSH server keys.</td
+              ></tr
+            >
+            <tr
+              ><td>User</td><td class="mono">username admin secret Str0ngP@ss!</td><td
+                >Login account with encrypted password.</td
+              ></tr
+            >
+            <tr
+              ><td>VTY lines</td><td class="mono">line vty 0 15</td><td
+                >Enable SSH and choose login method.</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="shield-halved" /> SSH Hardening Tips</h3>
+      <ul class="mt-[4px] ml-[20px] list-disc leading-[1.8]">
+        <li>Disable Telnet: <code>transport input ssh</code> only on VTY lines.</li>
+        <li>Use <strong>exec-timeout</strong> to log out idle sessions automatically.</li>
+        <li>Restrict source IPs with an ACL applied to management lines.</li>
+      </ul>
+    </div>
+  </TabPanel><TabPanel id="ssh-gen-tab"
+    ><div data-island="ssh-gen" data-ssr><Generator /></div></TabPanel
+  ></Tabs
+>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="ssh-gen"]', Generator);
+</script>
