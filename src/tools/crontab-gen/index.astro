@@ -1,0 +1,280 @@
+---
+import Generator from './Generator.svelte';
+import CopyScript from '@/components/CopyScript.astro';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'ct-gen-tab', label: 'Generator', icon: 'clock' },
+    { id: 'ct-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'ct-examples-tab', label: 'Examples', icon: 'clipboard-list' },
+  ]}
+  ><TabPanel id="ct-gen-tab" selected
+    ><div data-island="crontab-gen" data-ssr><Generator /></div></TabPanel
+  ><TabPanel id="ct-ref-tab">
+    <div class="panel">
+      <h3><Icon name="ruler" /> Cron Expression Syntax</h3>
+      <div
+        class="rounded-field border border-line bg-bg p-[14px] font-mono text-[13px] leading-[2.2]"
+      >
+        <span class="text-accent">*</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-green">*</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-orange">*</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-purple">*</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-blue">*</span><br />
+        <span class="text-accent">│</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-green">│</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-orange">│</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-purple">│</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-blue">└── Day of Week (0–7, 0 &amp; 7 = Sun)</span><br />
+        <span class="text-accent">│</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-green">│</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-orange">│</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-purple">└───── Month (1–12)</span><br />
+        <span class="text-accent">│</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-green">│</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-orange">└────────── Day of Month (1–31)</span><br />
+        <span class="text-accent">│</span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="text-green">└─────────────── Hour (0–23)</span><br />
+        <span class="text-accent">└──────────────────── Minute (0–59)</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="hashtag" /> Special Characters</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Char</th><th>Meaning</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">*</td><td>Every value in the field</td><td class="mono"
+                >* * * * *</td
+              ></tr
+            >
+            <tr><td class="mono">,</td><td>List of values</td><td class="mono">0,15,30,45</td></tr>
+            <tr
+              ><td class="mono">-</td><td>Range of values</td><td class="mono">1-5 (Mon–Fri)</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">/</td><td>Step / interval</td><td class="mono"
+                >*/10 (every 10 min)</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="bolt" /> @Special Strings</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>String</th><th>Equivalent</th><th>Runs</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">@reboot</td><td>—</td><td>Once at startup</td></tr>
+            <tr
+              ><td class="mono">@yearly / @annually</td><td class="mono">0 0 1 1 *</td><td
+                >Jan 1st midnight</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">@monthly</td><td class="mono">0 0 1 * *</td><td
+                >1st of month midnight</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">@weekly</td><td class="mono">0 0 * * 0</td><td>Sunday midnight</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">@daily / @midnight</td><td class="mono">0 0 * * *</td><td
+                >Every day midnight</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">@hourly</td><td class="mono">0 * * * *</td><td
+                >Every hour on the hour</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="folder-open" /> Crontab File Locations</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Location</th><th>Used For</th><th>Has User Field?</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">crontab -e</td><td>Current user's personal cron</td><td>No</td></tr
+            >
+            <tr
+              ><td class="mono">/etc/crontab</td><td>System-wide cron (edit carefully)</td><td
+                ><strong>Yes</strong></td
+              ></tr
+            >
+            <tr
+              ><td class="mono">/etc/cron.d/</td><td>Drop-in system cron files (packages)</td><td
+                ><strong>Yes</strong></td
+              ></tr
+            >
+            <tr
+              ><td class="mono">/etc/cron.hourly/</td><td>Scripts run hourly by run-parts</td><td
+                >No (script)</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">/etc/cron.daily/</td><td>Scripts run daily by run-parts</td><td
+                >No (script)</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">/var/spool/cron/crontabs/</td><td
+                >User crontab storage (managed by crontab)</td
+              ><td>No</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="shield-halved" /> Output Redirect Reference</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Redirect</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">&gt; /dev/null 2&gt;&amp;1</td><td
+                >Discard ALL output (stdout + stderr) — no email, no log</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">&gt; /dev/null</td><td
+                >Discard stdout only; stderr still sent as email</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">2&gt; /dev/null</td><td
+                >Discard stderr only; stdout still sent as email</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">&gt;&gt; /var/log/job.log 2&gt;&amp;1</td><td
+                >Append all output to a log file</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">&gt;&gt; /var/log/job.log 2&gt;&gt; /var/log/job-err.log</td><td
+                >Append stdout and errors to separate log files</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+      <div class="tip mt-[10px]">
+        <strong>MAILTO=""</strong> at the top of a crontab silences all email for every job in that file.
+        Set <strong>MAILTO=user@host</strong> to route all output to a specific address instead.
+      </div>
+    </div>
+  </TabPanel><TabPanel id="ct-examples-tab">
+    <div class="panel">
+      <h3><Icon name="clipboard-list" /> Common Cron Job Examples</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Schedule</th><th>Command</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">0 2 * * *</td><td class="mono"
+                >/usr/local/bin/backup.sh &gt;&gt; /var/log/backup.log 2&gt;&amp;1</td
+              ><td>Daily backup at 2 AM, log all output</td></tr
+            >
+            <tr
+              ><td class="mono">*/5 * * * *</td><td class="mono"
+                >/usr/local/bin/check_service.sh &gt; /dev/null 2&gt;&amp;1</td
+              ><td>Health check every 5 min, no output</td></tr
+            >
+            <tr
+              ><td class="mono">0 0 * * 0</td><td class="mono"
+                >/usr/bin/find /tmp -mtime +7 -delete &gt; /dev/null 2&gt;&amp;1</td
+              ><td>Clean /tmp weekly on Sunday midnight</td></tr
+            >
+            <tr
+              ><td class="mono">@reboot</td><td class="mono"
+                >/usr/local/bin/start_app.sh &gt;&gt; /var/log/app-start.log 2&gt;&amp;1</td
+              ><td>Start app on every boot</td></tr
+            >
+            <tr
+              ><td class="mono">0 6 * * 1-5</td><td class="mono"
+                >/usr/local/bin/report.py &gt;&gt; /var/log/report.log 2&gt;&amp;1</td
+              ><td>Weekday morning report at 6 AM</td></tr
+            >
+            <tr
+              ><td class="mono">0 0 1 * *</td><td class="mono">/usr/local/bin/monthly_cleanup.sh</td
+              ><td>Monthly cleanup, output emailed to cron owner</td></tr
+            >
+            <tr
+              ><td class="mono">30 3 * * *</td><td class="mono"
+                >/usr/bin/certbot renew &gt;&gt; /var/log/certbot.log 2&gt;&amp;1</td
+              ><td>SSL cert renewal check daily at 3:30 AM</td></tr
+            >
+            <tr
+              ><td class="mono">*/10 * * * *</td><td class="mono"
+                >/usr/local/bin/sync.sh 2&gt;&gt; /var/log/sync-errors.log</td
+              ><td>Sync every 10 min, log errors only</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="file-lines" /> System Crontab Example (<code>/etc/cron.d/</code>)</h3>
+      <pre
+        class="code pr-20"
+        data-copy><code>SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=""
+
+# ┌── min  ┬── hour  ┬── dom  ┬── mon  ┬── dow  ┬── user    command
+# │        │         │        │        │        │
+  0        2         *        *        *        root       /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
+  */5      *         *        *        *        www-data   /usr/local/bin/health_check.sh > /dev/null 2>&1
+  0        0         1        *        *        root       /usr/local/bin/monthly.sh >> /var/log/monthly.log 2>&1</code></pre>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="wrench" /> Log Rotation with logrotate</h3>
+      <pre
+        class="code pr-20"
+        data-copy><code># /etc/logrotate.d/mycron
+/var/log/mycron.log {'{'}
+    daily
+    rotate 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 youruser youruser
+{'}'}</code></pre>
+      <div class="tip mt-[8px]">
+        Apply with: <code>sudo logrotate -f /etc/logrotate.d/mycron</code> — prevents log files from consuming
+        all disk space.
+      </div>
+    </div>
+  </TabPanel></Tabs
+>
+
+<CopyScript />
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="crontab-gen"]', Generator);
+</script>
