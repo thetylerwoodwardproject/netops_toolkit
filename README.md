@@ -169,6 +169,26 @@ event handler, because the site is meant to run under `script-src 'self'` and
 3. Use the shared classes in `src/styles/global.css` (`panel`, `tip`,
    `ref-table`, `result-grid`, `form-input`, `btn`…) and Tailwind utilities,
    never `style=""`.
+4. Drop-downs inside a Svelte island use `src/components/SelectField.svelte`
+   (`label`, `id`, `options`, `bind:value`), a [shadcn-svelte](https://shadcn-svelte.com)
+   select. It matches the `form-input` sizing. Don't use a native
+   `<select>` for form input, and don't add shadcn components that open
+   popovers without checking them under the CSP (see below).
+
+### shadcn-svelte components
+
+`components.json` is set up, so `npx shadcn-svelte@latest add <name>` puts a
+component in `src/components/ui/`. Its colour tokens are aliased onto this
+site's palette in `global.css`, so it follows the theme. After adding one:
+
+- Replace its icon imports with `Icon.svelte` (Font Awesome).
+- `accent` is the brand colour here, but shadcn uses it for hover highlights;
+  use `muted` for those.
+- Check it with the CSP on: open it, use it, and look for console errors.
+  bits-ui's scroll lock restores the page with `setAttribute('style')`, which
+  `style-src 'self'` blocks and leaves the page locked, so `select-content`
+  defaults to `preventScroll = false`. Other overlays (dialog, popover) need
+  the same check.
 
 ## Made by
 
