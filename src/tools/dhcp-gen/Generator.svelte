@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import CodeBlock from '@/components/CodeBlock.svelte';
   import TextField from '@/components/TextField.svelte';
   import { dhcpConfig, type DhcpInput } from '@/lib/gen/dhcp';
@@ -23,14 +24,16 @@
     bind:value={f.pools}></textarea>
 </div>
 <div class="form-row">
-  <div class="form-group">
-    <label class="form-label" for="dhcp-excl">Exclude Range (gateway)</label>
-    <select class="form-select" id="dhcp-excl" bind:value={f.exclude}>
-      <option value="1">Exclude .1 only</option>
-      <option value="10">Exclude .1–.10</option>
-      <option value="20">Exclude .1–.20</option>
-    </select>
-  </div>
+  <SelectField
+    label="Exclude Range (gateway)"
+    id="dhcp-excl"
+    bind:value={f.exclude}
+    options={[
+      { value: '1', label: 'Exclude .1 only' },
+      { value: '10', label: 'Exclude .1–.10' },
+      { value: '20', label: 'Exclude .1–.20' },
+    ]}
+  />
   <TextField label="Lease (days)" id="dhcp-lease" bind:value={f.lease} />
 </div>
 

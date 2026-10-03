@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
   import CodeBlock from '@/components/CodeBlock.svelte';
   import Icon from '@/components/Icon.svelte';
@@ -46,17 +47,20 @@
 <div class="panel">
   <h3><Icon icon={faGear} /> Route Entry Builder</h3>
   <div class="form-row">
-    <div class="form-group">
-      <label class="form-label" for="sr-type">Route Type</label>
-      <select class="form-select" id="sr-type" bind:value={f.type} onchange={onType}>
-        <option value="standard">Standard Static Route</option>
-        <option value="default">Default Route (0.0.0.0/0)</option>
-        <option value="floating">Floating Static (Backup)</option>
-        <option value="null">Null0 Black Hole</option>
-        <option value="ipv6">IPv6 Static Route</option>
-        <option value="summary">Summary / Supernet</option>
-      </select>
-    </div>
+    <SelectField
+      label="Route Type"
+      id="sr-type"
+      bind:value={f.type}
+      onchange={onType}
+      options={[
+        { value: 'standard', label: 'Standard Static Route' },
+        { value: 'default', label: 'Default Route (0.0.0.0/0)' },
+        { value: 'floating', label: 'Floating Static (Backup)' },
+        { value: 'null', label: 'Null0 Black Hole' },
+        { value: 'ipv6', label: 'IPv6 Static Route' },
+        { value: 'summary', label: 'Summary / Supernet' },
+      ]}
+    />
     <TextField label={destLabel} id="sr-dest" placeholder="10.10.10.0" bind:value={f.dest} />
   </div>
   <div class="form-row">

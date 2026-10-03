@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import CodeBlock from '@/components/CodeBlock.svelte';
 
   const types = {
@@ -35,15 +36,17 @@
       bind:value={channel}
     />
   </div>
-  <div class="form-group">
-    <label class="form-label" for="lw-type">Stream Type</label>
-    <select id="lw-type" class="form-select" bind:value={type}>
-      <option value="standard">Standard (239.192.x.x)</option>
-      <option value="backfeed">Backfeed (239.193.x.x)</option>
-      <option value="backfeed_ls">Backfeed Livestream (239.195.x.x)</option>
-      <option value="surround">Surround / 5.1 (239.196.x.x)</option>
-    </select>
-  </div>
+  <SelectField
+    label="Stream Type"
+    id="lw-type"
+    bind:value={type}
+    options={[
+      { value: 'standard', label: 'Standard (239.192.x.x)' },
+      { value: 'backfeed', label: 'Backfeed (239.193.x.x)' },
+      { value: 'backfeed_ls', label: 'Backfeed Livestream (239.195.x.x)' },
+      { value: 'surround', label: 'Surround / 5.1 (239.196.x.x)' },
+    ]}
+  />
 </div>
 
 <div aria-live="polite">

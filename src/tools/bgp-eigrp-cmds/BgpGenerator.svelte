@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import { faLaptop } from '@fortawesome/free-solid-svg-icons/faLaptop';
   import CodeBlock from '@/components/CodeBlock.svelte';
   import Icon from '@/components/Icon.svelte';
@@ -29,13 +30,15 @@
     <TextField label="Router ID (Loopback IP)" id="bgp-router-id" bind:value={f.routerId} />
   </div>
   <div class="form-row">
-    <div class="form-group">
-      <label class="form-label" for="bgp-type">BGP Type</label>
-      <select class="form-select" id="bgp-type" bind:value={f.type}>
-        <option value="ebgp">eBGP (external / ISP)</option>
-        <option value="ibgp">iBGP (internal)</option>
-      </select>
-    </div>
+    <SelectField
+      label="BGP Type"
+      id="bgp-type"
+      bind:value={f.type}
+      options={[
+        { value: 'ebgp', label: 'eBGP (external / ISP)' },
+        { value: 'ibgp', label: 'iBGP (internal)' },
+      ]}
+    />
     <TextField label="Neighbor IP" id="bgp-neighbor-ip" bind:value={f.neighborIp} />
   </div>
   <div class="form-row">

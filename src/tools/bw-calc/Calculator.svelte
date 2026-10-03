@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   let size: number | null = $state(1);
   let unit = $state('1000000000');
 
@@ -35,14 +36,16 @@
       bind:value={size}
     />
   </div>
-  <div class="form-group">
-    <label class="form-label" for="bw-unit">Unit</label>
-    <select class="form-select" id="bw-unit" bind:value={unit}>
-      <option value="1000000000">GB</option>
-      <option value="1000000">MB</option>
-      <option value="1000000000000">TB</option>
-    </select>
-  </div>
+  <SelectField
+    label="Unit"
+    id="bw-unit"
+    bind:value={unit}
+    options={[
+      { value: '1000000000', label: 'GB' },
+      { value: '1000000', label: 'MB' },
+      { value: '1000000000000', label: 'TB' },
+    ]}
+  />
 </div>
 
 <div aria-live="polite">

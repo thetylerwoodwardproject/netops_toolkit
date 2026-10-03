@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import { faLaptop } from '@fortawesome/free-solid-svg-icons/faLaptop';
   import CodeBlock from '@/components/CodeBlock.svelte';
   import Icon from '@/components/Icon.svelte';
@@ -24,13 +25,15 @@
 <div class="panel">
   <h3><Icon icon={faLaptop} /> EIGRP Config Generator</h3>
   <div class="form-row">
-    <div class="form-group">
-      <label class="form-label" for="eigrp-mode">EIGRP Mode</label>
-      <select class="form-select" id="eigrp-mode" bind:value={f.mode}>
-        <option value="classic">Classic</option>
-        <option value="named">Named Mode</option>
-      </select>
-    </div>
+    <SelectField
+      label="EIGRP Mode"
+      id="eigrp-mode"
+      bind:value={f.mode}
+      options={[
+        { value: 'classic', label: 'Classic' },
+        { value: 'named', label: 'Named Mode' },
+      ]}
+    />
     <TextField label="AS Number" id="eigrp-as" bind:value={f.asNum} />
   </div>
   {#if f.mode === 'named'}

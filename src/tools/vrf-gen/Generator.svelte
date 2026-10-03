@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import { faWrench } from '@fortawesome/free-solid-svg-icons/faWrench';
   import CodeBlock from '@/components/CodeBlock.svelte';
   import Icon from '@/components/Icon.svelte';
@@ -49,15 +50,17 @@
   />
 </div>
 <div class="form-row">
-  <div class="form-group">
-    <label class="form-label" for="vrf-routing">Routing Protocol in VRF</label>
-    <select class="form-select" id="vrf-routing" bind:value={f.routing}>
-      <option value="eigrp">EIGRP</option>
-      <option value="ospf">OSPF</option>
-      <option value="bgp">BGP</option>
-      <option value="none">None / Static Only</option>
-    </select>
-  </div>
+  <SelectField
+    label="Routing Protocol in VRF"
+    id="vrf-routing"
+    bind:value={f.routing}
+    options={[
+      { value: 'eigrp', label: 'EIGRP' },
+      { value: 'ospf', label: 'OSPF' },
+      { value: 'bgp', label: 'BGP' },
+      { value: 'none', label: 'None / Static Only' },
+    ]}
+  />
   <TextField label="AS / Process / BGP ASN" id="vrf-asn" bind:value={f.asn} />
 </div>
 
