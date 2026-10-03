@@ -1,0 +1,21 @@
+---
+import Checker from './Checker.svelte';
+---
+
+<div data-island="ip-checker" data-ssr><Checker /></div>
+
+<div class="tip">
+  <strong>Powered by:</strong>
+  <a href="https://ipapi.co" target="_blank" rel="noopener">ipapi.co</a> — IP geolocation &nbsp;·&nbsp;
+  <a href="https://www.ipify.org" target="_blank" rel="noopener">ipify.org</a> — IPv4 / IPv6 lookup &nbsp;·&nbsp;
+  <a href="https://developers.google.com/speed/public-dns/docs/doh" target="_blank" rel="noopener"
+    >Google DNS</a
+  > — reverse PTR lookup
+</div>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Checker from './Checker.svelte';
+
+  start('[data-island="ip-checker"]', Checker);
+</script>
