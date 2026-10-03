@@ -21,7 +21,7 @@
   <Select.Root type="single" bind:value>
     <Select.Trigger
       {id}
-      class="h-auto w-full rounded-field border-line bg-bg px-3 py-[9px] text-[16px] leading-[1.21] text-text xs:text-[13px]"
+      class="w-full rounded-field border-line bg-bg px-3 py-[9px] text-[16px] leading-[1.21] text-text data-[size=default]:h-auto xs:text-[13px]"
     >
       {current}
     </Select.Trigger>

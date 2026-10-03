@@ -13,7 +13,9 @@
     sideOffset = 4,
     portalProps,
     children,
-    preventScroll = true,
+    // bits-ui's scroll lock restores the body with setAttribute('style'), which
+    // the site's CSP blocks, leaving the page locked. Keep it off.
+    preventScroll = false,
     ...restProps
   }: WithoutChild<SelectPrimitive.ContentProps> & {
     portalProps?: WithoutChildrenOrChild<ComponentProps<typeof SelectPortal>>;
