@@ -146,9 +146,11 @@ if [ "$failed" -ne 0 ]; then
 fi
 
 say "Retiring the old header snippet if nothing includes it"
-if sudo grep -Rl "twp-headers-tools\.conf" /etc/nginx/ 2>/dev/null | grep -v "^$OLD_SNIPPET$" | grep -q .; then
+# Only real include lines count: the new snippet's header comment names the old one.
+INCLUDERS=$(sudo grep -REl "^[[:space:]]*include[[:space:]]+(snippets/)?twp-headers-tools\.conf" /etc/nginx/ 2>/dev/null || true)
+if [ -n "$INCLUDERS" ]; then
   echo "    still included somewhere; left in place:"
-  sudo grep -Rl "twp-headers-tools\.conf" /etc/nginx/ | grep -v "^$OLD_SNIPPET$" | sed 's/^/      /'
+  echo "$INCLUDERS" | sed 's/^/      /'
 else
   sudo mv "$OLD_SNIPPET" "$ARCHIVE/twp-headers-tools.conf-retired-$STAMP"
   echo "    moved to $ARCHIVE/twp-headers-tools.conf-retired-$STAMP"
