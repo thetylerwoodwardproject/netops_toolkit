@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/jetbrains-mono';
 
@@ -47,6 +48,32 @@
 
   --radius-card: 12px;
   --radius-field: 6px;
+}
+
+/*
+ * shadcn-svelte tokens, aliased onto this site's palette rather than given
+ * their own values, so ui components follow the theme and /theme.css brand.
+ * `accent` is NOT aliased: here it is the brand green (buttons, links), while
+ * shadcn uses it for hover surfaces. Components copied in need
+ * `accent` swapped for `muted` where they mean a hover highlight.
+ */
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-text);
+  --color-popover: var(--color-surface2);
+  --color-popover-foreground: var(--color-text);
+  --color-primary: var(--color-accent);
+  --color-primary-foreground: var(--color-accent-ink);
+  --color-secondary: var(--color-surface2);
+  --color-secondary-foreground: var(--color-text);
+  --color-muted: var(--color-surface3);
+  --color-muted-foreground: var(--color-text2);
+  --color-destructive: var(--color-red);
+  --color-border: var(--color-line2);
+  --color-input: var(--color-line2);
+  --color-ring: var(--color-accent);
 }
 
 @layer base {
