@@ -71,7 +71,7 @@
     role="combobox"
     aria-expanded={open && results.length > 0}
     aria-controls="search-results"
-    class="w-full rounded-lg border border-line bg-surface py-[9px] pr-3 pl-9 text-[16px] leading-[1.21] text-text outline-none placeholder:text-text3 focus:border-accent focus:ring-3 focus:ring-accent/15 xs:text-[13px] md:pr-12"
+    class="w-full rounded-lg border border-line bg-surface/60 py-[9px] pr-3 pl-9 text-[16px] leading-[1.21] text-text outline-none placeholder:text-text3 focus:border-accent focus:ring-3 focus:ring-accent/15 xs:text-[13px] md:pr-12"
     onfocus={() => {
       open = true;
       load();
