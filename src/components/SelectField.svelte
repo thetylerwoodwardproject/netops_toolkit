@@ -7,6 +7,8 @@
     value = $bindable(''),
     options,
     onchange,
+    group = true,
+    class: className = '',
   }: {
     label: string;
     id: string;
@@ -14,12 +16,16 @@
     options: { value: string; label: string }[];
     /** Runs after the bound value has been updated, like a native select's change event. */
     onchange?: () => void;
+    /** The wrapper is a .form-group (with its bottom margin) unless this is false. */
+    group?: boolean;
+    /** Extra classes on the wrapper, e.g. a top margin. */
+    class?: string;
   } = $props();
 
   const current = $derived(options.find((o) => o.value === value)?.label ?? '');
 </script>
 
-<div class="form-group">
+<div class={[group && 'form-group', className]}>
   <label class="form-label" for={id}>{label}</label>
   <Select.Root type="single" bind:value onValueChange={() => onchange && queueMicrotask(onchange)}>
     <Select.Trigger

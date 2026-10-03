@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import { faBullseye } from '@fortawesome/free-solid-svg-icons/faBullseye';
   import { faClock } from '@fortawesome/free-solid-svg-icons/faClock';
   import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder';
@@ -116,12 +117,12 @@
 <div class="form-row">
   <div class="panel">
     <h3><Icon icon={faMagnifyingGlass} /> Scan Type</h3>
-    <div class="form-group">
-      <label class="form-label" for="nmap-scan-type">Primary Scan</label>
-      <select class="form-select" id="nmap-scan-type" bind:value={f.scanType}>
-        {#each scanTypes as [value, label] (value)}<option {value}>{label}</option>{/each}
-      </select>
-    </div>
+    <SelectField
+      label="Primary Scan"
+      id="nmap-scan-type"
+      bind:value={f.scanType}
+      options={scanTypes.map(([value, label]) => ({ value, label }))}
+    />
     {#if f.scanType === '-sI zombie'}
       <TextField
         label="Zombie Host IP"
@@ -133,36 +134,38 @@
   </div>
   <div class="panel">
     <h3><Icon icon={faClock} /> Timing &amp; Aggression</h3>
-    <div class="form-group">
-      <label class="form-label" for="nmap-timing">Timing Template</label>
-      <select class="form-select" id="nmap-timing" bind:value={f.timing}>
-        {#each timings as [value, label] (value)}<option {value}>{label}</option>{/each}
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="nmap-hostgroup">Parallel Hosts (--min-hostgroup)</label>
-      <select class="form-select" id="nmap-hostgroup" bind:value={f.hostgroup}>
-        <option value="">Default</option>
-        {#each [16, 32, 64, 128] as n (n)}
-          <option value="--min-hostgroup {n}">{n} hosts</option>
-        {/each}
-      </select>
-    </div>
+    <SelectField
+      label="Timing Template"
+      id="nmap-timing"
+      bind:value={f.timing}
+      options={timings.map(([value, label]) => ({ value, label }))}
+    />
+    <SelectField
+      label="Parallel Hosts (--min-hostgroup)"
+      id="nmap-hostgroup"
+      bind:value={f.hostgroup}
+      options={[
+        { value: '', label: 'Default' },
+        ...[16, 32, 64, 128].map((n) => ({ value: `--min-hostgroup ${n}`, label: `${n} hosts` })),
+      ]}
+    />
   </div>
 </div>
 <div class="form-row">
   <div class="panel">
     <h3><Icon icon={faFolder} /> Port Selection</h3>
-    <div class="form-group">
-      <label class="form-label" for="nmap-port-preset">Port Range</label>
-      <select class="form-select" id="nmap-port-preset" bind:value={f.portPreset}>
-        <option value="top100">Top 100 Ports (--top-ports 100)</option>
-        <option value="top1000">Top 1000 Ports (default)</option>
-        <option value="common">Common Network Ports (22,23,25,53,80,443,3389...)</option>
-        <option value="allports">All 65535 Ports (-p-)</option>
-        <option value="custom">Custom</option>
-      </select>
-    </div>
+    <SelectField
+      label="Port Range"
+      id="nmap-port-preset"
+      bind:value={f.portPreset}
+      options={[
+        { value: 'top100', label: 'Top 100 Ports (--top-ports 100)' },
+        { value: 'top1000', label: 'Top 1000 Ports (default)' },
+        { value: 'common', label: 'Common Network Ports (22,23,25,53,80,443,3389...)' },
+        { value: 'allports', label: 'All 65535 Ports (-p-)' },
+        { value: 'custom', label: 'Custom' },
+      ]}
+    />
     {#if f.portPreset === 'custom'}
       <TextField
         label="Custom Ports (e.g. 22,80,443 or 1-1024)"
@@ -175,12 +178,12 @@
   <div class="panel">
     <h3><Icon icon={faUpload} /> Output</h3>
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" for="nmap-output-fmt">Output Format</label>
-        <select class="form-select" id="nmap-output-fmt" bind:value={f.outputFmt}>
-          {#each outputs as [value, label] (value)}<option {value}>{label}</option>{/each}
-        </select>
-      </div>
+      <SelectField
+        label="Output Format"
+        id="nmap-output-fmt"
+        bind:value={f.outputFmt}
+        options={outputs.map(([value, label]) => ({ value, label }))}
+      />
       <TextField
         label="Output Filename"
         id="nmap-output-file"
@@ -205,12 +208,13 @@
       </label>
     {/each}
   </div>
-  <div class="form-group mt-2.5">
-    <label class="form-label" for="nmap-script">NSE Script (--script)</label>
-    <select class="form-select" id="nmap-script" bind:value={f.script}>
-      {#each scripts as [value, label] (value)}<option {value}>{label}</option>{/each}
-    </select>
-  </div>
+  <SelectField
+    label="NSE Script (--script)"
+    id="nmap-script"
+    bind:value={f.script}
+    options={scripts.map(([value, label]) => ({ value, label }))}
+    class="mt-2.5"
+  />
   {#if f.script === 'custom'}
     <TextField
       label="Custom Script Name or Path"

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
   import CodeBlock from '@/components/CodeBlock.svelte';
   import Icon from '@/components/Icon.svelte';
@@ -30,14 +31,16 @@
   />
 </div>
 <div class="form-row">
-  <div class="form-group">
-    <label class="form-label" for="pcap-dir">Direction</label>
-    <select class="form-select" id="pcap-dir" bind:value={f.dir}>
-      <option value="both">Both (in &amp; out)</option>
-      <option value="in">In only</option>
-      <option value="out">Out only</option>
-    </select>
-  </div>
+  <SelectField
+    label="Direction"
+    id="pcap-dir"
+    bind:value={f.dir}
+    options={[
+      { value: 'both', label: 'Both (in & out)' },
+      { value: 'in', label: 'In only' },
+      { value: 'out', label: 'Out only' },
+    ]}
+  />
   <div class="form-group">
     <label class="form-label" for="pcap-buf">Buffer Size (MB)</label>
     <input
@@ -53,23 +56,27 @@
 <div class="panel mt-1">
   <h3><Icon icon={faMagnifyingGlass} /> Traffic Filter</h3>
   <div class="form-row">
-    <div class="form-group">
-      <label class="form-label" for="pcap-match">Match</label>
-      <select class="form-select" id="pcap-match" bind:value={f.match}>
-        <option value="any">Any (all traffic)</option>
-        <option value="ipv4">IPv4 any</option>
-        <option value="acl">Custom ACL Filter</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="pcap-proto">Protocol (ACL filter only)</label>
-      <select class="form-select" id="pcap-proto" bind:value={f.proto}>
-        <option value="ip">Any (IP)</option>
-        <option value="tcp">TCP</option>
-        <option value="udp">UDP</option>
-        <option value="icmp">ICMP</option>
-      </select>
-    </div>
+    <SelectField
+      label="Match"
+      id="pcap-match"
+      bind:value={f.match}
+      options={[
+        { value: 'any', label: 'Any (all traffic)' },
+        { value: 'ipv4', label: 'IPv4 any' },
+        { value: 'acl', label: 'Custom ACL Filter' },
+      ]}
+    />
+    <SelectField
+      label="Protocol (ACL filter only)"
+      id="pcap-proto"
+      bind:value={f.proto}
+      options={[
+        { value: 'ip', label: 'Any (IP)' },
+        { value: 'tcp', label: 'TCP' },
+        { value: 'udp', label: 'UDP' },
+        { value: 'icmp', label: 'ICMP' },
+      ]}
+    />
   </div>
   {#if f.match === 'acl'}
     <div class="form-row">
@@ -116,15 +123,17 @@
   {/if}
 </div>
 <div class="form-row mt-1">
-  <div class="form-group">
-    <label class="form-label" for="pcap-export-method">Export Method</label>
-    <select class="form-select" id="pcap-export-method" bind:value={f.exportMethod}>
-      <option value="flash">Flash / bootflash</option>
-      <option value="tftp">TFTP Server</option>
-      <option value="ftp">FTP Server</option>
-      <option value="none">Don't include export</option>
-    </select>
-  </div>
+  <SelectField
+    label="Export Method"
+    id="pcap-export-method"
+    bind:value={f.exportMethod}
+    options={[
+      { value: 'flash', label: 'Flash / bootflash' },
+      { value: 'tftp', label: 'TFTP Server' },
+      { value: 'ftp', label: 'FTP Server' },
+      { value: 'none', label: "Don't include export" },
+    ]}
+  />
   {#if f.exportMethod !== 'none'}
     <div class="form-group">
       <label class="form-label" for="pcap-server"

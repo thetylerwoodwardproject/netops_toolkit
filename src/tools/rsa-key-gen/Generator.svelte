@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt';
   import { faCircleXmark } from '@fortawesome/free-solid-svg-icons/faCircleXmark';
   import { faClipboardList } from '@fortawesome/free-solid-svg-icons/faClipboardList';
@@ -89,21 +90,25 @@
 <div class="panel">
   <h3><Icon icon={faKey} /> Key Configuration</h3>
   <div class="form-row-3">
-    <div class="form-group">
-      <label class="form-label" for="rsa-bits">Key Size (bits)</label>
-      <select class="form-select" id="rsa-bits" bind:value={bits}>
-        <option value="2048">2048-bit (standard)</option>
-        <option value="3072">3072-bit (stronger)</option>
-        <option value="4096">4096-bit (high security)</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="rsa-usage">Key Usage</label>
-      <select class="form-select" id="rsa-usage" bind:value={usage}>
-        <option value="encrypt">Encryption / Decryption (RSA-OAEP)</option>
-        <option value="sign">Signing / Verification (RSASSA-PKCS1-v1_5)</option>
-      </select>
-    </div>
+    <SelectField
+      label="Key Size (bits)"
+      id="rsa-bits"
+      bind:value={bits}
+      options={[
+        { value: '2048', label: '2048-bit (standard)' },
+        { value: '3072', label: '3072-bit (stronger)' },
+        { value: '4096', label: '4096-bit (high security)' },
+      ]}
+    />
+    <SelectField
+      label="Key Usage"
+      id="rsa-usage"
+      bind:value={usage}
+      options={[
+        { value: 'encrypt', label: 'Encryption / Decryption (RSA-OAEP)' },
+        { value: 'sign', label: 'Signing / Verification (RSASSA-PKCS1-v1_5)' },
+      ]}
+    />
     <div class="form-group">
       <span class="form-label max-md:hidden">&nbsp;</span>
       <button

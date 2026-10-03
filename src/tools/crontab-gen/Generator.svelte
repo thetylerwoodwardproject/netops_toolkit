@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar';
   import { faClock } from '@fortawesome/free-solid-svg-icons/faClock';
   import { faDesktop } from '@fortawesome/free-solid-svg-icons/faDesktop';
@@ -241,24 +242,30 @@
 <div class="panel">
   <h3><Icon icon={faUpload} /> Output &amp; Logging Options</h3>
   <div class="grid grid-cols-1 gap-3.5 xs:grid-cols-2">
-    <div>
-      <label class="form-label" for="ct-stdout">Stdout (standard output)</label>
-      <select class="form-select" id="ct-stdout" bind:value={f.stdout}>
-        <option value="">— no redirect —</option>
-        <option value=">/dev/null">&gt; /dev/null (discard stdout)</option>
-        <option value=">>LOG">&gt;&gt; logfile (append to log)</option>
-        <option value=">LOG">&gt; logfile (overwrite log)</option>
-      </select>
-    </div>
-    <div>
-      <label class="form-label" for="ct-stderr">Stderr (errors)</label>
-      <select class="form-select" id="ct-stderr" bind:value={f.stderr}>
-        <option value="">— no redirect —</option>
-        <option value="2>/dev/null">2&gt; /dev/null (discard errors)</option>
-        <option value="2>&1">2&gt;&amp;1 (merge into stdout)</option>
-        <option value="2>>ERRLOG">2&gt;&gt; error logfile (append)</option>
-      </select>
-    </div>
+    <SelectField
+      label="Stdout (standard output)"
+      id="ct-stdout"
+      bind:value={f.stdout}
+      group={false}
+      options={[
+        { value: '', label: '— no redirect —' },
+        { value: '>/dev/null', label: '> /dev/null (discard stdout)' },
+        { value: '>>LOG', label: '>> logfile (append to log)' },
+        { value: '>LOG', label: '> logfile (overwrite log)' },
+      ]}
+    />
+    <SelectField
+      label="Stderr (errors)"
+      id="ct-stderr"
+      bind:value={f.stderr}
+      group={false}
+      options={[
+        { value: '', label: '— no redirect —' },
+        { value: '2>/dev/null', label: '2> /dev/null (discard errors)' },
+        { value: '2>&1', label: '2>&1 (merge into stdout)' },
+        { value: '2>>ERRLOG', label: '2>> error logfile (append)' },
+      ]}
+    />
   </div>
   {#if needsLog || needsErrLog}
     <div class="mt-3">
@@ -295,14 +302,18 @@
       </div>
     </div>
   {/if}
-  <div class="mt-3">
-    <label class="form-label" for="ct-mailto">Email Notifications (MAILTO)</label>
-    <select class="form-select" id="ct-mailto" bind:value={f.mailto}>
-      <option value="">— system default (send to cron owner) —</option>
-      <option value="suppress">MAILTO="" (suppress all email)</option>
-      <option value="custom">MAILTO=address (send to specific address)</option>
-    </select>
-  </div>
+  <SelectField
+    label="Email Notifications (MAILTO)"
+    id="ct-mailto"
+    bind:value={f.mailto}
+    group={false}
+    class="mt-3"
+    options={[
+      { value: '', label: '— system default (send to cron owner) —' },
+      { value: 'suppress', label: 'MAILTO="" (suppress all email)' },
+      { value: 'custom', label: 'MAILTO=address (send to specific address)' },
+    ]}
+  />
   {#if f.mailto === 'custom'}
     <div class="mt-2">
       <TextField label="Email Address" id="ct-mailaddr" bind:value={f.mailAddr} />

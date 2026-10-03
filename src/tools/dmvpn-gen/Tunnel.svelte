@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import { faLock } from '@fortawesome/free-solid-svg-icons/faLock';
   import { faWrench } from '@fortawesome/free-solid-svg-icons/faWrench';
   import CodeBlock from '@/components/CodeBlock.svelte';
@@ -106,25 +107,29 @@
   </div>
 {/snippet}
 {#snippet phaseField()}
-  <div class="form-group">
-    <label class="form-label" for="{p}-phase">DMVPN Phase</label>
-    <select class="form-select" id="{p}-phase" bind:value={f.phase}>
-      <option value="1">Phase 1{hub ? ' — Hub-and-Spoke' : ''}</option>
-      <option value="2">Phase 2{hub ? ' — Direct Spoke-to-Spoke' : ''}</option>
-      <option value="3">Phase 3{hub ? ' — Scalable (Recommended)' : ''}</option>
-    </select>
-  </div>
+  <SelectField
+    label="DMVPN Phase"
+    id="{p}-phase"
+    bind:value={f.phase}
+    options={[
+      { value: '1', label: `Phase 1${hub ? ' — Hub-and-Spoke' : ''}` },
+      { value: '2', label: `Phase 2${hub ? ' — Direct Spoke-to-Spoke' : ''}` },
+      { value: '3', label: `Phase 3${hub ? ' — Scalable (Recommended)' : ''}` },
+    ]}
+  />
 {/snippet}
 {#snippet routingField()}
-  <div class="form-group">
-    <label class="form-label" for="{p}-routing">Routing Protocol</label>
-    <select class="form-select" id="{p}-routing" bind:value={f.routing}>
-      <option value="eigrp">EIGRP</option>
-      <option value="ospf">OSPF (point-to-multipoint)</option>
-      <option value="bgp">BGP</option>
-      <option value="none">None / Static</option>
-    </select>
-  </div>
+  <SelectField
+    label="Routing Protocol"
+    id="{p}-routing"
+    bind:value={f.routing}
+    options={[
+      { value: 'eigrp', label: 'EIGRP' },
+      { value: 'ospf', label: 'OSPF (point-to-multipoint)' },
+      { value: 'bgp', label: 'BGP' },
+      { value: 'none', label: 'None / Static' },
+    ]}
+  />
 {/snippet}
 
 {#snippet pskField()}
@@ -149,14 +154,16 @@
   </div>
 {/snippet}
 {#snippet encField()}
-  <div class="form-group">
-    <label class="form-label" for="{p}-enc">Encryption / Integrity</label>
-    <select class="form-select" id="{p}-enc" bind:value={f.enc}>
-      <option value="aes256-sha256">AES-256 / SHA-256 (Recommended)</option>
-      <option value="aes128-sha256">AES-128 / SHA-256</option>
-      <option value="aes256-sha512">AES-256 / SHA-512</option>
-    </select>
-  </div>
+  <SelectField
+    label="Encryption / Integrity"
+    id="{p}-enc"
+    bind:value={f.enc}
+    options={[
+      { value: 'aes256-sha256', label: 'AES-256 / SHA-256 (Recommended)' },
+      { value: 'aes128-sha256', label: 'AES-128 / SHA-256' },
+      { value: 'aes256-sha512', label: 'AES-256 / SHA-512' },
+    ]}
+  />
 {/snippet}
 
 {#if hub}

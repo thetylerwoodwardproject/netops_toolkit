@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import CodeBlock from '@/components/CodeBlock.svelte';
   import TextField from '@/components/TextField.svelte';
   import { aclConfig, type AclInput } from '@/lib/gen/acl';
@@ -14,13 +15,15 @@
 </script>
 
 <div class="form-row">
-  <div class="form-group">
-    <label class="form-label" for="acl-type">ACL Type</label>
-    <select class="form-select" id="acl-type" bind:value={f.type}>
-      <option>standard</option>
-      <option>extended</option>
-    </select>
-  </div>
+  <SelectField
+    label="ACL Type"
+    id="acl-type"
+    bind:value={f.type}
+    options={[
+      { value: 'standard', label: 'standard' },
+      { value: 'extended', label: 'extended' },
+    ]}
+  />
   <TextField label="ACL Name/Number" id="acl-name" bind:value={f.name} />
 </div>
 <div class="form-group">
@@ -36,13 +39,15 @@
 </div>
 <div class="form-row">
   <TextField label="Apply to Interface" id="acl-intf" bind:value={f.intf} />
-  <div class="form-group">
-    <label class="form-label" for="acl-dir">Direction</label>
-    <select class="form-select" id="acl-dir" bind:value={f.dir}>
-      <option>in</option>
-      <option>out</option>
-    </select>
-  </div>
+  <SelectField
+    label="Direction"
+    id="acl-dir"
+    bind:value={f.dir}
+    options={[
+      { value: 'in', label: 'in' },
+      { value: 'out', label: 'out' },
+    ]}
+  />
 </div>
 
 <div aria-live="polite">

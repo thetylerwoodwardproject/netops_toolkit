@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload';
   import CodeBlock from '@/components/CodeBlock.svelte';
   import Icon from '@/components/Icon.svelte';
@@ -31,22 +32,26 @@
 
 <div class="form-row">
   <TextField label="Interface" id="np-interface" bind:value={f.interface} />
-  <div class="form-group">
-    <label class="form-label" for="np-renderer">Renderer</label>
-    <select class="form-select" id="np-renderer" bind:value={f.renderer}>
-      <option value="networkd">networkd</option>
-      <option value="NetworkManager">NetworkManager</option>
-    </select>
-  </div>
+  <SelectField
+    label="Renderer"
+    id="np-renderer"
+    bind:value={f.renderer}
+    options={[
+      { value: 'networkd', label: 'networkd' },
+      { value: 'NetworkManager', label: 'NetworkManager' },
+    ]}
+  />
 </div>
 <div class="form-row">
-  <div class="form-group">
-    <label class="form-label" for="np-mode">Mode</label>
-    <select class="form-select" id="np-mode" bind:value={f.mode}>
-      <option value="dhcp">DHCP (IPv4)</option>
-      <option value="static">Static (IPv4)</option>
-    </select>
-  </div>
+  <SelectField
+    label="Mode"
+    id="np-mode"
+    bind:value={f.mode}
+    options={[
+      { value: 'dhcp', label: 'DHCP (IPv4)' },
+      { value: 'static', label: 'Static (IPv4)' },
+    ]}
+  />
   <TextField label="Filename" id="np-filename" bind:value={filename} />
 </div>
 {#if f.mode === 'static'}

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   // Keyed rather than valued by Mbps: Livestream and AES67 share 4.80, and the
   // original's <select value="4.80"> couldn't tell them apart.
   const types = {
@@ -41,14 +42,12 @@
       bind:value={count}
     />
   </div>
-  <div class="form-group">
-    <label class="form-label" for="lw-bw-type">Stream Type</label>
-    <select id="lw-bw-type" class="form-select" bind:value={type}>
-      {#each Object.entries(types) as [key, t] (key)}
-        <option value={key}>{t.label}</option>
-      {/each}
-    </select>
-  </div>
+  <SelectField
+    label="Stream Type"
+    id="lw-bw-type"
+    bind:value={() => type, (v) => (type = v as keyof typeof types)}
+    options={Object.entries(types).map(([value, t]) => ({ value, label: t.label }))}
+  />
 </div>
 
 <div aria-live="polite">
