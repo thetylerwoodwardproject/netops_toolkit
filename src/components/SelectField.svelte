@@ -9,6 +9,7 @@
     onchange,
     group = true,
     class: className = '',
+    triggerClass = '',
   }: {
     label: string;
     id: string;
@@ -20,6 +21,8 @@
     group?: boolean;
     /** Extra classes on the wrapper, e.g. a top margin. */
     class?: string;
+    /** Extra classes on the trigger button, e.g. a fixed width. */
+    triggerClass?: string;
   } = $props();
 
   const current = $derived(options.find((o) => o.value === value)?.label ?? '');
@@ -30,7 +33,10 @@
   <Select.Root type="single" bind:value onValueChange={() => onchange && queueMicrotask(onchange)}>
     <Select.Trigger
       {id}
-      class="w-full rounded-field border-line bg-bg px-3 py-0 text-[16px] leading-[1.21] text-text data-[size=default]:h-[42px] xs:text-[13px] xs:data-[size=default]:h-[38px]"
+      class={[
+        'w-full rounded-field border-line bg-bg px-3 py-0 text-[16px] leading-[1.21] text-text data-[size=default]:h-[42px] xs:text-[13px] xs:data-[size=default]:h-[38px]',
+        triggerClass,
+      ]}
     >
       {current}
     </Select.Trigger>

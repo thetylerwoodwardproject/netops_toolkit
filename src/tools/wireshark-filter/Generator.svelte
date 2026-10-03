@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SelectField from '@/components/SelectField.svelte';
   import { faPuzzlePiece } from '@fortawesome/free-solid-svg-icons/faPuzzlePiece';
   import { faWrench } from '@fortawesome/free-solid-svg-icons/faWrench';
   import CodeBlock from '@/components/CodeBlock.svelte';
@@ -66,51 +67,57 @@
     <code>!(…)</code> for safe exclusions.
   </p>
   <div class="form-row">
-    <div class="form-group">
-      <label class="form-label" for="ws-cat">Category</label>
-      <select class="form-select" id="ws-cat" bind:value={cat}>
-        <option value="ip">IP Address</option>
-        <option value="port">TCP/UDP Port</option>
-        <option value="proto">Protocol</option>
-        <option value="tcp-flags">TCP Flags</option>
-        <option value="mac">MAC / Ethernet</option>
-        <option value="vlan">VLAN</option>
-        <option value="http">HTTP</option>
-        <option value="dns">DNS</option>
-        <option value="sip">SIP / RTP</option>
-        <option value="icmp">ICMP</option>
-        <option value="frame">Frame / Size</option>
-        <option value="custom">Custom Field</option>
-      </select>
-    </div>
+    <SelectField
+      label="Category"
+      id="ws-cat"
+      bind:value={cat}
+      options={[
+        { value: 'ip', label: 'IP Address' },
+        { value: 'port', label: 'TCP/UDP Port' },
+        { value: 'proto', label: 'Protocol' },
+        { value: 'tcp-flags', label: 'TCP Flags' },
+        { value: 'mac', label: 'MAC / Ethernet' },
+        { value: 'vlan', label: 'VLAN' },
+        { value: 'http', label: 'HTTP' },
+        { value: 'dns', label: 'DNS' },
+        { value: 'sip', label: 'SIP / RTP' },
+        { value: 'icmp', label: 'ICMP' },
+        { value: 'frame', label: 'Frame / Size' },
+        { value: 'custom', label: 'Custom Field' },
+      ]}
+    />
     {#if !NO_OPERATOR.includes(cat)}
-      <div class="form-group">
-        <label class="form-label" for="ws-op">Operator</label>
-        <select class="form-select" id="ws-op" bind:value={op}>
-          <option value="==">== (equals)</option>
-          <option value="!=">!= (not equal)*</option>
-          <option value=">">&gt; (greater than)</option>
-          <option value="<">&lt; (less than)</option>
-          <option value="contains">contains</option>
-          <option value="matches">matches (regex)</option>
-        </select>
-      </div>
+      <SelectField
+        label="Operator"
+        id="ws-op"
+        bind:value={op}
+        options={[
+          { value: '==', label: '== (equals)' },
+          { value: '!=', label: '!= (not equal)*' },
+          { value: '>', label: '> (greater than)' },
+          { value: '<', label: '< (less than)' },
+          { value: 'contains', label: 'contains' },
+          { value: 'matches', label: 'matches (regex)' },
+        ]}
+      />
     {/if}
   </div>
 
   {#if cat === 'ip'}
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" for="ws-ip-dir">Direction</label>
-        <select class="form-select" id="ws-ip-dir" bind:value={f.ipDir}>
-          <option value="ip.addr">Either (ip.addr)</option>
-          <option value="ip.src">Source (ip.src)</option>
-          <option value="ip.dst">Destination (ip.dst)</option>
-          <option value="ipv6.addr">IPv6 Either</option>
-          <option value="ipv6.src">IPv6 Src</option>
-          <option value="ipv6.dst">IPv6 Dst</option>
-        </select>
-      </div>
+      <SelectField
+        label="Direction"
+        id="ws-ip-dir"
+        bind:value={f.ipDir}
+        options={[
+          { value: 'ip.addr', label: 'Either (ip.addr)' },
+          { value: 'ip.src', label: 'Source (ip.src)' },
+          { value: 'ip.dst', label: 'Destination (ip.dst)' },
+          { value: 'ipv6.addr', label: 'IPv6 Either' },
+          { value: 'ipv6.src', label: 'IPv6 Src' },
+          { value: 'ipv6.dst', label: 'IPv6 Dst' },
+        ]}
+      />
       <div class="form-group">
         <label class="form-label" for="ws-ip-val">IP / CIDR</label>
         <input
@@ -125,17 +132,19 @@
     </div>
   {:else if cat === 'port'}
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" for="ws-port-proto">Protocol</label>
-        <select class="form-select" id="ws-port-proto" bind:value={f.portProto}>
-          <option value="tcp.port">TCP (either)</option>
-          <option value="tcp.srcport">TCP Source</option>
-          <option value="tcp.dstport">TCP Dest</option>
-          <option value="udp.port">UDP (either)</option>
-          <option value="udp.srcport">UDP Source</option>
-          <option value="udp.dstport">UDP Dest</option>
-        </select>
-      </div>
+      <SelectField
+        label="Protocol"
+        id="ws-port-proto"
+        bind:value={f.portProto}
+        options={[
+          { value: 'tcp.port', label: 'TCP (either)' },
+          { value: 'tcp.srcport', label: 'TCP Source' },
+          { value: 'tcp.dstport', label: 'TCP Dest' },
+          { value: 'udp.port', label: 'UDP (either)' },
+          { value: 'udp.srcport', label: 'UDP Source' },
+          { value: 'udp.dstport', label: 'UDP Dest' },
+        ]}
+      />
       <div class="form-group">
         <label class="form-label" for="ws-port-val">Port Number</label>
         <input
@@ -149,37 +158,41 @@
       </div>
     </div>
   {:else if cat === 'proto'}
-    <div class="form-group">
-      <label class="form-label" for="ws-proto-val">Protocol</label>
-      <select class="form-select" id="ws-proto-val" bind:value={f.protoVal}>
-        {#each protocols as p (p)}<option>{p}</option>{/each}
-      </select>
-    </div>
+    <SelectField
+      label="Protocol"
+      id="ws-proto-val"
+      bind:value={f.protoVal}
+      options={protocols.map((p) => ({ value: p, label: p }))}
+    />
   {:else if cat === 'tcp-flags'}
-    <div class="form-group">
-      <label class="form-label" for="ws-flag-val">Flag / Condition</label>
-      <select class="form-select" id="ws-flag-val" bind:value={f.flagVal}>
-        <option value="tcp.flags.syn == 1">SYN set</option>
-        <option value="tcp.flags.ack == 1">ACK set</option>
-        <option value="tcp.flags.fin == 1">FIN set</option>
-        <option value="tcp.flags.reset == 1">RST set</option>
-        <option value="tcp.flags.push == 1">PSH set</option>
-        <option value="tcp.flags.urg == 1">URG set</option>
-        <option value="tcp.flags.syn == 1 && tcp.flags.ack == 0">SYN only (new connection)</option>
-        <option value="tcp.flags.syn == 1 && tcp.flags.ack == 1">SYN-ACK</option>
-        <option value="tcp.window_size == 0 && tcp.flags.reset != 1">Zero-window</option>
-      </select>
-    </div>
+    <SelectField
+      label="Flag / Condition"
+      id="ws-flag-val"
+      bind:value={f.flagVal}
+      options={[
+        { value: 'tcp.flags.syn == 1', label: 'SYN set' },
+        { value: 'tcp.flags.ack == 1', label: 'ACK set' },
+        { value: 'tcp.flags.fin == 1', label: 'FIN set' },
+        { value: 'tcp.flags.reset == 1', label: 'RST set' },
+        { value: 'tcp.flags.push == 1', label: 'PSH set' },
+        { value: 'tcp.flags.urg == 1', label: 'URG set' },
+        { value: 'tcp.flags.syn == 1 && tcp.flags.ack == 0', label: 'SYN only (new connection)' },
+        { value: 'tcp.flags.syn == 1 && tcp.flags.ack == 1', label: 'SYN-ACK' },
+        { value: 'tcp.window_size == 0 && tcp.flags.reset != 1', label: 'Zero-window' },
+      ]}
+    />
   {:else if cat === 'mac'}
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" for="ws-mac-dir">Direction</label>
-        <select class="form-select" id="ws-mac-dir" bind:value={f.macDir}>
-          <option value="eth.addr">Either</option>
-          <option value="eth.src">Source</option>
-          <option value="eth.dst">Destination</option>
-        </select>
-      </div>
+      <SelectField
+        label="Direction"
+        id="ws-mac-dir"
+        bind:value={f.macDir}
+        options={[
+          { value: 'eth.addr', label: 'Either' },
+          { value: 'eth.src', label: 'Source' },
+          { value: 'eth.dst', label: 'Destination' },
+        ]}
+      />
       <div class="form-group">
         <label class="form-label" for="ws-mac-val">MAC Address</label>
         <input
@@ -206,16 +219,18 @@
     </div>
   {:else if cat === 'http'}
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" for="ws-http-field">Field</label>
-        <select class="form-select" id="ws-http-field" bind:value={f.httpField}>
-          <option value="http.request.method">Method (GET, POST…)</option>
-          <option value="http.response.code">Response Code</option>
-          <option value="http.request.uri">URI path</option>
-          <option value="http.host">Host header</option>
-          <option value="http.authorization">Authorization (any)</option>
-        </select>
-      </div>
+      <SelectField
+        label="Field"
+        id="ws-http-field"
+        bind:value={f.httpField}
+        options={[
+          { value: 'http.request.method', label: 'Method (GET, POST…)' },
+          { value: 'http.response.code', label: 'Response Code' },
+          { value: 'http.request.uri', label: 'URI path' },
+          { value: 'http.host', label: 'Host header' },
+          { value: 'http.authorization', label: 'Authorization (any)' },
+        ]}
+      />
       <div class="form-group">
         <label class="form-label" for="ws-http-val">Value</label>
         <input
@@ -230,14 +245,16 @@
     </div>
   {:else if cat === 'dns'}
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" for="ws-dns-field">Field</label>
-        <select class="form-select" id="ws-dns-field" bind:value={f.dnsField}>
-          <option value="dns.qry.name">Query name</option>
-          <option value="dns.resp.name">Response name</option>
-          <option value="dns.qry.type">Query type (A=1, AAAA=28)</option>
-        </select>
-      </div>
+      <SelectField
+        label="Field"
+        id="ws-dns-field"
+        bind:value={f.dnsField}
+        options={[
+          { value: 'dns.qry.name', label: 'Query name' },
+          { value: 'dns.resp.name', label: 'Response name' },
+          { value: 'dns.qry.type', label: 'Query type (A=1, AAAA=28)' },
+        ]}
+      />
       <div class="form-group">
         <label class="form-label" for="ws-dns-val">Value</label>
         <input
@@ -252,15 +269,17 @@
     </div>
   {:else if cat === 'sip'}
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" for="ws-sip-type">Filter</label>
-        <select class="form-select" id="ws-sip-type" bind:value={f.sipType}>
-          <option value="sip">All SIP</option>
-          <option value="rtp">All RTP</option>
-          <option value="sip.Method">SIP Method</option>
-          <option value="sip.Status-Code">SIP Status Code</option>
-        </select>
-      </div>
+      <SelectField
+        label="Filter"
+        id="ws-sip-type"
+        bind:value={f.sipType}
+        options={[
+          { value: 'sip', label: 'All SIP' },
+          { value: 'rtp', label: 'All RTP' },
+          { value: 'sip.Method', label: 'SIP Method' },
+          { value: 'sip.Status-Code', label: 'SIP Status Code' },
+        ]}
+      />
       <div class="form-group">
         <label class="form-label" for="ws-sip-val">Value (if field)</label>
         <input
@@ -274,28 +293,32 @@
       </div>
     </div>
   {:else if cat === 'icmp'}
-    <div class="form-group">
-      <label class="form-label" for="ws-icmp-type">Type</label>
-      <select class="form-select" id="ws-icmp-type" bind:value={f.icmpType}>
-        <option value="icmp">All ICMP</option>
-        <option value="icmp.type == 0">Echo Reply (0)</option>
-        <option value="icmp.type == 3">Destination Unreachable (3)</option>
-        <option value="icmp.type == 5">Redirect (5)</option>
-        <option value="icmp.type == 8">Echo Request / ping (8)</option>
-        <option value="icmp.type == 11">Time Exceeded / TTL (11)</option>
-      </select>
-    </div>
+    <SelectField
+      label="Type"
+      id="ws-icmp-type"
+      bind:value={f.icmpType}
+      options={[
+        { value: 'icmp', label: 'All ICMP' },
+        { value: 'icmp.type == 0', label: 'Echo Reply (0)' },
+        { value: 'icmp.type == 3', label: 'Destination Unreachable (3)' },
+        { value: 'icmp.type == 5', label: 'Redirect (5)' },
+        { value: 'icmp.type == 8', label: 'Echo Request / ping (8)' },
+        { value: 'icmp.type == 11', label: 'Time Exceeded / TTL (11)' },
+      ]}
+    />
   {:else if cat === 'frame'}
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" for="ws-frame-field">Field</label>
-        <select class="form-select" id="ws-frame-field" bind:value={f.frameField}>
-          <option value="frame.len">Frame length (bytes)</option>
-          <option value="frame.number">Frame number</option>
-          <option value="ip.ttl">IP TTL</option>
-          <option value="ip.frag_offset">IP frag offset</option>
-        </select>
-      </div>
+      <SelectField
+        label="Field"
+        id="ws-frame-field"
+        bind:value={f.frameField}
+        options={[
+          { value: 'frame.len', label: 'Frame length (bytes)' },
+          { value: 'frame.number', label: 'Frame number' },
+          { value: 'ip.ttl', label: 'IP TTL' },
+          { value: 'ip.frag_offset', label: 'IP frag offset' },
+        ]}
+      />
       <div class="form-group">
         <label class="form-label" for="ws-frame-val">Value</label>
         <input
@@ -336,13 +359,16 @@
   {/if}
 
   <div class="form-row mt-2.5 items-end">
-    <div class="form-group">
-      <label class="form-label" for="ws-join">Join with</label>
-      <select class="form-select w-[140px]" id="ws-join" bind:value={join}>
-        <option value=" && ">AND (&amp;&amp;)</option>
-        <option value=" || ">OR (||)</option>
-      </select>
-    </div>
+    <SelectField
+      label="Join with"
+      id="ws-join"
+      triggerClass="w-[140px]"
+      bind:value={join}
+      options={[
+        { value: ' && ', label: 'AND (&&)' },
+        { value: ' || ', label: 'OR (||)' },
+      ]}
+    />
     <div class="form-group">
       <div class="btn-group">
         <button class="btn btn-primary" type="button" onclick={() => add(false)}>
