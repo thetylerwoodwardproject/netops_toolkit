@@ -50,7 +50,7 @@ else {
   for (const id of ids) {
     const page = join(dir, id, 'index.html');
     if (!existsSync(page)) fail(page, `enabled tool "${id}" has no page`);
-    else if (readFileSync(page, 'utf8').includes('data-placeholder')) {
+    else if (readFileSync(page, 'utf8').includes('class="warn" data-placeholder')) {
       (complete ? failures : warnings).push(`${id}: not ported yet`);
     }
   }

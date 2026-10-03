@@ -1,5 +1,6 @@
 <script lang="ts">
   import CodeBlock from '@/components/CodeBlock.svelte';
+  import SelectField from '@/components/SelectField.svelte';
   import TextField from '@/components/TextField.svelte';
   import { natConfig, type NatInput } from '@/lib/gen/nat';
 
@@ -15,14 +16,16 @@
   });
 </script>
 
-<div class="form-group">
-  <label class="form-label" for="nat-type">NAT Type</label>
-  <select class="form-select" id="nat-type" bind:value={f.type}>
-    <option value="pat">PAT (Overload) — Most Common</option>
-    <option value="static">Static NAT</option>
-    <option value="dynamic">Dynamic NAT</option>
-  </select>
-</div>
+<SelectField
+  label="NAT Type"
+  id="nat-type"
+  bind:value={f.type}
+  options={[
+    { value: 'pat', label: 'PAT (Overload) — Most Common' },
+    { value: 'static', label: 'Static NAT' },
+    { value: 'dynamic', label: 'Dynamic NAT' },
+  ]}
+/>
 <div class="form-row">
   <TextField label="Inside Interface" id="nat-in" bind:value={f.inside} />
   <TextField label="Outside Interface" id="nat-out" bind:value={f.outside} />
