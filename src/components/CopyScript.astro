@@ -1,8 +1,9 @@
 ---
-// Adds a Copy button to every <pre class="code" data-copy> on the page, for
-// static code samples that are not worth a Svelte island. The button is added
-// here, so without JavaScript the sample is just a code block. Include once
-// per page; give the <pre> pr-20 so a long first line stays clear of the button.
+// Copy buttons for static code samples that are not worth a Svelte island.
+// A <pre class="code" data-copy> gets a button added here, so without
+// JavaScript the sample is just a code block; give it pr-20 so a long first
+// line stays clear of the button. A <button data-copy-value="text"> already in
+// the page copies that text. Include once per page.
 ---
 
 <script>
@@ -21,5 +22,17 @@
       setTimeout(() => (button.textContent = 'Copy'), 1500);
     });
     pre.prepend(button);
+  }
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('button[data-copy-value]')) {
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copyValue ?? '');
+        button.textContent = '✓';
+      } catch {
+        button.textContent = 'Failed';
+      }
+      setTimeout(() => (button.textContent = 'Copy'), 1400);
+    });
   }
 </script>

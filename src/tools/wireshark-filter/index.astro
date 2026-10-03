@@ -1,0 +1,769 @@
+---
+import Generator from './Generator.svelte';
+import CopyScript from '@/components/CopyScript.astro';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'ws-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'ws-gen-tab', label: 'Filter Builder', icon: 'wrench' },
+    { id: 'ws-quick-tab', label: 'Quick Filters', icon: 'bolt' },
+  ]}
+  ><TabPanel id="ws-ref-tab" selected>
+    <div class="panel">
+      <h3><Icon name="filter" /> What is a Wireshark Display Filter?</h3>
+      <p>
+        A <strong>display filter</strong> narrows which packets appear in the packet list without discarding
+        captured data. Unlike capture filters (BPF syntax written before capture), display filters use
+        Wireshark's own field-based syntax and can reference any decoded protocol field.
+      </p>
+      <div class="tip mt-[10px]">
+        <Icon name="triangle-exclamation" />
+        <strong>Display filter ≠ Capture filter.</strong> Capture filters use BPF syntax (e.g., <code
+          >tcp port 80</code
+        >). Display filters use Wireshark field notation (e.g., <code>tcp.port == 80</code>). They
+        are <em>not</em> interchangeable.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="hashtag" /> Comparison Operators</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>English</th><th>Symbol</th><th>Example</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">eq</td><td class="mono">==</td><td class="mono">ip.ttl == 64</td><td
+                >Equal to</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">ne</td><td class="mono">!=</td><td class="mono"
+                >eth.type != 0x0800</td
+              ><td>Not equal — see Gotchas!</td></tr
+            >
+            <tr
+              ><td class="mono">gt</td><td class="mono">&gt;</td><td class="mono"
+                >frame.len &gt; 1000</td
+              ><td>Greater than</td></tr
+            >
+            <tr
+              ><td class="mono">lt</td><td class="mono">&lt;</td><td class="mono"
+                >tcp.window_size &lt; 1024</td
+              ><td>Less than</td></tr
+            >
+            <tr
+              ><td class="mono">ge</td><td class="mono">&gt;=</td><td class="mono"
+                >udp.length &gt;= 512</td
+              ><td>Greater than or equal</td></tr
+            >
+            <tr
+              ><td class="mono">le</td><td class="mono">&lt;=</td><td class="mono"
+                >ip.ttl &lt;= 10</td
+              ><td>Less than or equal</td></tr
+            >
+            <tr
+              ><td class="mono">contains</td><td></td><td class="mono">http contains "login"</td><td
+                >Field or protocol contains value</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">matches</td><td class="mono">~</td><td class="mono"
+                >http.host matches ".gov$"</td
+              ><td>PCRE regular expression</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="link" /> Logical Operators</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>English</th><th>Symbol</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">and</td><td class="mono">&amp;&amp;</td><td class="mono"
+                >ip.src == 10.0.0.1 &amp;&amp; tcp.port == 443</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">or</td><td class="mono">||</td><td class="mono"
+                >tcp.port == 80 || tcp.port == 443</td
+              ></tr
+            >
+            <tr><td class="mono">not</td><td class="mono">!</td><td class="mono">!icmp</td></tr>
+            <tr
+              ><td colspan="3"
+                ><em
+                  >Use parentheses to group: <code
+                    >(ip.src == 10.0.0.1 || ip.src == 10.0.0.2) &amp;&amp; tcp.port == 80</code
+                  ></em
+                ></td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="triangle-exclamation" /> Gotchas — Read These!</h3>
+      <ul class="ml-[20px] list-disc leading-[2.1]">
+        <li>
+          <strong><code>ip.addr != 10.1.1.1</code> does NOT exclude that IP.</strong> It matches any packet
+          where <em>at least one</em> address field is not that value. Use <code
+            >!(ip.addr == 10.1.1.1)</code
+          > instead. Same trap applies to <code>tcp.port</code>, <code>udp.port</code>, and <code
+            >eth.addr</code
+          >.
+        </li>
+        <li>
+          <strong>Tunneled protocols</strong> (GRE, VXLAN) have two IP layers. Use <code
+            >ip.src#1</code
+          > for outer, <code>ip.src#2</code> for inner (Wireshark 4.0+).
+        </li>
+        <li>
+          <strong>String comparisons are case-sensitive:</strong>
+          <code>http.request.method == "GET"</code> works; <code>"get"</code> does not.
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="magnifying-glass" /> Protocol Field Reference</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Field</th><th>Scope</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">ip.addr</td><td>IPv4 src or dst</td><td class="mono"
+                >ip.addr == 192.168.1.10</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">ip.src / ip.dst</td><td>IPv4 directional</td><td class="mono"
+                >ip.src == 10.0.0.0/8</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">ipv6.addr</td><td>IPv6 src or dst</td><td class="mono"
+                >ipv6.addr == fe80::1</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">tcp.port / udp.port</td><td>src or dst port</td><td class="mono"
+                >tcp.port == 443</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">tcp.srcport / tcp.dstport</td><td>Directional port</td><td
+                class="mono">tcp.dstport == 80</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">tcp.flags.syn / .ack / .fin / .rst</td><td>TCP flag bits</td><td
+                class="mono">tcp.flags.syn == 1</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">tcp.window_size</td><td>Receive window</td><td class="mono"
+                >tcp.window_size == 0</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">eth.addr / eth.src / eth.dst</td><td>MAC address</td><td
+                class="mono">eth.src == aa:bb:cc:dd:ee:ff</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">eth.addr[0:3]</td><td>OUI / vendor prefix</td><td class="mono"
+                >eth.addr[0:3] == 00:06:5b</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">frame.len</td><td>Total frame size</td><td class="mono"
+                >frame.len &gt; 1500</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">http.request.method</td><td>HTTP verb</td><td class="mono"
+                >http.request.method == "POST"</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">http.request.uri</td><td>HTTP URI</td><td class="mono"
+                >http.request.uri matches "login"</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">dns.qry.name</td><td>DNS query name</td><td class="mono"
+                >dns.qry.name contains "example"</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">sip.Method</td><td>SIP method</td><td class="mono"
+                >sip.Method == "INVITE"</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">vlan.id</td><td>802.1Q VLAN ID</td><td class="mono"
+                >vlan.id == 100</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">arp.opcode</td><td>ARP op (1=req, 2=reply)</td><td class="mono"
+                >arp.opcode == 1</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">icmp.type</td><td>ICMP type number</td><td class="mono"
+                >icmp.type == 8</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">rtp.ssrc</td><td>RTP stream SSRC ID</td><td class="mono"
+                >rtp.ssrc == 0xdeadbeef</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">tls.handshake.type</td><td>TLS handshake type</td><td class="mono"
+                >tls.handshake.type == 1</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">ip.src#1 / ip.src#2</td><td>Layer-specific (v4.0+)</td><td
+                class="mono">ip.src#2 == 10.1.2.3</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </TabPanel><TabPanel id="ws-gen-tab"
+    ><div data-island="wireshark-filter" data-ssr><Generator /></div></TabPanel
+  ><TabPanel id="ws-quick-tab">
+    <div class="panel">
+      <h3><Icon name="bolt" /> Common Display Filters</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Goal</th><th>Filter</th></tr></thead>
+          <tbody
+            ><tr
+              ><td>HTTP traffic only</td><td
+                ><code class="mono break-all">http</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="http">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>HTTPS / TLS</td><td
+                ><code class="mono break-all">tls</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tls">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>DNS queries &amp; responses</td><td
+                ><code class="mono break-all">dns</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="dns">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>ICMP (ping)</td><td
+                ><code class="mono break-all">icmp</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="icmp">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>ARP traffic</td><td
+                ><code class="mono break-all">arp</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="arp">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>All TCP</td><td
+                ><code class="mono break-all">tcp</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tcp">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>All UDP</td><td
+                ><code class="mono break-all">udp</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="udp">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>TCP SYN only (new connections)</td><td
+                ><code class="mono break-all">tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</code
+                ><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tcp.flags.syn == 1 && tcp.flags.ack == 0">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>TCP RST (resets / drops)</td><td
+                ><code class="mono break-all">tcp.flags.reset == 1</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tcp.flags.reset == 1">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>TCP FIN (graceful close)</td><td
+                ><code class="mono break-all">tcp.flags.fin == 1</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tcp.flags.fin == 1">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Zero-window (congestion)</td><td
+                ><code class="mono break-all"
+                  >tcp.window_size == 0 &amp;&amp; tcp.flags.reset != 1</code
+                ><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tcp.window_size == 0 && tcp.flags.reset != 1">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Traffic to/from IP (either direction)</td><td
+                ><code class="mono break-all">ip.addr == 192.168.1.10</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="ip.addr == 192.168.1.10">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Source IP only</td><td
+                ><code class="mono break-all">ip.src == 10.0.0.1</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="ip.src == 10.0.0.1">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Exclude an IP (correct method)</td><td
+                ><code class="mono break-all">!(ip.addr == 10.43.54.65)</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="!(ip.addr == 10.43.54.65)">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Subnet range</td><td
+                ><code class="mono break-all">ip.addr == 192.168.0.0/24</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="ip.addr == 192.168.0.0/24">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>OSPF routing</td><td
+                ><code class="mono break-all">ospf</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="ospf">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>BGP</td><td
+                ><code class="mono break-all">tcp.port == 179</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tcp.port == 179">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>SNMP traps</td><td
+                ><code class="mono break-all">udp.port == 162</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="udp.port == 162">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>NTP</td><td
+                ><code class="mono break-all">udp.port == 123</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="udp.port == 123">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>SSH</td><td
+                ><code class="mono break-all">tcp.port == 22</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tcp.port == 22">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>VLAN-tagged frames (any)</td><td
+                ><code class="mono break-all">vlan</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="vlan">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Specific VLAN ID</td><td
+                ><code class="mono break-all">vlan.id == 100</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="vlan.id == 100">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Frames larger than 1500 bytes</td><td
+                ><code class="mono break-all">frame.len &gt; 1500</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="frame.len > 1500">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>HTTP POST requests</td><td
+                ><code class="mono break-all">http.request.method == "POST"</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value='http.request.method == "POST"'>Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>HTTP 404 responses</td><td
+                ><code class="mono break-all">http.response.code == 404</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="http.response.code == 404">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>TLS ClientHello</td><td
+                ><code class="mono break-all">tls.handshake.type == 1</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tls.handshake.type == 1">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>MAC OUI vendor match</td><td
+                ><code class="mono break-all">eth.addr[0:3] == 00:06:5b</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="eth.addr[0:3] == 00:06:5b">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Inner IP in GRE/VXLAN tunnel (v4.0+)</td><td
+                ><code class="mono break-all">ip.src#2 == 10.1.2.3</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="ip.src#2 == 10.1.2.3">Copy</button
+                ></td
+              ></tr
+            ></tbody
+          >
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <h3><Icon name="tower-broadcast" /> Broadcast / AV / Streaming</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Goal</th><th>Filter</th></tr></thead>
+          <tbody
+            ><tr
+              ><td>All SIP signaling</td><td
+                ><code class="mono break-all">sip</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="sip">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>SIP INVITE</td><td
+                ><code class="mono break-all">sip.Method == "INVITE"</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value='sip.Method == "INVITE"'>Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>SIP BYE</td><td
+                ><code class="mono break-all">sip.Method == "BYE"</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value='sip.Method == "BYE"'>Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>SIP REGISTER</td><td
+                ><code class="mono break-all">sip.Method == "REGISTER"</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value='sip.Method == "REGISTER"'>Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>RTP media streams</td><td
+                ><code class="mono break-all">rtp</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="rtp">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>RTSP streaming</td><td
+                ><code class="mono break-all">rtsp</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="rtsp">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Multicast traffic</td><td
+                ><code class="mono break-all"
+                  >ip.dst &gt;= 224.0.0.0 &amp;&amp; ip.dst &lt;= 239.255.255.255</code
+                ><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="ip.dst >= 224.0.0.0 && ip.dst <= 239.255.255.255">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>IGMP (multicast group management)</td><td
+                ><code class="mono break-all">igmp</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="igmp">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>mDNS (Bonjour / Avahi)</td><td
+                ><code class="mono break-all">mdns</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="mdns">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>SSDP (UPnP discovery)</td><td
+                ><code class="mono break-all">ssdp</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="ssdp">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>PTP / IEEE 1588 precision time</td><td
+                ><code class="mono break-all">ptp</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="ptp">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>AES67 / Ravenna RTP audio</td><td
+                ><code class="mono break-all">rtp &amp;&amp; udp.port &gt;= 5004</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="rtp && udp.port >= 5004">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>NMOS IS-04 mDNS discovery</td><td
+                ><code class="mono break-all">mdns &amp;&amp; dns.qry.name contains "_nmos"</code
+                ><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value='mdns && dns.qry.name contains "_nmos"'>Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Windows SMB file shares</td><td
+                ><code class="mono break-all">smb || smb2</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="smb || smb2">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>NBT / NBNS name resolution</td><td
+                ><code class="mono break-all">nbns</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="nbns">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>DCE-RPC</td><td
+                ><code class="mono break-all">dcerpc</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="dcerpc">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Suppress Windows domain noise</td><td
+                ><code class="mono break-all">smb || nbns || dcerpc || nbss || dns</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="smb || nbns || dcerpc || nbss || dns">Copy</button
+                ></td
+              ></tr
+            ></tbody
+          >
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <h3><Icon name="lock" /> Security / Anomaly Hunting</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Goal</th><th>Filter</th></tr></thead>
+          <tbody
+            ><tr
+              ><td>Port scan indicators (many SYNs)</td><td
+                ><code class="mono break-all">tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</code
+                ><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tcp.flags.syn == 1 && tcp.flags.ack == 0">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>TCP RST storm</td><td
+                ><code class="mono break-all">tcp.flags.reset == 1</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tcp.flags.reset == 1">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>ICMP flood (echo requests)</td><td
+                ><code class="mono break-all">icmp &amp;&amp; icmp.type == 8</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="icmp && icmp.type == 8">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Large DNS responses (possible exfil)</td><td
+                ><code class="mono break-all">dns &amp;&amp; udp.length &gt; 512</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="dns && udp.length > 512">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>HTTP basic auth (credentials visible)</td><td
+                ><code class="mono break-all">http.authorization</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="http.authorization">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Cleartext password fields in HTTP</td><td
+                ><code class="mono break-all">http contains "password"</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value='http contains "password"'>Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>TLS 1.0 (weak / legacy)</td><td
+                ><code class="mono break-all">tls.record.version == 0x0301</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="tls.record.version == 0x0301">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>ARP spoofing / duplicate address</td><td
+                ><code class="mono break-all">arp.duplicate-address-detected</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="arp.duplicate-address-detected">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>ICMP redirects</td><td
+                ><code class="mono break-all">icmp.type == 5</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="icmp.type == 5">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Low TTL — possible spoofing</td><td
+                ><code class="mono break-all">ip.ttl &lt; 5</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="ip.ttl < 5">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>String match in UDP payload</td><td
+                ><code class="mono break-all">udp contains "MAGIC"</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value='udp contains "MAGIC"'>Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>SIP excluding noisy host</td><td
+                ><code class="mono break-all">sip &amp;&amp; !(ip.addr == 10.1.1.99)</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="sip && !(ip.addr == 10.1.1.99)">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Destination unreachable</td><td
+                ><code class="mono break-all">icmp.type == 3</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="icmp.type == 3">Copy</button
+                ></td
+              ></tr
+            >
+            <tr
+              ><td>Time exceeded / traceroute hops</td><td
+                ><code class="mono break-all">icmp.type == 11</code><button
+                  class="copy-btn static float-right px-[7px] py-[2px] text-[11px]"
+                  data-copy-value="icmp.type == 11">Copy</button
+                ></td
+              ></tr
+            ></tbody
+          >
+        </table>
+      </div>
+    </div>
+  </TabPanel></Tabs
+>
+
+<CopyScript />
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="wireshark-filter"]', Generator);
+</script>
