@@ -31,7 +31,7 @@ export function eigrpConfig(f: EigrpInput): string {
     .trim()
     .split(',')
     .map((s) => s.trim())
-    .filter(Boolean);
+    .filter((p) => p && p !== active);
   const classic = f.mode === 'classic';
 
   let cfg = 'conf t\n!\n';
@@ -41,15 +41,11 @@ export function eigrpConfig(f: EigrpInput): string {
     for (const n of nets) cfg += ` network ${n.trim()}\n`;
     cfg += ` passive-interface default\n`;
     cfg += ` no passive-interface ${active}\n`;
+    for (const p of passive) cfg += ` passive-interface ${p}\n`;
     if (f.noAutoSummary) cfg += ` no auto-summary\n`;
     if (f.variance) cfg += ` variance ${varianceVal}\n`;
     if (f.stub) cfg += ` eigrp stub connected summary\n`;
     cfg += `!\n`;
-    if (passive.length > 0) {
-      for (const p of passive) cfg += ` no passive-interface ${p}\n`;
-      // Kept as the old site produced it.
-      cfg = cfg.replace(' no passive-interface ' + active, '');
-    }
   } else {
     cfg += `router eigrp ${name}\n`;
     cfg += ` address-family ipv4 unicast autonomous-system ${asNum}\n`;
@@ -59,7 +55,7 @@ export function eigrpConfig(f: EigrpInput): string {
     if (hold) cfg += `   hold-time ${hold}\n`;
     cfg += `  exit-af-interface\n`;
     for (const p of passive) {
-      cfg += `  !\n  af-interface ${p}\n   no passive-interface\n  exit-af-interface\n`;
+      cfg += `  !\n  af-interface ${p}\n   passive-interface\n  exit-af-interface\n`;
     }
     cfg += `  !\n  topology base\n`;
     if (f.variance) cfg += `   variance ${varianceVal}\n`;
