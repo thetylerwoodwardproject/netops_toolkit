@@ -1,0 +1,476 @@
+---
+import Generator from './Generator.svelte';
+import CopyScript from '@/components/CopyScript.astro';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'nmap-gen-tab', label: 'Syntax Generator', icon: 'wrench' },
+    { id: 'nmap-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'nmap-examples-tab', label: 'Examples', icon: 'clipboard-list' },
+  ]}
+  ><TabPanel id="nmap-gen-tab" selected
+    ><div data-island="nmap-gen" data-ssr><Generator /></div></TabPanel
+  ><TabPanel id="nmap-ref-tab">
+    <div class="panel">
+      <h3><Icon name="magnifying-glass" /> Scan Types</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Flag</th><th>Name</th><th>Root?</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">-sS</td><td>SYN Stealth</td><td class="text-orange">Yes</td><td
+                >Sends SYN, never completes handshake. Fast and stealthy — default when run as root.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-sT</td><td>TCP Connect</td><td class="text-green">No</td><td
+                >Full TCP handshake via OS. Slower, leaves logs, but works without root.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-sU</td><td>UDP Scan</td><td class="text-orange">Yes</td><td
+                >Probes UDP ports. Slow — no response = open|filtered. ICMP unreachable = closed.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-sA</td><td>ACK Scan</td><td class="text-orange">Yes</td><td
+                >Maps firewall rules. RST = unfiltered. No response or ICMP = filtered.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-sW</td><td>Window Scan</td><td class="text-orange">Yes</td><td
+                >Like ACK, but inspects TCP window size. OS-dependent results.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-sN</td><td>Null Scan</td><td class="text-orange">Yes</td><td
+                >No flags set. No response = open|filtered. RFC-compliant RST = closed.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-sF</td><td>FIN Scan</td><td class="text-orange">Yes</td><td
+                >FIN flag only. Bypasses some packet filters. Same interpretation as Null.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-sX</td><td>Xmas Scan</td><td class="text-orange">Yes</td><td
+                >FIN, PSH, and URG flags. "Lit up like a Christmas tree."</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-sI</td><td>Idle/Zombie</td><td class="text-orange">Yes</td><td
+                >Uses a third-party zombie host's IP ID sequence to scan target anonymously.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-sn</td><td>Ping Scan</td><td class="text-green">No</td><td
+                >Host discovery only, no port scan. Determines which hosts are up.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-sV</td><td>Version Detect</td><td class="text-green">No</td><td
+                >Probes open ports to determine service and version running.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-O</td><td>OS Detection</td><td class="text-orange">Yes</td><td
+                >Uses TCP/IP stack fingerprinting to guess the OS and version.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-A</td><td>Aggressive</td><td class="text-orange">Yes</td><td
+                >Enables -O, -sV, -sC, and --traceroute simultaneously.</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="clock" /> Timing Templates</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Flag</th><th>Name</th><th>Use Case</th><th>Approx. Speed</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">-T0</td><td>Paranoid</td><td>IDS evasion, extremely covert</td><td
+                >Serialized, 5 min/probe delay</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-T1</td><td>Sneaky</td><td>IDS evasion, slow recon</td><td
+                >15 sec delay between probes</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-T2</td><td>Polite</td><td>Reduce bandwidth/resource impact</td><td
+                >0.4 sec delay</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-T3</td><td>Normal</td><td>Default, balanced</td><td
+                >No delay, adaptive</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-T4</td><td>Aggressive</td><td>Fast, trusted LAN or lab</td><td
+                >10ms timeout, fast retransmit</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-T5</td><td>Insane</td><td>Max speed, may drop accuracy</td><td
+                >5ms timeout, no retransmit</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="shield-halved" /> Host Discovery Flags</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">-Pn</td><td
+                >Skip ping, treat all hosts as up (useful when ICMP is blocked)</td
+              ></tr
+            >
+            <tr><td class="mono">-PE</td><td>ICMP echo request (ping) for host discovery</td></tr>
+            <tr
+              ><td class="mono">-PS[portlist]</td><td
+                >TCP SYN ping on specified ports (default: 80)</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-PA[portlist]</td><td
+                >TCP ACK ping on specified ports (default: 80)</td
+              ></tr
+            >
+            <tr><td class="mono">-PU[portlist]</td><td>UDP ping on specified ports</td></tr>
+            <tr><td class="mono">-PO[proto]</td><td>IP protocol ping</td></tr>
+            <tr><td class="mono">-PR</td><td>ARP ping — fastest for local network segments</td></tr>
+            <tr
+              ><td class="mono">-n</td><td>No DNS resolution — speeds up scans significantly</td
+              ></tr
+            >
+            <tr><td class="mono">-R</td><td>Force DNS resolution for all hosts</td></tr>
+            <tr><td class="mono">--dns-servers</td><td>Specify custom DNS server(s)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="folder" /> Port Specification</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Flag</th><th>Example</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">-p</td><td class="mono">-p 22,80,443</td><td>Scan specific ports</td
+              ></tr
+            >
+            <tr><td class="mono">-p</td><td class="mono">-p 1-1024</td><td>Scan port range</td></tr>
+            <tr><td class="mono">-p-</td><td class="mono">-p-</td><td>Scan all 65535 ports</td></tr>
+            <tr
+              ><td class="mono">-p U:53,T:80</td><td class="mono">-p U:53,T:22,80</td><td
+                >Specify protocol per port</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">--top-ports</td><td class="mono">--top-ports 100</td><td
+                >Scan N most common ports</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">--port-ratio</td><td class="mono">--port-ratio 0.1</td><td
+                >Scan ports with ratio > value (0–1)</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-F</td><td class="mono">-F</td><td
+                >Fast mode — top 100 ports only</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-r</td><td class="mono">-r</td><td
+                >Scan ports in sequential (not random) order</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="upload" /> Output Formats</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Flag</th><th>Format</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">-oN &lt;file&gt;</td><td>Normal</td><td
+                >Human-readable text, same as terminal output</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-oX &lt;file&gt;</td><td>XML</td><td
+                >Machine-parseable XML — compatible with Metasploit, etc.</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-oG &lt;file&gt;</td><td>Grepable</td><td
+                >Single-line per host, easy to grep/awk</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-oS &lt;file&gt;</td><td>Script Kiddie</td><td
+                >Leet-speak output (not useful in production)</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-oA &lt;base&gt;</td><td>All Formats</td><td
+                >Saves -oN, -oX, and -oG simultaneously to &lt;base&gt;.nmap / .xml / .gnmap</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-v / -vv</td><td>Verbose</td><td
+                >Increase output verbosity during scan</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">-d / -dd</td><td>Debug</td><td
+                >Debug level output for troubleshooting</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">--open</td><td>Open only</td><td
+                >Only show ports with state: open</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">--reason</td><td>Reason</td><td
+                >Display reason for each port state (RST, SYN-ACK, etc.)</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">--stats-every &lt;t&gt;</td><td>Progress</td><td
+                >Print periodic progress stats (e.g. --stats-every 10s)</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="scroll" /> NSE Script Categories</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Category</th><th>Flag</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr
+              ><td><strong>auth</strong></td><td class="mono">--script=auth</td><td
+                >Authentication/bypass tests (default credentials, anonymous logins)</td
+              ></tr
+            >
+            <tr
+              ><td><strong>broadcast</strong></td><td class="mono">--script=broadcast</td><td
+                >Discover hosts via LAN broadcast probes</td
+              ></tr
+            >
+            <tr
+              ><td><strong>default</strong></td><td class="mono">-sC or --script=default</td><td
+                >Commonly useful, fast, non-intrusive scripts</td
+              ></tr
+            >
+            <tr
+              ><td><strong>discovery</strong></td><td class="mono">--script=discovery</td><td
+                >Active and passive network reconnaissance</td
+              ></tr
+            >
+            <tr
+              ><td><strong>dos</strong></td><td class="mono">--script=dos</td><td
+                >Denial-of-service vulnerability tests (use with caution)</td
+              ></tr
+            >
+            <tr
+              ><td><strong>exploit</strong></td><td class="mono">--script=exploit</td><td
+                >Attempt to exploit identified vulnerabilities</td
+              ></tr
+            >
+            <tr
+              ><td><strong>external</strong></td><td class="mono">--script=external</td><td
+                >Send data to external third-party services</td
+              ></tr
+            >
+            <tr
+              ><td><strong>fuzzer</strong></td><td class="mono">--script=fuzzer</td><td
+                >Send randomized/unexpected data to test robustness</td
+              ></tr
+            >
+            <tr
+              ><td><strong>intrusive</strong></td><td class="mono">--script=intrusive</td><td
+                >May crash or adversely affect target — use only with permission</td
+              ></tr
+            >
+            <tr
+              ><td><strong>malware</strong></td><td class="mono">--script=malware</td><td
+                >Check for backdoors, malware, and compromised services</td
+              ></tr
+            >
+            <tr
+              ><td><strong>safe</strong></td><td class="mono">--script=safe</td><td
+                >Non-intrusive scripts that will not crash services</td
+              ></tr
+            >
+            <tr
+              ><td><strong>version</strong></td><td class="mono">--script=version</td><td
+                >Enhance version detection (used with -sV)</td
+              ></tr
+            >
+            <tr
+              ><td><strong>vuln</strong></td><td class="mono">--script=vuln</td><td
+                >Check for known vulnerabilities — combines safe+intrusive checks</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+      <div class="tip mt-[10px]">
+        <strong>Useful NSE scripts for broadcast environments:</strong>
+        <code>snmp-info</code>, <code>http-title</code>, <code>ssl-cert</code>, <code>banner</code>, <code
+          >dns-brute</code
+        >, <code>ssh-hostkey</code>
+      </div>
+    </div>
+  </TabPanel><TabPanel id="nmap-examples-tab">
+    <div class="panel">
+      <h3><Icon name="clipboard-list" /> Common Nmap Examples</h3>
+      <div class="tip">
+        Always obtain written authorization before scanning any network you do not own. <strong
+          >Unauthorized scanning may be illegal.</strong
+        >
+      </div>
+      <div class="mt-[12px] flex flex-col gap-[10px]">
+        <div class="rounded-field border border-line bg-bg p-[12px]">
+          <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+            Quick host discovery — who's on the network?
+          </div>
+          <pre class="code my-0 pr-20" data-copy><code>nmap -sn 192.168.1.0/24</code></pre>
+        </div>
+
+        <div class="rounded-field border border-line bg-bg p-[12px]">
+          <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+            Fast SYN scan — top 1000 ports, version detect
+          </div>
+          <pre
+            class="code my-0 pr-20"
+            data-copy><code>sudo nmap -sS -sV -T4 --open -oA scan_results 192.168.1.0/24</code></pre>
+        </div>
+
+        <div class="rounded-field border border-line bg-bg p-[12px]">
+          <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+            Aggressive scan — OS, version, scripts, traceroute
+          </div>
+          <pre
+            class="code my-0 pr-20"
+            data-copy><code>sudo nmap -A -T4 -v 192.168.1.100</code></pre>
+        </div>
+
+        <div class="rounded-field border border-line bg-bg p-[12px]">
+          <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+            Full port scan — all 65535 ports
+          </div>
+          <pre
+            class="code my-0 pr-20"
+            data-copy><code>sudo nmap -sS -p- -T4 --open -n 10.0.0.1</code></pre>
+        </div>
+
+        <div class="rounded-field border border-line bg-bg p-[12px]">
+          <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+            UDP scan — DNS, SNMP, NTP
+          </div>
+          <pre
+            class="code my-0 pr-20"
+            data-copy><code>sudo nmap -sU -p 53,123,161,162,500 --open -T4 192.168.1.0/24</code></pre>
+        </div>
+
+        <div class="rounded-field border border-line bg-bg p-[12px]">
+          <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+            Vulnerability scan — check for known CVEs
+          </div>
+          <pre
+            class="code my-0 pr-20"
+            data-copy><code>sudo nmap -sV --script=vuln -T4 -oN vuln_scan.txt 192.168.1.100</code></pre>
+        </div>
+
+        <div class="rounded-field border border-line bg-bg p-[12px]">
+          <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+            SMB vulnerability check (EternalBlue, etc.)
+          </div>
+          <pre
+            class="code my-0 pr-20"
+            data-copy><code>sudo nmap -p 445 --script=smb-vuln* -T4 192.168.1.0/24</code></pre>
+        </div>
+
+        <div class="rounded-field border border-line bg-bg p-[12px]">
+          <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+            Firewall/ACL mapping — ACK scan
+          </div>
+          <pre
+            class="code my-0 pr-20"
+            data-copy><code>sudo nmap -sA -T4 -p 80,443,22,3389 --reason 192.168.1.1</code></pre>
+        </div>
+
+        <div class="rounded-field border border-line bg-bg p-[12px]">
+          <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+            SNMP device discovery (broadcast network gear)
+          </div>
+          <pre
+            class="code my-0 pr-20"
+            data-copy><code>sudo nmap -sU -p 161 --script=snmp-info -T4 10.0.0.0/24</code></pre>
+        </div>
+
+        <div class="rounded-field border border-line bg-bg p-[12px]">
+          <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+            Web server enumeration
+          </div>
+          <pre
+            class="code my-0 pr-20"
+            data-copy><code>nmap -p 80,443,8080,8443 --script=http-title,http-headers,ssl-cert -T4 192.168.1.0/24</code></pre>
+        </div>
+
+        <div class="rounded-field border border-line bg-bg p-[12px]">
+          <div class="mb-[4px] text-[11px] font-bold tracking-[.05em] text-text3 uppercase">
+            Slow, stealthy IDS-evasion scan
+          </div>
+          <pre
+            class="code my-0 pr-20"
+            data-copy><code>sudo nmap -sS -T1 -Pn -n -p 80,443,22 --data-length 24 10.0.0.1</code></pre>
+        </div>
+      </div>
+    </div>
+    <div class="warn">
+      <strong>Legal Reminder:</strong> Always obtain written authorization before scanning. Unauthorized
+      port scanning may violate the Computer Fraud and Abuse Act (CFAA) and equivalent laws worldwide.
+    </div>
+  </TabPanel></Tabs
+>
+
+<CopyScript />
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="nmap-gen"]', Generator);
+</script>
