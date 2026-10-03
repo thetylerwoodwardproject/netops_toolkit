@@ -27,7 +27,7 @@
 </p>
 
 > [!WARNING]
-> **NetOps Toolkit is in active development and changes often.** Tools are still being ported over from an older single-script site, so expect rough edges and changes between versions. Check any generated config before you apply it, and please open an issue if something is wrong.
+> **NetOps Toolkit is in active development and changes often.** Every tool has now been ported over from an older single-script site, but expect rough edges and changes between versions while it settles. Check any generated config before you apply it, and please open an issue if something is wrong.
 
 <p align="center">
   <strong>🔴 See it live: <a href="https://dev.tools.tylerwoodward.me/">dev.tools.tylerwoodward.me</a></strong>
