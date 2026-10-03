@@ -1,0 +1,340 @@
+---
+import Generator from './Generator.svelte';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'pcap-gen-tab', label: 'Generator', icon: 'gear' },
+    { id: 'pcap-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'pcap-export-tab', label: 'Export & Wireshark', icon: 'upload' },
+  ]}
+  ><TabPanel id="pcap-gen-tab" selected
+    ><div data-island="pcap-gen" data-ssr><Generator /></div></TabPanel
+  ><TabPanel id="pcap-ref-tab">
+    <div class="panel">
+      <h3><Icon name="box" /> What is a PCAP?</h3>
+      <p>
+        A <strong>.pcap</strong> file is a packet capture — a recording of raw network frames flowing
+        across an interface. The format was developed for <strong>libpcap / tcpdump</strong> on Linux/Unix
+        and is now universal. Any tool that captures packets — Wireshark, tcpdump, Cisco EPC — can write
+        and read <code>.pcap</code> files.
+      </p>
+      <div class="tip">
+        A pcap is the <strong>file format</strong>. <code>tcpdump</code> and Cisco EPC are different <strong
+          >tools</strong
+        > that both produce pcap files. They are not the same thing, but their output is interchangeable
+        in Wireshark.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="arrows-rotate" /> Cisco EPC vs tcpdump</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead
+            ><tr><th>Feature</th><th>Cisco EPC (monitor capture)</th><th>tcpdump</th></tr></thead
+          >
+          <tbody>
+            <tr
+              ><td><strong>Runs on</strong></td><td>IOS-XE, IOS (EPC)</td><td
+                >Linux shell (NX-OS bash, NFVIS, SD-WAN vEdge)</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Output format</strong></td><td>.pcap (via export command)</td><td
+                >.pcap (via -w flag)</td
+              ></tr
+            >
+            <tr
+              ><td><strong>CLI interface</strong></td><td>Standard IOS CLI</td><td
+                >Linux terminal / bash shell</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Real-time decode</strong></td><td
+                >show monitor capture NAME buffer detailed</td
+              ><td>Yes — live in terminal output</td></tr
+            >
+            <tr
+              ><td><strong>Export to Wireshark</strong></td><td>TFTP, FTP, flash, USB</td><td
+                >Copy the .pcap file off the device</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Filtering</strong></td><td>IOS ACL syntax (no BPF)</td><td
+                >Full BPF filter syntax</td
+              ></tr
+            >
+            <tr><td><strong>Requires Linux shell</strong></td><td>No</td><td>Yes</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="desktop" /> Platform Support</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Platform</th><th>Capture Method</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr
+              ><td><strong>IOS-XE</strong></td><td class="mono">monitor capture</td><td
+                >Full EPC — use the generator on this page</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Classic IOS</strong></td><td class="mono">monitor capture (EPC)</td><td
+                >Older syntax; buffer-only on some versions</td
+              ></tr
+            >
+            <tr
+              ><td><strong>NX-OS (Nexus)</strong></td><td class="mono">ethanalyzer / tcpdump</td><td
+                >ethanalyzer for control-plane; tcpdump in bash for data-plane</td
+              ></tr
+            >
+            <tr
+              ><td><strong>IOS XR</strong></td><td class="mono">monitor-session / tcpdump</td><td
+                >Uses SPAN/ERSPAN or tcpdump in admin shell</td
+              ></tr
+            >
+            <tr
+              ><td><strong>SD-WAN vEdge</strong></td><td class="mono">tcpdump (Linux shell)</td><td
+                >request shell — writes pcap natively</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Firepower / FTD</strong></td><td class="mono"
+                >capture (LINA) / tcpdump</td
+              ><td>LINA (ASA) capture cmd, or tcpdump on FTD CLI</td></tr
+            >
+            <tr
+              ><td><strong>ASA</strong></td><td class="mono">capture NAME interface INTF</td><td
+                >Different syntax — download via ASDM or HTTPS</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="clipboard-list" /> Key IOS-XE EPC Commands</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">monitor capture NAME interface INTF both</td><td
+                >Define capture on interface (both directions)</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">monitor capture NAME match any</td><td
+                >Capture all traffic — no filter</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">monitor capture NAME match ipv4 any any</td><td
+                >Capture all IPv4 traffic</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">monitor capture NAME match ipv4 access-list ACL</td><td
+                >Filter capture using an extended ACL</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">monitor capture NAME buffer size &lt;MB&gt;</td><td
+                >Set buffer size (default is only 1 MB!)</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">monitor capture NAME buffer circular</td><td
+                >Overwrite oldest packets when buffer is full</td
+              ></tr
+            >
+            <tr><td class="mono">monitor capture NAME start</td><td>Begin capturing traffic</td></tr
+            >
+            <tr><td class="mono">monitor capture NAME stop</td><td>Stop the capture</td></tr>
+            <tr
+              ><td class="mono">show monitor capture NAME</td><td
+                >Check capture status and packet count</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show monitor capture NAME buffer brief</td><td
+                >Quick summary of captured packets in CLI</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show monitor capture NAME buffer detailed</td><td
+                >Full hex/decode of packets in CLI</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">monitor capture NAME export flash:file.pcap</td><td
+                >Export buffer to flash as .pcap</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">monitor capture NAME export tftp://IP/file.pcap</td><td
+                >Export directly to TFTP server</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">no monitor capture NAME</td><td
+                >Delete the capture and free the buffer</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </TabPanel><TabPanel id="pcap-export-tab">
+    <div class="panel">
+      <h3><Icon name="upload" /> Exporting from IOS-XE</h3>
+      <p>Stop the capture first, then export the buffer to a file you can retrieve.</p>
+      <div class="table-wrap mt-[10px]">
+        <table class="ref-table">
+          <thead><tr><th>Method</th><th>Command</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr
+              ><td><strong>Flash</strong></td><td class="mono"
+                >monitor capture CAP1 export flash:cap1.pcap</td
+              ><td>Store on router flash, then SCP/TFTP off</td></tr
+            >
+            <tr
+              ><td><strong>bootflash</strong></td><td class="mono"
+                >monitor capture CAP1 export bootflash:cap1.pcap</td
+              ><td>ISR/ASR platform name for flash</td></tr
+            >
+            <tr
+              ><td><strong>TFTP</strong></td><td class="mono"
+                >monitor capture CAP1 export tftp://10.0.0.1/cap1.pcap</td
+              ><td>Fastest — sends directly to TFTP server</td></tr
+            >
+            <tr
+              ><td><strong>FTP</strong></td><td class="mono"
+                >monitor capture CAP1 export ftp://user:pass@10.0.0.1/cap1.pcap</td
+              ><td>Use where TFTP is unavailable</td></tr
+            >
+            <tr
+              ><td><strong>USB</strong></td><td class="mono"
+                >monitor capture CAP1 export usb0:cap1.pcap</td
+              ><td>If USB storage is installed on the device</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+      <div class="tip mt-[10px]">
+        <strong>After exporting to flash:</strong> Use <code
+          >copy flash:cap1.pcap tftp://&lt;server&gt;/cap1.pcap</code
+        > or SCP to pull the file to your workstation.
+      </div>
+      <div class="warn mt-[8px]">
+        <strong>Buffer size warning:</strong> The default buffer is only <strong>1 MB</strong>.
+        Always set a larger buffer with <code>monitor capture NAME buffer size &lt;MB&gt;</code> before
+        starting, or use <code>monitor capture NAME buffer circular</code> to prevent drops when the buffer
+        fills.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="filter" /> Opening in Wireshark</h3>
+      <ol class="ml-[20px] list-decimal text-[12.5px] leading-[2] text-text2">
+        <li>
+          Transfer the <code>.pcap</code> file to your workstation via SCP, TFTP, or ASDM/HTTPS.
+        </li>
+        <li>
+          Open <strong>Wireshark</strong> → <strong>File → Open</strong> → select the <code
+            >.pcap</code
+          > file.
+        </li>
+        <li>
+          Use the <strong>Display Filter</strong> bar to narrow down traffic (see common filters below).
+        </li>
+        <li>
+          Right-click any packet → <strong>Follow → TCP Stream</strong> to reconstruct full sessions.
+        </li>
+        <li>
+          Use <strong>Statistics → Protocol Hierarchy</strong> for a protocol breakdown of the capture.
+        </li>
+        <li>Use <strong>Statistics → Conversations</strong> to identify top-talker IP pairs.</li>
+        <li>Use <strong>Statistics → IO Graph</strong> to visualize traffic rate over time.</li>
+      </ol>
+      <div class="tip">
+        <strong>Download Wireshark (free):</strong>
+        <a href="https://www.wireshark.org/download.html" target="_blank" rel="noopener"
+          >wireshark.org/download.html</a
+        > — available for Windows, macOS, and Linux.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="magnifying-glass-plus" /> Common Wireshark Display Filters</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Display Filter</th><th>What it shows</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">ip.addr == 192.168.1.1</td><td
+                >All traffic to or from a specific IP</td
+              ></tr
+            >
+            <tr><td class="mono">ip.src == 10.0.0.0/8</td><td>Traffic sourced from a subnet</td></tr
+            >
+            <tr
+              ><td class="mono">ip.dst == 8.8.8.8</td><td>Traffic destined to a specific IP</td></tr
+            >
+            <tr><td class="mono">tcp.port == 443</td><td>HTTPS traffic (either direction)</td></tr>
+            <tr><td class="mono">udp.port == 5060</td><td>SIP / VoIP signaling</td></tr>
+            <tr><td class="mono">icmp</td><td>All ICMP (ping, traceroute, unreachable)</td></tr>
+            <tr><td class="mono">ospf</td><td>OSPF hellos and LSA packets</td></tr>
+            <tr><td class="mono">stp</td><td>Spanning Tree Protocol BPDUs</td></tr>
+            <tr
+              ><td class="mono">tcp.flags.syn==1 &amp;&amp; tcp.flags.ack==0</td><td
+                >TCP SYN — new connection attempts</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">tcp.flags.reset==1</td><td
+                >TCP RST — rejected or broken connections</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">!arp &amp;&amp; !stp &amp;&amp; !cdp</td><td
+                >Hide noisy control-plane traffic</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">frame.len &gt; 1400</td><td
+                >Large frames — watch for fragmentation</td
+              ></tr
+            >
+            <tr><td class="mono">dns</td><td>All DNS queries and responses</td></tr>
+            <tr><td class="mono">http.request</td><td>HTTP GET / POST requests only</td></tr>
+            <tr
+              ><td class="mono">ip.addr==192.168.1.1 &amp;&amp; tcp.port==22</td><td
+                >SSH traffic to/from a specific host</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">udp.port==161 || udp.port==162</td><td>SNMP queries and traps</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </TabPanel></Tabs
+>
+
+<script>
+  import { start } from '@/lib/mount';
+  import Generator from './Generator.svelte';
+
+  start('[data-island="pcap-gen"]', Generator);
+</script>

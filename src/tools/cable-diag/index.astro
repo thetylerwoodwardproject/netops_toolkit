@@ -1,0 +1,369 @@
+---
+import TdrGenerator from './TdrGenerator.svelte';
+import Parser from './Parser.svelte';
+import Icon from '@/components/Icon.astro';
+import Tabs from '@/components/Tabs.astro';
+import TabPanel from '@/components/TabPanel.astro';
+---
+
+<Tabs
+  tabs={[
+    { id: 'cd-ref-tab', label: 'Reference', icon: 'book-open' },
+    { id: 'cd-gen-tab', label: 'TDR Command Generator', icon: 'gear' },
+    { id: 'cd-parse-tab', label: 'Result Interpreter', icon: 'magnifying-glass' },
+    { id: 'cd-fiber-tab', label: 'Fiber / Optical', icon: 'bolt' },
+    { id: 'cd-ts-tab', label: 'Troubleshooting', icon: 'wrench' },
+  ]}
+  ><TabPanel id="cd-ref-tab" selected>
+    <div class="panel">
+      <h3><Icon name="wave-square" /> What is TDR Cable Diagnostics?</h3>
+      <p>
+        Many Catalyst switches include a built-in <strong>Time Domain Reflectometer (TDR)</strong> in
+        their DSP/PHY. The <code>test cable-diagnostics tdr</code> command sends an electrical pulse down
+        each of the four copper pairs on an RJ-45 port and measures the reflection to determine pair status
+        and, when there's a fault or a remote link partner, the approximate distance to it — all without
+        unplugging a single cable.
+      </p>
+      <div class="tip">
+        TDR is a <strong>copper-only</strong> feature built into the switch port's PHY. It cannot test
+        fiber — see the <strong>Fiber / Optical</strong> tab for the fiber equivalent (DOM).
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="code-branch" /> How It Works</h3>
+      <ol class="ml-[20px] list-decimal text-[12.5px] leading-[1.9] text-text2">
+        <li>The PHY injects a test pulse onto each pair (A, B, C, D).</li>
+        <li>
+          The pulse travels down the cable and reflects back when it hits an impedance change — an
+          open end, a short, a bad connector, or a properly terminated link partner.
+        </li>
+        <li>
+          The switch measures the round-trip time of the reflection and converts it to a distance
+          using the cable's nominal velocity of propagation.
+        </li>
+        <li>
+          Results are reported per pair: status (Open / Short / Terminated / Pair up) and distance
+          to the fault or termination point.
+        </li>
+      </ol>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="triangle-exclamation" /> Requirements &amp; Limitations</h3>
+      <ul class="ml-[20px] list-disc text-[12.5px] leading-[1.9] text-text2">
+        <li><strong>Copper RJ-45 ports only</strong> — not supported on SFP/fiber interfaces.</li>
+        <li>
+          Running the test on an <strong>active link briefly interrupts traffic</strong> (link flap of
+          roughly 1–2 seconds) — schedule it during a maintenance window on production ports.
+        </li>
+        <li>
+          Distance readings are estimates, typically accurate to <strong>&plusmn; 10 meters</strong
+          >, and become unreliable on very short cable runs (under ~15 m / 50 ft).
+        </li>
+        <li>
+          Not all platforms/linecards support it — older fixed-config switches and most router WAN
+          ports do not implement TDR.
+        </li>
+        <li>
+          The interface should be administratively up (<code>no shutdown</code>) before testing; an
+          admin-down port typically returns <strong>Not Completed</strong>.
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3><Icon name="server" /> Platform Support</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Platform</th><th>Command</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr
+              ><td><strong>Catalyst 2960/3560/3750</strong> (classic IOS)</td><td class="mono"
+                >test cable-diagnostics tdr</td
+              ><td>Original implementation — the reference syntax used throughout this tool</td></tr
+            >
+            <tr
+              ><td><strong>Catalyst 9200/9300/9400/9500</strong> (IOS-XE)</td><td class="mono"
+                >test cable-diagnostics tdr</td
+              ><td>Same syntax, carried forward into IOS-XE</td></tr
+            >
+            <tr
+              ><td><strong>Catalyst 4500 / 6500</strong></td><td class="mono"
+                >test cable-diagnostics tdr</td
+              ><td
+                >Support varies by supervisor/linecard — verify with <code
+                  >show cable-diagnostics tdr</code
+                > help</td
+              ></tr
+            >
+            <tr
+              ><td><strong>ISR/ASR routers</strong></td><td class="mono">n/a</td><td
+                >TDR is a switch-port PHY feature; generally not available on router copper WAN
+                interfaces</td
+              ></tr
+            >
+            <tr
+              ><td><strong>SFP / fiber ports</strong></td><td class="mono">n/a</td><td
+                >Use <code>show interfaces transceiver</code> (DOM) instead — see Fiber / Optical tab</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </TabPanel><TabPanel id="cd-gen-tab"
+    ><div data-island="cable-diag" data-ssr><TdrGenerator /></div><div class="warn mt-[14px]">
+      <strong>Link flap warning:</strong> TDR forces a brief link down/up on the tested port. Avoid running
+      this on production ports during business hours unless the outage is acceptable.
+    </div></TabPanel
+  ><TabPanel id="cd-parse-tab"
+    ><div data-island="cable-diag-2" data-ssr><Parser /></div>
+    <div class="panel mt-[14px]">
+      <h3><Icon name="list" /> Pair Status Legend</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr
+              ><td><strong class="text-green">Terminated</strong></td><td
+                >A link partner or proper termination is present at the reported distance — the
+                normal, healthy state for a connected pair.</td
+              ></tr
+            >
+            <tr
+              ><td><strong class="text-green">Pair up / Pair is working correctly</strong></td><td
+                >The pair is actively passing a link — healthy.</td
+              ></tr
+            >
+            <tr
+              ><td><strong class="text-red">Open</strong></td><td
+                >The pair is broken, disconnected, or nothing is plugged in on the far end —
+                reflection comes from an unterminated open circuit.</td
+              ></tr
+            >
+            <tr
+              ><td><strong class="text-red">Short</strong></td><td
+                >The pair is shorted to another pair or to ground at the reported distance — usually
+                physical damage, a pinched cable, or a wiring fault.</td
+              ></tr
+            >
+            <tr
+              ><td><strong class="text-orange">Impedance Mismatched</strong></td><td
+                >An impedance discontinuity was detected (bad connector, kink, staple, or wrong
+                cable category) at the reported distance.</td
+              ></tr
+            >
+            <tr
+              ><td><strong class="text-text3">Not Completed</strong></td><td
+                >The test didn't finish — interface may be admin-down, unsupported, or link state
+                prevented the test from running.</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </TabPanel><TabPanel id="cd-fiber-tab">
+    <div class="panel">
+      <h3><Icon name="bolt" /> Fiber Doesn't Use TDR</h3>
+      <p>
+        TDR relies on electrical reflections and only works on copper pairs. For fiber links, the
+        equivalent diagnostic is <strong>Digital Optical Monitoring (DOM)</strong>, built into most
+        SFP/SFP+ transceivers — it reports real-time optical power, temperature, voltage, and bias
+        current.
+      </p>
+    </div>
+    <div class="panel">
+      <h3><Icon name="terminal" /> Optical Diagnostic Commands</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">show interfaces transceiver</td><td
+                >Quick summary of Tx/Rx optical power for all installed transceivers</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show interfaces transceiver detail</td><td
+                >Full readout per interface — power, temperature, voltage, bias current, and
+                threshold alarms</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show interfaces &lt;intf&gt; status</td><td
+                >Link state, speed/duplex, and the transceiver type installed</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show inventory</td><td
+                >Confirm the exact SFP model and part number installed in each slot</td
+              ></tr
+            >
+            <tr
+              ><td class="mono">show interfaces &lt;intf&gt; counters errors</td><td
+                >CRC, input, and runt/giant error counters — rising counts point to a marginal
+                optical link</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <h3><Icon name="gauge-high" /> Typical DOM Thresholds</h3>
+      <p class="mb-[8px] text-[12px] text-text3">
+        Exact thresholds vary by transceiver model — always check <code
+          >show interfaces transceiver detail</code
+        > for the specific high/low alarm and warning values programmed into that SFP.
+      </p>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead
+            ><tr
+              ><th>Parameter</th><th>Healthy Range (typical 1G/10G SFP)</th><th>If out of range</th
+              ></tr
+            ></thead
+          >
+          <tbody>
+            <tr
+              ><td><strong>Rx Power</strong></td><td class="mono"
+                >-1 to -18 dBm (varies by optic)</td
+              ><td
+                >Low Rx &mdash; dirty/bad connector, excess fiber loss, bad transceiver, or exceeded
+                distance</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Tx Power</strong></td><td class="mono">-1 to -9 dBm (varies by optic)</td
+              ><td>Low Tx &mdash; failing laser diode; replace the transceiver</td></tr
+            >
+            <tr
+              ><td><strong>Temperature</strong></td><td class="mono">0&ndash;70&deg;C</td><td
+                >High temp &mdash; check airflow/cooling; can cause intermittent errors</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Voltage</strong></td><td class="mono">~3.3V &plusmn; 5%</td><td
+                >Out of range &mdash; failing transceiver or power supply issue</td
+              ></tr
+            >
+            <tr
+              ><td><strong>Bias Current</strong></td><td class="mono"
+                >Manufacturer spec, usually 2&ndash;60 mA</td
+              ><td>Rising bias current over time &mdash; laser is aging/degrading</td></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tip">
+      A link that flaps or shows CRC errors on fiber is far more often a <strong
+        >dirty or damaged connector</strong
+      > than a bad transceiver. Clean both ends with a fiber cleaning pen before swapping hardware.
+    </div>
+    <div class="warn">
+      DOM only diagnoses the optical link electrically/optically at each end. To physically locate a
+      break or bend in the fiber run itself, you need an external <strong
+        >OTDR (Optical Time Domain Reflectometer)</strong
+      > test tool — this is separate hardware, not built into the switch.
+    </div>
+  </TabPanel><TabPanel id="cd-ts-tab">
+    <div class="panel">
+      <h3><Icon name="wrench" /> Copper Cable Fault Checklist</h3>
+      <ol class="ml-[20px] list-decimal text-[12.5px] leading-[2] text-text2">
+        <li>
+          <strong class="text-text">Check the obvious first</strong> — reseat both ends of the cable and
+          confirm it's fully clicked into the jack before running TDR.
+        </li>
+        <li>
+          <strong class="text-text">Confirm the interface is up</strong> — <code
+            >show interfaces &lt;intf&gt; status</code
+          >. An admin-down port will report <strong>Not Completed</strong>.
+        </li>
+        <li>
+          <strong class="text-text">Run the test</strong> — <code
+            >test cable-diagnostics tdr interface &lt;intf&gt;</code
+          >, then wait a few seconds.
+        </li>
+        <li>
+          <strong class="text-text">Read the results</strong> — <code
+            >show cable-diagnostics tdr interface &lt;intf&gt;</code
+          >, or paste them into the Result Interpreter tab above.
+        </li>
+        <li>
+          <strong class="text-text">Open/Short at a short distance</strong> (a few meters) usually means
+          damage near the connector — check for a bad crimp or a damaged jack.
+        </li>
+        <li>
+          <strong class="text-text">Open/Short at a longer distance</strong> points to physical damage
+          mid-run — a staple through the cable, a chewed section, or a kink/crush point.
+        </li>
+        <li>
+          <strong class="text-text">Only some pairs bad</strong>? Only 2 of the 4 pairs are used at
+          100 Mbps (Fast Ethernet); a fault on an unused pair won't affect a 100 Mb link but will
+          block Gigabit, which needs all four.
+        </li>
+        <li>
+          <strong class="text-text">Check pinout compliance</strong> — mixed T568A/T568B ends on the same
+          run cause split pairs. See the <strong>Ethernet Cable Standards</strong> tool for pinout reference.
+        </li>
+        <li>
+          <strong class="text-text">Verify against cable category limits</strong> — runs beyond 100 m
+          (328 ft) for copper Ethernet will show marginal or failing links regardless of TDR results.
+        </li>
+        <li>
+          <strong class="text-text">Still inconclusive?</strong> — swap in a known-good patch cable to
+          isolate whether the fault is in the fixed cable run or a patch cord.
+        </li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3><Icon name="triangle-exclamation" /> Common Errors</h3>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead><tr><th>Message / Symptom</th><th>Cause</th><th>Fix</th></tr></thead>
+          <tbody>
+            <tr
+              ><td class="mono">% Cable diagnostics is not supported on this interface</td><td
+                >Interface is fiber/SFP, or the platform doesn't support TDR on that port type</td
+              ><td>Use the Fiber / Optical tab (DOM) for optical links instead</td></tr
+            >
+            <tr
+              ><td>Result is always <strong>Not Completed</strong></td><td
+                >Interface admin-down, or test run while the port was already actively linked at a
+                speed that blocks TDR on some platforms</td
+              ><td
+                ><code>shutdown</code> / <code>no shutdown</code> the interface, then rerun the test</td
+              ></tr
+            >
+            <tr
+              ><td>Link flaps briefly after running the test</td><td
+                >Expected behavior — the DSP pulse temporarily interrupts the electrical link</td
+              ><td
+                >No action needed; schedule tests during maintenance windows on production ports</td
+              ></tr
+            >
+            <tr
+              ><td>Distance reads as 0m with status Open</td><td
+                >Nothing connected on the far end, or the cable is shorter than the tool's minimum
+                reliable measurement distance</td
+              ><td>Confirm a cable is actually plugged in; treat sub-15m readings as approximate</td
+              ></tr
+            >
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </TabPanel></Tabs
+>
+
+<script>
+  import { start } from '@/lib/mount';
+  import TdrGenerator from './TdrGenerator.svelte';
+  import Parser from './Parser.svelte';
+
+  start('[data-island="cable-diag"]', TdrGenerator);
+  start('[data-island="cable-diag-2"]', Parser);
+</script>
